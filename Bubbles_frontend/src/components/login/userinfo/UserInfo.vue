@@ -37,6 +37,7 @@
     padding: 0px 10px;
 
     font: 200 normal 14px/1.6 Avant Garde, Avantgarde, Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+    text-align: center;
 
     position: absolute;
     top: 50%;
