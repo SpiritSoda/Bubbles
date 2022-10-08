@@ -1,15 +1,32 @@
 <script>
     export default{
-        props: ['avatar'],
+        props: ['avatar','error_code'],
         data(){
             return {
                 username: '',
-                avatar_id: -1
+                msg: ''
             }
         },
         methods:{
             submit(){
-                console.log(this.avatar, this.username)
+                if(this.username === ''){
+                    this.$emit('error', 1);
+                }
+                else if(this.avatar === -1){
+                    this.$emit('error', 2);
+                }
+                else{
+
+                }
+            }
+        },
+        computed:{
+            error_msg(){
+                if(this.error_code == 1)
+                    this.msg = 'Username can not be empty ...'
+                else if(this.error_code == 2)
+                    this.msg = 'Don\'t forget to choose a user icon ..'
+                return this.msg
             }
         }
     }
@@ -23,9 +40,9 @@
                     <i class="fas fa-arrow-right"></i>
                 </a>
             </button>
-            <input type="text" class="username" v-model="username">
+            <input type="text" class="username" v-model="username" :class="{'shake': error_code == 1}">
         </form>
-
+        <span class="error_msg" :style="{'opacity': error_code > 0 ? 1 : 0}">{{error_msg}}</span>
     </div>
 </template>
 
@@ -53,12 +70,13 @@
     outline: none;
     padding: 0px 10px;
 
-    font: 200 normal 14px/1.6 Avant Garde, Avantgarde, Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: inherit;
     text-align: center;
 
     position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
+    top: calc(50% - 19px);
     left: 0;
     right: 0;
     margin: auto;
@@ -79,8 +97,7 @@
     background-color: rgba(255, 255, 255, .9);
 
     position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
+    top: calc(50% - 19px);
     left: 0;
     right: 0;
     margin: auto;
@@ -91,14 +108,12 @@
     outline: none;
 
     transition: all .3s;
-    ;
 }
 
 .login-btn i {
     color: #424242;
     text-align: center;
     transition: all .3s;
-    ;
 }
 
 .login-btn:hover {
@@ -112,5 +127,21 @@
 
 .login-btn:hover~.username {
     background-color: rgba(255, 255, 255, .6);
+}
+
+.error_msg{
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    color:rgba(255, 255, 255, .8);
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 40px;
+
+    opacity: 0;
+    transition: all .2s;;
 }
 </style>

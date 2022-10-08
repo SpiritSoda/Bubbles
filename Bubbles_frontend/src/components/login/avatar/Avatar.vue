@@ -11,7 +11,7 @@ export default {
             avatar_count: 6
         }
     },
-    props: ['avatar'],
+    props: ['avatar', 'error_code'],
     computed: {
         avatar_show() {
             let style = this.show_list || this.avatar_hover ? { 'width': '150px', 'height': '150px', 'border': '5px solid rgb(124, 179, 255)', 'background-color': 'rgba(255, 255, 255, 1)' } : {};
@@ -42,7 +42,7 @@ export default {
 <template>
     <div class="avatar-wrapper">
         <div class="avatar-show" @click="reverse_show();" @mouseenter="avatar_hover=true"
-            @mouseleave="avatar_hover=false" :style="avatar_show">
+            @mouseleave="avatar_hover=false" :style="avatar_show" :class="{'shake': error_code == 2}">
             <i class="fas fa-user" :style="avatar_icon"></i>
             <i class="fas fa-edit" :style="avatar_icon"></i>
             <div class="avatar" v-if="avatar_selected" :style="{'background-image':'url(\'/avatars/' + this.avatar + '.webp\')'}"></div>
@@ -65,7 +65,6 @@ export default {
 
     overflow: hidden;
     transition: all .3s;
-
 
     z-index: 9999;
 }

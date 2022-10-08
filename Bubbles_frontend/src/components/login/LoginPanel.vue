@@ -8,12 +8,24 @@ export default {
     },
     data(){
         return {
-            avatar: -1
+            avatar: -1,
+            /* 
+                error code: 
+                    1. empty username
+                    2. unselected usericon
+            */
+            error_code: 0,
+            timer_id: null
         }
     },
     methods:{
         set_avatar(avatar_id){
             this.avatar = avatar_id
+        },
+        set_error_code(error){
+            this.error_code = error
+            clearTimeout(this.timer_id)
+            this.timer_id = setTimeout(() => {this.error_code = 0}, 1500)
         }
     }
 }
@@ -21,14 +33,14 @@ export default {
 
 <template>
     <div class="login-panel clearfix">
-        <Avatar @set_avatar=set_avatar :avatar="avatar"></Avatar>
+        <Avatar @set_avatar="set_avatar" :error_code="error_code" :avatar="avatar"></Avatar>
 
         <div class="info-msg">
             <span>Tell us your name: </span>
         </div>
 
         <!-- pass avatar to userinfo components -->
-        <UserInfo :avatar="avatar"></UserInfo>
+        <UserInfo :avatar="avatar" :error_code="error_code" @error="set_error_code"></UserInfo>
 
     </div>
 </template>
@@ -44,7 +56,9 @@ export default {
 
 .info-msg {
     text-align: center;
-    font: 300 normal 24px/1.6 Avant Garde, Avantgarde, Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+    font-size: 24px;
+    line-height: 1.6;
+    font-family: inherit;
     color: #ffffff;
 
     position: absolute;

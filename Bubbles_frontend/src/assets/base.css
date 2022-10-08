@@ -1,5 +1,5 @@
-html{
-  perspective: 800px;
+html *{
+  font-family: Avant Garde, Avantgarde, Century Gothic, CenturyGothic, AppleGothic, sans-serif;
 }
 html, body{
   height: 100%;
@@ -15,4 +15,16 @@ body{
   content: '';
   display: table;
   clear: both;
+}
+.shake{
+  animation: shake ease .3s;
+}
+
+@keyframes shake{
+  from,40%,80%{
+      transform: translate(-2px);
+  }
+  20%,60%,to{
+      transform: translate(2px);
+  }
 }
