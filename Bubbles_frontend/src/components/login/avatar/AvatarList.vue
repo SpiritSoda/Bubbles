@@ -4,7 +4,7 @@
             return {
             }
         },
-        props:['show'],
+        props:['show', 'avatar_count'],
         computed:{
             display_height(){
                 if(!this || !this.show){
@@ -23,18 +23,37 @@
                     return 5 + 'px';
                 else
                     return 0 + 'px';
+            },
+            display_padding(){
+                if(!this || !this.show){
+                    return '0px';
+                }
+                if(this.show === true)
+                    return '20px';
+                else
+                    return '0px';
             }
         },
         methods: {
             reverse_show(){
                 this.$emit("reverse_show")
+            },
+            set_avatar(id){
+                this.reverse_show()
+                this.$emit("set_avatar", id)
             }
         },
     }
 </script>
 
 <template>
-    <div class="avatar-list-wrapper" :style="{'height': display_height, 'border-width': display_border}">
+    <div class="avatar-list-wrapper" :style="{'height': display_height, 'border-width': display_border, 'padding': display_padding + ' 0px'}">
+        <div class="avatar-icon" 
+            v-for="id in avatar_count" 
+            :style="{'background-image':'url(\'/avatars/' + id + '.webp\')'}"
+            @click="set_avatar(id)">
+
+        </div>
         <div class="unshow" @click="reverse_show()">
             <i class="fas fa-chevron-up"></i>
         </div>
@@ -45,11 +64,12 @@
     .avatar-list-wrapper{
         position: absolute;
         overflow: hidden;
-        width: 400px;
+        width: 421px;
         height: 0px;
         border: 5px solid rgb(124, 179, 255);
         border-radius: 40px;
         background-color: rgba(255, 255, 255, 1);
+        padding-top: 0px;
 
         box-sizing: border-box;
 
@@ -85,5 +105,23 @@
     }
     .unshow:hover{
         background-color: rgb(71, 147, 253);
+    }
+    .avatar-icon{
+        float: left;
+        margin: 10px 15px;
+        background-clip: padding-box;
+        background-size: 103px;
+        border: 2px solid rgb(71, 147, 253);
+        border-radius: 50%;
+
+        width: 103px;
+        height: 103px;
+
+        transition: all .3s;
+    }
+    .avatar-icon:hover{
+        border-color: rgb(71, 147, 253);
+        box-shadow: 0 0 15px rgba(71, 147, 253, .8);
+        transform: perspective(800px) translateZ(100px);
     }
 </style>

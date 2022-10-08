@@ -5,19 +5,30 @@ export default {
     components: {
         UserInfo,
         Avatar
+    },
+    data(){
+        return {
+            avatar: -1
+        }
+    },
+    methods:{
+        set_avatar(avatar_id){
+            this.avatar = avatar_id
+        }
     }
 }
 </script>
 
 <template>
     <div class="login-panel clearfix">
-        <Avatar></Avatar>
+        <Avatar @set_avatar=set_avatar :avatar="avatar"></Avatar>
 
         <div class="info-msg">
             <span>Tell us your name: </span>
         </div>
 
-        <UserInfo></UserInfo>
+        <!-- pass avatar to userinfo components -->
+        <UserInfo :avatar="avatar"></UserInfo>
 
     </div>
 </template>

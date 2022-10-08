@@ -1,12 +1,29 @@
+<script>
+    export default{
+        props: ['avatar'],
+        data(){
+            return {
+                username: '',
+                avatar_id: -1
+            }
+        },
+        methods:{
+            submit(){
+                console.log(this.avatar, this.username)
+            }
+        }
+    }
+</script>
+
 <template>
     <div class="user-info-wrapper">
         <form action="#" class="user-info">
-            <button class="login-btn">
+            <button class="login-btn" @click="submit">
                 <a href="javascript:;">
                     <i class="fas fa-arrow-right"></i>
                 </a>
             </button>
-            <input type="text" class="username">
+            <input type="text" class="username" v-model="username">
         </form>
 
     </div>
@@ -94,7 +111,6 @@
 }
 
 .login-btn:hover~.username {
-    height: 0px;
-    border: none;
+    background-color: rgba(255, 255, 255, .6);
 }
 </style>

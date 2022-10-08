@@ -1,8 +1,11 @@
+html{
+  perspective: 800px;
+}
 html, body{
   height: 100%;
+  overflow: hidden;
 }
 body{
-  overflow: hidden;
   margin: 0;
   background: linear-gradient(to bottom, rgb(131, 137, 193), rgb(111, 117, 174));
 }
