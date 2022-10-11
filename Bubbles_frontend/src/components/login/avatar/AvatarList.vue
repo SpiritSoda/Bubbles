@@ -60,7 +60,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .avatar-list-wrapper{
         position: absolute;
         overflow: hidden;

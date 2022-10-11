@@ -1,35 +1,36 @@
 <script>
-    export default{
-        props: ['avatar','error_code'],
-        data(){
-            return {
-                username: '',
-                msg: ''
+import $bus from '../../../utils/eventbus.js'
+export default {
+    props: ['avatar', 'error_code'],
+    data() {
+        return {
+            username: '',
+            msg: ''
+        }
+    },
+    methods: {
+        submit() {
+            if (this.username === '') {
+                $bus.emit('error', 1);
             }
-        },
-        methods:{
-            submit(){
-                if(this.username === ''){
-                    this.$emit('error', 1);
-                }
-                else if(this.avatar === -1){
-                    this.$emit('error', 2);
-                }
-                else{
+            else if (this.avatar === -1) {
+                $bus.emit('error', 2);
+            }
+            else {
 
-                }
-            }
-        },
-        computed:{
-            error_msg(){
-                if(this.error_code == 1)
-                    this.msg = 'Username can not be empty ...'
-                else if(this.error_code == 2)
-                    this.msg = 'Don\'t forget to choose a user icon ..'
-                return this.msg
             }
         }
+    },
+    computed: {
+        error_msg() {
+            if (this.error_code == 1)
+                this.msg = 'Username can not be empty ...'
+            else if (this.error_code == 2)
+                this.msg = 'Don\'t forget to choose a user icon ..'
+            return this.msg
+        }
     }
+}
 </script>
 
 <template>
@@ -46,7 +47,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .user-info-wrapper {
     height: 40px;
     line-height: 40px;
@@ -59,6 +60,7 @@
     right: 0;
     margin: auto;
 }
+
 .username {
     width: 200px;
     height: 32px;
@@ -89,27 +91,34 @@
 }
 
 .login-btn {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     border: 2px solid transparent;
     text-align: center;
     background-color: rgba(255, 255, 255, .9);
+    overflow: hidden;
+    padding: 0;
 
     position: absolute;
     top: calc(50% - 19px);
-    left: 0;
+    left: 280px;
     right: 0;
     margin: auto;
 
-    left: 280px;
+    box-sizing: content-box;
 
     box-shadow: 0 0 5px rgb(124, 179, 255, .3);
     outline: none;
 
     transition: all .3s;
 }
-
+.login-btn a{
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    display: block;
+}
 .login-btn i {
     color: #424242;
     text-align: center;
@@ -129,11 +138,11 @@
     background-color: rgba(255, 255, 255, .6);
 }
 
-.error_msg{
+.error_msg {
     font-size: 12px;
     height: 20px;
     line-height: 20px;
-    color:rgba(255, 255, 255, .8);
+    color: rgba(255, 255, 255, .8);
 
     position: absolute;
     left: 0;
@@ -142,6 +151,7 @@
     top: 40px;
 
     opacity: 0;
-    transition: all .2s;;
+    transition: all .2s;
+    ;
 }
 </style>

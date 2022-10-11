@@ -9,25 +9,14 @@ export default {
     data(){
         return {
             avatar: -1,
-            /* 
-                error code: 
-                    1. empty username
-                    2. unselected usericon
-            */
-            error_code: 0,
-            timer_id: null
         }
     },
     methods:{
         set_avatar(avatar_id){
             this.avatar = avatar_id
-        },
-        set_error_code(error){
-            this.error_code = error
-            clearTimeout(this.timer_id)
-            this.timer_id = setTimeout(() => {this.error_code = 0}, 1500)
         }
-    }
+    },
+    props:['error_code']
 }
 </script>
 
@@ -40,7 +29,7 @@ export default {
         </div>
 
         <!-- pass avatar to userinfo components -->
-        <UserInfo :avatar="avatar" :error_code="error_code" @error="set_error_code"></UserInfo>
+        <UserInfo :avatar="avatar" :error_code="error_code"></UserInfo>
 
     </div>
 </template>
@@ -52,6 +41,8 @@ export default {
     background-color: transparent;
     margin: 100px auto;
     position: relative;
+
+    animation: appear ease 1s;
 }
 
 .info-msg {

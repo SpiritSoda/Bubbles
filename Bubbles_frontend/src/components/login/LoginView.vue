@@ -8,12 +8,13 @@ export default {
         return {
             
         }
-    }
+    },
+    props:['error_code']
 }
 </script>
 <template>
     <div>
-        <LoginPanel>
+        <LoginPanel :error_code="error_code">
 
         </LoginPanel>
     </div>

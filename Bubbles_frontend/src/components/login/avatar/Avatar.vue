@@ -51,7 +51,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 .avatar-show {
     width: 150px;
     height: 150px;
@@ -82,7 +82,7 @@ export default {
 
 .avatar-show .fa-user {
     font-size: 60px;
-    color: #424242;
+    color: rgb(111, 113, 115);
     text-align: center;
 
     position: absolute;
@@ -95,7 +95,7 @@ export default {
 }
 .avatar-show .fa-edit {
     font-size: 60px;
-    color: #424242;
+    color: rgb(111, 113, 115);
     text-align: center;
 
     position: absolute;
