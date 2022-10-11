@@ -2,11 +2,13 @@
 import VerticalSplit from '../../../utils/VerticalSplit.vue';
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
 import MessageBar from './message_bar/MessageBar.vue';
+import Chat from './chat/Chat.vue'
 export default{
     components:{
     VerticalSplit,
     HorizontalSplit,
-    MessageBar
+    MessageBar,
+    Chat
 }
 }
 </script>
@@ -30,8 +32,8 @@ export default{
             </a>
         </div>
 
-        <div class="receive-wrapper">
-
+        <div class="chat-wrapper">
+            <Chat></Chat>
         </div>
     </div>
 </template>
@@ -57,12 +59,13 @@ export default{
     bottom: 30px;
     margin: auto;
 }
-.receive-wrapper{
+.chat-wrapper{
     width: 650px;
+    height: 340px;
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 126px;
+    bottom: 132px;
     margin: auto;
 }
 

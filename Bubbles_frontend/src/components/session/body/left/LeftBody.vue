@@ -4,24 +4,12 @@ import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
 import OnlineList from './userlist/OnlineList.vue'
 export default {
+    props:['onlines', 'local'],
     components: {
         VerticalSplit,
         HorizontalSplit,
         UserBar,
         OnlineList,
-    },
-    data(){
-        return {
-            onlines:[
-                {icon: 1, username: 'Kazuha'},
-                {icon: 2, username: 'Ayaka'},
-                {icon: 3, username: 'Kaeya'},
-                {icon: 4, username: 'Ganyu'},
-                {icon: 5, username: 'Tartarlia'},
-                {icon: 6, username: 'Zhongli'},
-                {icon: 7, username: 'You Know Who'},
-            ]
-        }
     }
 }
 </script>
@@ -34,7 +22,7 @@ export default {
         <HorizontalSplit :length="260" :top="5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <HorizontalSplit :length="260" :top="-5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <div class="userbar-wrapper clearfix">
-            <UserBar></UserBar>
+            <UserBar :local_user="this.onlines[this.local]"></UserBar>
         </div>
         <div class="onlinelist-wrapper clearfix">
             <OnlineList :online_max="20" :onlines="this.onlines"></OnlineList>
