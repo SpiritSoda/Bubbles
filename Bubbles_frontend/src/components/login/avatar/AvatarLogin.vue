@@ -1,8 +1,10 @@
 <script>
 import AvatarList from "./AvatarList.vue"
+import Avatar from '../../utils/Avatar.vue'
 export default {
     components: {
-        AvatarList
+        AvatarList,
+        Avatar
     },
     data() {
         return {
@@ -45,7 +47,9 @@ export default {
             @mouseleave="avatar_hover=false" :style="avatar_show" :class="{'shake': error_code == 2}">
             <i class="fas fa-user" :style="avatar_icon"></i>
             <i class="fas fa-edit" :style="avatar_icon"></i>
-            <div class="avatar" v-if="avatar_selected" :style="{'background-image':'url(\'/avatars/' + this.avatar + '.webp\')'}"></div>
+            <div class="avatar" v-if="avatar_selected">
+                <Avatar :avatar="avatar" :r="150"></Avatar>
+            </div>
         </div>
         <AvatarList :show=show_list :avatar_count=avatar_count @set_avatar=set_avatar @reverse_show=reverse_show></AvatarList>
     </div>
@@ -106,7 +110,7 @@ export default {
     transform: translateY(-60%);
     transition: all .3s;
 }
-.avatar{
+/* .avatar{
     width: 145px;
     height: 145px;
     background-color: rgba(255, 255, 255, 1);
@@ -123,5 +127,5 @@ export default {
 
     transition: all .3s;
 
-}
+} */
 </style>

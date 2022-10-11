@@ -1,11 +1,11 @@
 <script>
 import UserInfo from './userinfo/UserInfo.vue';
-import Avatar from './avatar/Avatar.vue'
+import AvatarLogin from './avatar/AvatarLogin.vue';
 export default {
     components: {
-        UserInfo,
-        Avatar
-    },
+    UserInfo,
+    AvatarLogin
+},
     data(){
         return {
             avatar: -1,
@@ -22,7 +22,7 @@ export default {
 
 <template>
     <div class="login-panel clearfix">
-        <Avatar @set_avatar="set_avatar" :error_code="error_code" :avatar="avatar"></Avatar>
+        <AvatarLogin @set_avatar="set_avatar" :error_code="error_code" :avatar="avatar"></AvatarLogin>
 
         <div class="info-msg">
             <span>Tell us your name: </span>

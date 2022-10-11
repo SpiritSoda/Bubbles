@@ -2,51 +2,67 @@
 import VerticalSplit from '../../../utils/VerticalSplit.vue'
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
-import UserList from './userlist/UserList.vue'
-export default{
+import OnlineList from './userlist/OnlineList.vue'
+export default {
     components: {
-    VerticalSplit,
-    HorizontalSplit,
-    UserBar,
-    UserList,
-}
+        VerticalSplit,
+        HorizontalSplit,
+        UserBar,
+        OnlineList,
+    },
+    data(){
+        return {
+            onlines:[
+                {icon: 1, username: 'Kazuha'},
+                {icon: 2, username: 'Ayaka'},
+                {icon: 3, username: 'Kaeya'},
+                {icon: 4, username: 'Ganyu'},
+                {icon: 5, username: 'Tartarlia'},
+                {icon: 6, username: 'Zhongli'},
+                {icon: 7, username: 'You Know Who'},
+            ]
+        }
+    }
 }
 </script>
 
 <template>
     <div class="left-body clearfix">
-        <VerticalSplit :length="500" :left="300" :color="'rgb(150, 150, 150)'"></VerticalSplit>
-        <VerticalSplit :length="500" :left="5" :color="'rgb(150, 150, 150)'"></VerticalSplit>
-        <HorizontalSplit :length="240" :top="231" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
-        <HorizontalSplit :length="240" :top="5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
-        <HorizontalSplit :length="240" :top="-5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
+        <VerticalSplit :length="510" :left="-5" :color="'rgb(150, 150, 150)'"></VerticalSplit>
+        <VerticalSplit :length="510" :left="5" :color="'rgb(150, 150, 150)'"></VerticalSplit>
+        <HorizontalSplit :length="260" :top="231" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
+        <HorizontalSplit :length="260" :top="5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
+        <HorizontalSplit :length="260" :top="-5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <div class="userbar-wrapper clearfix">
             <UserBar></UserBar>
         </div>
-        <div class="userlist-wrapper clearfix">
-            <UserList></UserList>
+        <div class="onlinelist-wrapper clearfix">
+            <OnlineList :online_max="20" :onlines="this.onlines"></OnlineList>
         </div>
     </div>
 </template>
 
 <style scoped>
-.left-body{
+.left-body {
     height: 100%;
     width: 30%;
     box-sizing: border-box;
-    
-    /* border: 2px solid black; */
+
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     background-color: #fff;
     position: absolute;
     left: 0px;
     bottom: 0px;
 }
-.userbar-wrapper{
+
+.userbar-wrapper {
     width: 100%;
     height: 230px;
     position: relative;
 }
-.userlist-wrapper{
+
+.onlinelist-wrapper {
     width: 100%;
     height: calc(100% - 230px);
     position: relative;

@@ -1,5 +1,5 @@
 <script>
-import Avatar from './Avatar.vue';
+import Avatar from '../../../../utils/Avatar.vue';
 import Edit from './Edit.vue';
 import DisplayBar from '../../../../utils/DisplayBar.vue'
 import VerticalSplit from '../../../../utils/VerticalSplit.vue'
@@ -22,7 +22,7 @@ export default {
 <template>
     <div class="user-bar clearfix">
         <div class="avatar-wrapper">
-            <Avatar :avatar="6"></Avatar>
+            <Avatar :avatar="7" :r="120" :shadow="true"></Avatar>
         </div>
         <div class="edit-wrapper clearfix">
             <Edit></Edit>
