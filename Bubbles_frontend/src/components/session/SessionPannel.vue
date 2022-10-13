@@ -24,7 +24,8 @@ export default{
                 {id: 6, content: 'Stabilized!'},
                 {id: 4, content: 'XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD'},
                 {id: 5, content: '~'},
-                {id: 2, content: 'Hehehehehe...'}
+                {id: 2, content: 'Hehehehehe...'},
+                {id: 7, content: '(╯‵□′)╯︵┻━┻'}
             ]
         }
     },

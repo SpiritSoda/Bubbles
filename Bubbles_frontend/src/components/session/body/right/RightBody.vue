@@ -9,6 +9,21 @@ export default {
         HorizontalSplit,
         MessageBar,
         Chat
+    },
+    methods:{
+        refresh_message(){
+            console.log('Time to get more message from server...')
+            this.$refs.to_top_icon.className="fas fa-undo"
+        },
+        scroll_to_top(){
+            this.$refs.chat_body.scroll_to_top()
+            if(this.$refs.chat_body.at_top()){
+                this.refresh_message()
+            }
+        },
+        scroll_to_bottom(){
+            this.$refs.chat_body.scroll_to_bottom()
+        }
     }
 }
 </script>
@@ -24,17 +39,17 @@ export default {
         <HorizontalSplit :length="687" :top="64" :color="'rgba(219, 222, 226, .8)'"></HorizontalSplit>
 
         <div class="message-bar-wrapper">
-            <MessageBar></MessageBar>
+            <MessageBar :scroll_to_bottom="scroll_to_bottom"></MessageBar>
         </div>
 
         <div class="to-top">
-            <a href="javascript:;">
-                <i class="fas fa-arrow-up"></i>
+            <a href="javascript:;" @click="scroll_to_top">
+                <i class="fas fa-arrow-up" ref="to_top_icon"></i>
             </a>
         </div>
 
         <div class="chat-wrapper">
-            <Chat></Chat>
+            <Chat ref="chat_body"></Chat>
         </div>
     </div>
 </template>

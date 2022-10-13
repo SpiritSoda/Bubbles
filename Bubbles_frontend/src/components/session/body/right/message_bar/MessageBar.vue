@@ -1,4 +1,12 @@
 <script>
+export default{
+    props:['scroll_to_bottom'],
+    methods:{
+        send_message(){
+            this.scroll_to_bottom()
+        }
+    }
+}
 </script>
 
 <template>
@@ -32,7 +40,7 @@
         </ul>
         <form action="#" class="message-wrapper">
             <input type="text" class="message">
-            <button class="send-btn">
+            <button class="send-btn" @click="send_message">
                 <a href="javascript:;" class="send-a">
                     <i class="fas fa-share"></i>
                 </a>
