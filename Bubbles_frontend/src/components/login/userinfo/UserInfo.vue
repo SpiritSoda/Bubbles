@@ -1,7 +1,8 @@
 <script>
 import $bus from '../../../utils/eventbus.js'
 export default {
-    props: ['avatar', 'error_code'],
+    inject: ['error_code'],
+    props: ['avatar'],
     data() {
         return {
             username: '',
@@ -19,6 +20,7 @@ export default {
             else {
 
             }
+            console.log(this.error_code)
         }
     },
     computed: {

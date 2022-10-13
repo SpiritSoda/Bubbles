@@ -1,13 +1,14 @@
 <script>
-import LoginView from './components/login/LoginView.vue'
+import LoginView from './components/login/LoginView.vue';
 import SessionView from './components/session/SessionView.vue';
-import $bus from './utils/eventbus.js'
+import $bus from './utils/eventbus.js';
+import { computed } from 'vue';
 
 export default {
   components: {
     LoginView,
     SessionView
-},
+  },
   data() {
     return {
       /* 
@@ -26,6 +27,11 @@ export default {
       this.timer_id = setTimeout(() => { this.error_code = 0 }, 1500)
     }
   },
+  provide() {
+    return {
+      error_code: computed(() => this.error_code)
+    }
+  },
   mounted() {
     $bus.on('error', (error_code) => { this.set_error_code(error_code) })
   }
@@ -34,7 +40,7 @@ export default {
   
 <template>
   <div>
-    <!-- <LoginView :error_code="error_code"></LoginView> -->
-    <SessionView :error_code="error_code"></SessionView>
+    <!-- <LoginView></LoginView> -->
+    <SessionView></SessionView>
   </div>
 </template>

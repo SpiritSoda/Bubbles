@@ -15,21 +15,20 @@ export default {
         set_avatar(avatar_id){
             this.avatar = avatar_id
         }
-    },
-    props:['error_code']
+    }
 }
 </script>
 
 <template>
     <div class="login-panel clearfix">
-        <AvatarLogin @set_avatar="set_avatar" :error_code="error_code" :avatar="avatar"></AvatarLogin>
+        <AvatarLogin @set_avatar="set_avatar" :avatar="avatar"></AvatarLogin>
 
         <div class="info-msg">
             <span>Tell us your name: </span>
         </div>
 
         <!-- pass avatar to userinfo components -->
-        <UserInfo :avatar="avatar" :error_code="error_code"></UserInfo>
+        <UserInfo :avatar="avatar"></UserInfo>
 
     </div>
 </template>

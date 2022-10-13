@@ -6,15 +6,14 @@ export default {
     },
     data() {
         return {
-            
+
         }
     },
-    props:['error_code']
 }
 </script>
 <template>
     <div>
-        <LoginPanel :error_code="error_code">
+        <LoginPanel>
 
         </LoginPanel>
     </div>

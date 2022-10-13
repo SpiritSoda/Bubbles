@@ -4,13 +4,23 @@ import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
 import OnlineList from './userlist/OnlineList.vue'
 export default {
-    props:['onlines', 'local'],
+    inject:['onlines', 'local_id'],
     components: {
         VerticalSplit,
         HorizontalSplit,
         UserBar,
         OnlineList,
-    }
+    },
+    methods:{
+        isLocal(user){
+            return user.id === this.local_id
+        }
+    },
+    computed:{
+        local(){
+            return this.onlines.findIndex(this.isLocal)
+        }
+    },
 }
 </script>
 

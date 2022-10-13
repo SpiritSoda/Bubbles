@@ -18,17 +18,21 @@ export default{
                 {id: 5, icon: 5, username: 'Tartarlia'},
                 {id: 6, icon: 6, username: 'Zhongli'},
                 {id: 7, icon: 7, username: 'You Know Who'},
+            ],
+            messages:[
+                {id: 7, content: 'Avada Kedavra'},
+                {id: 6, content: 'Stabilized!'},
+                {id: 4, content: 'XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD'},
+                {id: 5, content: '~'},
+                {id: 2, content: 'Hehehehehe...'}
             ]
         }
     },
-    methods:{
-        isLocal(user){
-            return user.id === this.local_id
-        }
-    },
-    computed:{
-        local(){
-            return this.onlines.findIndex(this.isLocal)
+    provide(){
+        return {
+            onlines: this.onlines,
+            messages: this.messages,
+            local_id: this.local_id
         }
     }
 }
@@ -36,7 +40,7 @@ export default{
 
 <template>
     <div class="session-wrapper">
-        <LeftBody :onlines="this.onlines" :local="this.local"></LeftBody>
+        <LeftBody></LeftBody>
         <RightBody></RightBody>
     </div>
 </template>

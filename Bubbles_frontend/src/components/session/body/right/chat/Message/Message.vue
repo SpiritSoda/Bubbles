@@ -1,0 +1,84 @@
+<script>
+import Avatar from '../../../../../utils/Avatar.vue';
+import Bubble from './Bubble.vue';
+export default {
+    components: { Avatar, Bubble },
+    props: ['message'],
+    inject: ['onlines', 'local_id'],
+    methods: {
+        isTarget(user) {
+            return user.id === this.message.id
+        },
+    },
+    computed: {
+        user_id() {
+            return this.onlines.findIndex(this.isTarget)
+        },
+        user() {
+            return this.onlines[this.user_id]
+        },
+        is_local(){
+            return this.message.id === this.local_id
+        },
+        bubble_color(){
+            return this.is_local ? 'rgb(124, 179, 255, .1)' : 'rgba(255, 255, 255, .1)'
+        }
+    }
+}
+</script>
+
+<template>
+    <div v-if="this.user" class="clearfix" style="padding-bottom: 3px; width: 100%;">
+        <div class="clearfix" v-if="this.is_local" style="position: relative">
+            <div class="avatar-wrapper right">
+                <Avatar :avatar="this.user.icon" :r="56"></Avatar>
+            </div>
+            <div class="right clearfix" style="right: 13px">
+                <div class="username right">
+                    {{this.user.username}}
+                </div>
+                <div class="bubble-wrapper">
+                    <Bubble :content="this.message.content" :color="this.bubble_color"></Bubble>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix" v-else style="position: relative">
+            <div class="avatar-wrapper left">
+                <Avatar :avatar="this.user.icon" :r="56"></Avatar>
+            </div>
+            <div class="left clearfix" style="left: 13px">
+                <div class="username left">
+                    {{this.user.username}}
+                </div>
+                <div class="bubble-wrapper clearfix">
+                    <Bubble :content="this.message.content" :color="this.bubble_color"></Bubble>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+.avatar-wrapper {
+    width: 56px;
+    height: 56px;
+    position: relative;
+}
+.bubble-wrapper{
+    position: relative;
+}
+.left{
+    position: relative;
+    float: left;
+}
+.right{
+    position: relative;
+    float: right;
+}
+.username{
+    position: relative;
+    top: 6px;
+    font-size: 12px;
+}
+</style>

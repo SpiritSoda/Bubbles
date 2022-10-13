@@ -2,6 +2,8 @@
 import AvatarList from "./AvatarList.vue"
 import Avatar from '../../utils/Avatar.vue'
 export default {
+    props: ['avatar'],
+    inject: ['error_code'],
     components: {
         AvatarList,
         Avatar
@@ -13,7 +15,6 @@ export default {
             avatar_count: 6
         }
     },
-    props: ['avatar', 'error_code'],
     computed: {
         avatar_show() {
             let style = this.show_list || this.avatar_hover ? { 'width': '150px', 'height': '150px', 'border': '5px solid rgb(124, 179, 255)', 'background-color': 'rgba(255, 255, 255, 1)' } : {};

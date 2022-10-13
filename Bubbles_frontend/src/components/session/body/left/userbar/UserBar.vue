@@ -6,8 +6,6 @@ import VerticalSplit from '../../../../utils/VerticalSplit.vue'
 import HorizontalSplit from '../../../../utils/HorizontalSplit.vue'
 export default {
     props:['local_user'],
-    data() {
-    },
     components: {
         Avatar,
         Edit,

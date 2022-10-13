@@ -5,4 +5,6 @@ import './assets/reset.css'
 import './assets/main.css'
 import './iconfont/css/all.css'
 
-createApp(App).mount('#app')
+var app = createApp(App)
+app.config.unwrapInjectedRef = true
+app.mount('#app')
