@@ -3,7 +3,14 @@ import VerticalSplit from '../../../utils/VerticalSplit.vue';
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
 import MessageBar from './message_bar/MessageBar.vue';
 import Chat from './chat/Chat.vue'
+import $bus from '../../../../utils/eventbus';
 export default {
+    inject:['error_code'],
+    data(){
+        return {
+            msg: 'Fail to connect server...'
+        }
+    },
     components: {
         VerticalSplit,
         HorizontalSplit,
@@ -12,8 +19,12 @@ export default {
     },
     methods:{
         refresh_message(){
-            console.log('Time to get more message from server...')
-            this.$refs.to_top_icon.className="fas fa-undo"
+            // console.log('Time to get more message from server...')
+            this.$refs.to_top_icon.className="fas fa-undo rotate"
+            setTimeout(() => {
+                this.$refs.to_top_icon.className="fas fa-arrow-up"
+                $bus.emit('error', 3)
+            }, 2000);
         },
         scroll_to_top(){
             this.$refs.chat_body.scroll_to_top()
@@ -24,6 +35,16 @@ export default {
         scroll_to_bottom(){
             this.$refs.chat_body.scroll_to_bottom()
         }
+    },
+    computed:{
+        error_msg() {
+            if (this.error_code == 3)
+                this.msg = 'Fail to connect server...'
+            return this.msg
+        },
+        show_error(){
+            return this.error_code == 3 ? 1 : 0
+        }
     }
 }
 </script>
@@ -31,7 +52,7 @@ export default {
 <template>
     <div class="right-body clearfix">
         <VerticalSplit :length="510" :left="-5" :color="'rgb(150, 150, 150)'"></VerticalSplit>
-        <VerticalSplit :length="510" :left="5" :color="'rgb(150, 150, 150)'"></VerticalSplit>
+        <!-- <VerticalSplit :length="510" :left="5" :color="'rgb(150, 150, 150)'"></VerticalSplit> -->
         <HorizontalSplit :length="687" :top="-5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <HorizontalSplit :length="687" :top="5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
 
@@ -42,7 +63,9 @@ export default {
             <MessageBar :scroll_to_bottom="scroll_to_bottom"></MessageBar>
         </div>
 
+        
         <div class="to-top">
+            <div class="error_msg" :class="{'appear-up': show_error}" :style="{'opacity': show_error}">{{error_msg}}</div>
             <a href="javascript:;" @click="scroll_to_top">
                 <i class="fas fa-arrow-up" ref="to_top_icon"></i>
             </a>
@@ -90,12 +113,11 @@ export default {
 }
 
 .to-top {
-    width: 30px;
+    width: 100%;
     height: 30px;
     border-radius: 50%;
-    background-color: #fff;
     position: absolute;
-    top: 40px;
+    top: 50px;
     left: 0;
     right: 0;
     margin: auto;
@@ -109,7 +131,13 @@ export default {
     display: block;
     transition: color .2s, box-shadow .2s;
     box-shadow: 0 0 2px rgba(0, 0, 0, .3);
+    background-color: #fff;
     border-radius: 50%;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
 
     color: rgba(0, 0, 0, .4);
 }
@@ -117,5 +145,23 @@ export default {
 .to-top a:hover {
     color: rgb(124, 179, 255);
     box-shadow: 0 0 7px rgb(124, 179, 255);
+}
+
+.error_msg{
+    width: 180px;
+    height: 24px;
+    line-height: 24px;
+
+    font-size: 14px;
+    text-align: center;
+    color: #626262;
+    
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: -25px;
+
+    transition: all .3s;
 }
 </style>

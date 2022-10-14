@@ -37,7 +37,7 @@ export default {
                 <div class="username right">
                     {{this.user.username}}
                 </div>
-                <div class="bubble-wrapper">
+                <div class="bubble-wrapper clearfix right">
                     <Bubble :content="this.message.content" :color="this.bubble_color"></Bubble>
                 </div>
             </div>
@@ -51,7 +51,7 @@ export default {
                 <div class="username left">
                     {{this.user.username}}
                 </div>
-                <div class="bubble-wrapper clearfix">
+                <div class="bubble-wrapper clearfix left">
                     <Bubble :content="this.message.content" :color="this.bubble_color"></Bubble>
                 </div>
             </div>
@@ -78,7 +78,14 @@ export default {
 }
 .username{
     position: relative;
+    width: 100%;
     top: 6px;
     font-size: 12px;
+}
+.username.left{
+    text-align: left;
+}
+.username.right{
+    text-align: right;
 }
 </style>

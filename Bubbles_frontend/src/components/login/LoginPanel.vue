@@ -41,7 +41,7 @@ export default {
     margin: 100px auto;
     position: relative;
 
-    animation: appear ease 1s;
+    animation: appear-down ease 1s;
 }
 
 .info-msg {
