@@ -15,6 +15,9 @@ export default {
         scroll_to_bottom(){
             this.$refs.chat_body.scrollTop = this.$refs.chat_body.scrollHeight
         }
+    },
+    mounted(){
+        this.scroll_to_bottom()
     }
 }
 </script>
@@ -38,6 +41,8 @@ export default {
 .messages-wrapper {
     width: 101%;
     height: 100%;
+    box-sizing: border-box;
+    padding-right: 5px;
     padding-bottom: 10px;
     overflow-y: scroll;
     scroll-behavior: smooth;

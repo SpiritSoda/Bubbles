@@ -3,11 +3,13 @@ import LoginView from './components/login/LoginView.vue';
 import SessionView from './components/session/SessionView.vue';
 import $bus from './utils/eventbus.js';
 import { computed } from 'vue';
+import Button from './components/utils/Button.vue';
 
 export default {
   components: {
     LoginView,
-    SessionView
+    SessionView,
+    Button
   },
   data() {
     return {
@@ -42,7 +44,11 @@ export default {
         { id: 5, content: '~' },
         { id: 2, content: 'Hehehehehe...' },
         { id: 7, content: '(╯‵□′)╯︵┻━┻' }
-      ]
+      ],
+      settings: {
+        dark_mode: { name: 'Dark Mode', value: false },
+        hide_username: { name: 'Hide usrname', value: false }
+      }
     }
   },
   methods: {
@@ -52,23 +58,46 @@ export default {
       this.timer_id = setTimeout(() => { this.error_code = 0 }, 1500)
     }
   },
+  computed: {
+    color_style() {
+      if (this.settings.dark_mode.value) {
+        return {
+          content_background_color: '#222222',
+          content_font_color: '#e2e2e2',
+          content_shadow_color: 'rgba(255, 255, 255, .6)'
+        }
+      }
+      else {
+        return {
+          content_background_color: '#fff',
+          content_font_color: '#000',
+          content_shadow_color: 'rgba(0, 0, 0, .3)'
+        }
+      }
+    }
+  },
   provide() {
     return {
       error_code: computed(() => this.error_code),
       onlines: computed(() => this.onlines),
       messages: computed(() => this.messages),
       local_id: computed(() => this.local_id),
+      settings: computed(() => this.settings),
+      background_color: computed(() => this.color_style.content_background_color),
+      font_color: computed(() => this.color_style.content_font_color),
+      shadow_color: computed(() => this.color_style.content_shadow_color)
     }
   },
   mounted() {
     $bus.on('error', (error_code) => { this.set_error_code(error_code) })
-    $bus.on('send', (content) => {this.messages.push({id: this.local_id, content: content})})
-  }
+    $bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
+    $bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
+  },
 }
 </script>
   
 <template>
-  <div>
+  <div :style="{'color': color_style.content_font_color}">
     <LoginView v-if="this.state === 0"></LoginView>
     <SessionView v-else-if="this.state === 1"></SessionView>
   </div>

@@ -4,7 +4,7 @@ import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
 import OnlineList from './userlist/OnlineList.vue'
 export default {
-    inject:['onlines', 'local_id'],
+    inject:['onlines', 'local_id', 'background_color'],
     components: {
         VerticalSplit,
         HorizontalSplit,
@@ -48,10 +48,13 @@ export default {
 
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    background-color: #fff;
+    background-color: v-bind(background_color);
+    
     position: absolute;
     left: 0px;
     bottom: 0px;
+
+    transition: all .3s;
 }
 
 .userbar-wrapper {

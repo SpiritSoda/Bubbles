@@ -1,8 +1,11 @@
 <script>
+export default{
+    inject: ['background_color', 'shadow_color']
+}
 </script>
 
 <template>
-    <div class="edit">
+    <div class="edit" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
         <a href="javascript:;">
             <i class="fas fa-edit"></i>
         </a>
@@ -32,6 +35,7 @@
     font-size: 14px;
 }
 .edit:hover {
-    box-shadow: 0 0 10px rgb(124, 179, 255);
+    color: rgb(124, 179, 255) !important;
+    box-shadow: 0 0 10px rgb(124, 179, 255) !important;
 }
 </style>

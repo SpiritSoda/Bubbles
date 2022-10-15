@@ -5,7 +5,7 @@ import MessageBar from './message_bar/MessageBar.vue';
 import Chat from './chat/Chat.vue'
 import $bus from '../../../../utils/eventbus';
 export default {
-    inject:['error_code'],
+    inject:['error_code','background_color', 'shadow_color', 'font_color'],
     data(){
         return {
             msg: 'Fail to connect server...'
@@ -66,7 +66,7 @@ export default {
         
         <div class="to-top">
             <div class="error_msg" :class="{'appear-up': show_error}" :style="{'opacity': show_error}">{{error_msg}}</div>
-            <a href="javascript:;" @click="scroll_to_top">
+            <a href="javascript:;" @click="scroll_to_top" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
                 <i class="fas fa-arrow-up" ref="to_top_icon"></i>
             </a>
         </div>
@@ -85,11 +85,12 @@ export default {
 
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: #fff;
+    background-color: v-bind(background_color);
     position: absolute;
     right: 0px;
     bottom: 0px;
 
+    transition: all .3s;
 }
 
 .message-bar-wrapper {
@@ -102,7 +103,7 @@ export default {
 }
 
 .chat-wrapper {
-    width: 650px;
+    width: 660px;
     height: 340px;
     position: absolute;
     left: 0px;
@@ -129,7 +130,6 @@ export default {
     line-height: 30px;
     text-align: center;
     display: block;
-    transition: color .2s, box-shadow .2s;
     box-shadow: 0 0 2px rgba(0, 0, 0, .3);
     background-color: #fff;
     border-radius: 50%;
@@ -138,13 +138,13 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
-
-    color: rgba(0, 0, 0, .4);
+    
+    transition: all .2s;
 }
 
 .to-top a:hover {
-    color: rgb(124, 179, 255);
-    box-shadow: 0 0 7px rgb(124, 179, 255);
+    color: rgb(124, 179, 255) !important;
+    box-shadow: 0 0 7px rgb(124, 179, 255) !important;
 }
 
 .error_msg{

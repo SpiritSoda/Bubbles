@@ -3,32 +3,45 @@ import { Picker, EmojiIndex } from "emoji-mart-vue-fast/src";
 import data from "emoji-mart-vue-fast/data/all.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
 import $bus from "../../../../../utils/eventbus";
+import Button from '../../../../utils/Button.vue'
 
 export default {
+    props: ['scroll_to_bottom'],
+    inject: ['background_color', 'settings', 'shadow_color'],
     components: {
-        Picker
+        Picker,
+        Button
     },
     data() {
         return {
             emoji_index: new EmojiIndex(data),
             emojis_output: "",
-            emoji_picker_style: {
-                'width': '300px',
-                'height': '245px'
-            },
             content: ''
         };
     },
-    props: ['scroll_to_bottom'],
     methods: {
         send_message() {
             $bus.emit('send', this.content)
             this.content = ''
-            this.$nextTick(() => {this.scroll_to_bottom()})
+            this.$nextTick(() => { this.scroll_to_bottom() })
         },
-        append_emoji(e){
+        append_emoji(e) {
             this.content += e.native
+        },
+        switch_setting(key) {
+            $bus.emit('setting', key)
+        },
+        logout(obj) {
+            console.log(obj)
         }
+    },
+    computed: {
+        emoji_picker_style() {
+            return {
+                'width': '300px',
+                'height': '245px'
+            }
+        },
     }
 }
 </script>
@@ -38,10 +51,9 @@ export default {
         <ul class="toolbar">
             <li class="emoji">
                 <div class="emoji-selector-wrapper">
-                    <div class="emoji-selector">
-                        <Picker :data="emoji_index" :show-categories="true"
-                            :picker-styles="emoji_picker_style" :show-preview="false"
-                            @select="append_emoji"></Picker>
+                    <div class="emoji-selector" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
+                        <Picker :data="emoji_index" :show-categories="true" :picker-styles="emoji_picker_style"
+                            :show-preview="false" @select="append_emoji" :color="'rgb(124, 179, 255)'"></Picker>
                     </div>
                 </div>
                 <a href="javascript:;">
@@ -64,12 +76,23 @@ export default {
                 </a>
             </li>
             <li class="setting">
+                <div class="setting-menu-wrapper">
+                    <div class="setting-menu" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
+                        <div class="option" v-for="key in Object.keys(settings)">
+                            <span>{{settings[key].name}}</span>
+                            <div class="button-wrapper">
+                                <Button :call_back="() => {switch_setting(key)}"
+                                    :default="settings[key].value"></Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <a href="javascript:;">
                     <i class="fas fa-wrench"></i>
                 </a>
             </li>
         </ul>
-        <form action="#" class="message-wrapper">
+        <form class="message-wrapper">
             <input type="text" class="message" v-model="content">
             <button class="send-btn" @click="send_message">
                 <a href="javascript:;" class="send-a">
@@ -205,7 +228,6 @@ export default {
     position: absolute;
     left: -20px;
     right: 0;
-    position: absolute;
     /* top: -215px; */
     top: 0;
     overflow: hidden;
@@ -234,5 +256,66 @@ export default {
     z-index: 10000;
 
     transition: all .3s;
+}
+
+
+
+.setting:hover .setting-menu-wrapper {
+    height: 230px;
+    top: -230px;
+}
+
+.setting-menu-wrapper {
+    width: 200px;
+    height: 0px;
+    background-color: transparent;
+
+    position: absolute;
+    left: -80px;
+    right: 0;
+    top: 0;
+    overflow: hidden;
+
+    transition: all .3s;
+}
+
+.setting-menu {
+    width: 160px;
+    height: 200px;
+    background-color: #fff;
+    padding: 10px;
+    padding-top: 6px;
+
+    font-size: 10px;
+    overflow: auto;
+
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    margin: auto;
+    z-index: 10000;
+
+    transition: all .3s;
+}
+
+.option {
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    margin-top: 5px;
+    position: relative;
+}
+
+.button-wrapper {
+    height: 16px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 5px;
+    margin: auto;
 }
 </style>
