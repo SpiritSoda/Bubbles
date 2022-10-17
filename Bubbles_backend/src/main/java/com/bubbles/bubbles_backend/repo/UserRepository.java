@@ -1,8 +1,10 @@
 package com.bubbles.bubbles_backend.repo;
 
-import com.bubbles.bubbles_backend.entity.AnonymousUser;
+import com.bubbles.bubbles_backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AnonymousUserRepository extends JpaRepository<AnonymousUser, Integer> {
-    AnonymousUser findUserByUserId(Integer userId);
+public interface UserRepository extends JpaRepository<User, Integer> {
+    User findUserByUserId(Integer userId);
+    User findUserByUsername(String username);
+    Boolean existsUserByUsername(String username);
 }

@@ -1,4 +1,4 @@
-package org.pkuse2020grp4.pkusporteventsbackend.exception;
+package com.bubbles.bubbles_backend.exception;
 
 public class PasswordNotValidException extends Exception {
     public PasswordNotValidException() {

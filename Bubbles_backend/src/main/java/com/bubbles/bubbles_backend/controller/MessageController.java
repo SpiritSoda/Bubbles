@@ -1,2 +1,10 @@
-package com.bubbles.bubbles_backend.controller;public class MessageController {
+package com.bubbles.bubbles_backend.controller;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+public class MessageController {
+
 }
