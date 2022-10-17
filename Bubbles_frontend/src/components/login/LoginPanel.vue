@@ -23,12 +23,8 @@ export default {
     <div class="login-panel clearfix">
         <AvatarLogin @set_avatar="set_avatar" :avatar="avatar"></AvatarLogin>
 
-        <div class="info-msg">
-            <span>Tell us your name: </span>
-        </div>
-
         <!-- pass avatar to userinfo components -->
-        <UserInfo :avatar="avatar"></UserInfo>
+        <UserInfo @set_avatar="set_avatar" :avatar="avatar"></UserInfo>
 
     </div>
 </template>
@@ -44,17 +40,4 @@ export default {
     animation: appear-down ease 1s;
 }
 
-.info-msg {
-    text-align: center;
-    font-size: 24px;
-    line-height: 1.6;
-    font-family: inherit;
-    color: #ffffff;
-
-    position: absolute;
-    top: 235px;
-    left: 0;
-    right: 0;
-    margin: auto;
-}
 </style>

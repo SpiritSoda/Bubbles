@@ -32,6 +32,9 @@ body {
 .appear-up{
   animation: appear-up ease 0.6s;
 }
+.fold-back{
+  animation: fold-back ease 0.3s;
+}
 
 @keyframes shake {
 
@@ -77,5 +80,14 @@ body {
   }
   to{
     transform: rotate(-360deg);
+  }
+}
+
+@keyframes fold-back {
+  from, to{
+    transform: '';
+  }
+  50%{
+    transform: rotateX(90deg);
   }
 }

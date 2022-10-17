@@ -2,7 +2,6 @@
 import { Picker, EmojiIndex } from "emoji-mart-vue-fast/src";
 import data from "emoji-mart-vue-fast/data/all.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
-import $bus from "../../../../../utils/eventbus";
 import Button from '../../../../utils/Button.vue'
 
 export default {
@@ -21,7 +20,7 @@ export default {
     },
     methods: {
         send_message() {
-            $bus.emit('send', this.content)
+            this.$bus.emit('send', this.content)
             this.content = ''
             this.$nextTick(() => { this.scroll_to_bottom() })
         },
@@ -29,7 +28,7 @@ export default {
             this.content += e.native
         },
         switch_setting(key) {
-            $bus.emit('setting', key)
+            this.$bus.emit('setting', key)
         },
         logout(obj) {
             console.log(obj)

@@ -1,32 +1,41 @@
 <script>
 import LoginView from './components/login/LoginView.vue';
 import SessionView from './components/session/SessionView.vue';
-import $bus from './utils/eventbus.js';
 import { computed } from 'vue';
 import Button from './components/utils/Button.vue';
+import RegisterView from './components/register/RegisterView.vue';
 
 export default {
   components: {
     LoginView,
     SessionView,
-    Button
-  },
+    Button,
+    RegisterView
+},
   data() {
     return {
       /* 
         error code: 
-          1: empty username
-          2: unselected usericon
-          3: refresh messages fail
+          1000: login::timeout
+          1001: login::empty username
+          1002: login::user not exist
+          1003: login::empty password
+          1004: login::password not match
+          2001: register::empty username
+          2002: register::unselected icon
+          2003: register::invalid password
+          2004: register::confirmed password not match
+          3001: chatroom::refresh messages fail
       */
       error_code: 0,
       timer_id: 0,
       /*
         instance state: 
-          0: waiting for logining in
-          1: logined in
+          0: login in
+          1: register
+          2: chatroom
        */
-      state: 1,
+      state: 0,
       local_id: 7,
       onlines: [
         { id: 1, icon: 1, username: 'Kazuha' },
@@ -89,9 +98,10 @@ export default {
     }
   },
   mounted() {
-    $bus.on('error', (error_code) => { this.set_error_code(error_code) })
-    $bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
-    $bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
+    this.$bus.on('error', (error_code) => { this.set_error_code(error_code) })
+    this.$bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
+    this.$bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
+    this.$bus.on('switch_state', (new_state) => {this.state = new_state})
   },
 }
 </script>
@@ -99,6 +109,7 @@ export default {
 <template>
   <div :style="{'color': color_style.content_font_color}">
     <LoginView v-if="this.state === 0"></LoginView>
-    <SessionView v-else-if="this.state === 1"></SessionView>
+    <RegisterView v-if="this.state === 1"></RegisterView>
+    <SessionView v-else-if="this.state === 2"></SessionView>
   </div>
 </template>

@@ -3,7 +3,6 @@ import VerticalSplit from '../../../utils/VerticalSplit.vue';
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
 import MessageBar from './message_bar/MessageBar.vue';
 import Chat from './chat/Chat.vue'
-import $bus from '../../../../utils/eventbus';
 export default {
     inject:['error_code','background_color', 'shadow_color', 'font_color'],
     data(){
@@ -23,7 +22,7 @@ export default {
             this.$refs.to_top_icon.className="fas fa-undo rotate"
             setTimeout(() => {
                 this.$refs.to_top_icon.className="fas fa-arrow-up"
-                $bus.emit('error', 3)
+                this.$bus.emit('error', 3001)
             }, 2000);
         },
         scroll_to_top(){
@@ -43,7 +42,7 @@ export default {
             return this.msg
         },
         show_error(){
-            return this.error_code == 3 ? 1 : 0
+            return this.error_code == 3001 ? 1 : 0
         }
     }
 }
@@ -122,6 +121,8 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
+
+    z-index: 10000;
 }
 
 .to-top a {

@@ -45,7 +45,7 @@ export default {
 <template>
     <div class="avatar-wrapper">
         <div class="avatar-show" @click="reverse_show();" @mouseenter="avatar_hover=true"
-            @mouseleave="avatar_hover=false" :style="avatar_show" :class="{'shake': error_code == 2}">
+            @mouseleave="avatar_hover=false" :style="avatar_show" :class="{'shake': error_code == 2002}">
             <i class="fas fa-user" :style="avatar_icon"></i>
             <i class="fas fa-edit" :style="avatar_icon"></i>
             <div class="avatar" v-if="avatar_selected">
