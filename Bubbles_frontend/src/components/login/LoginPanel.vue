@@ -34,7 +34,6 @@ export default {
     width: 500px;
     height: 500px;
     background-color: transparent;
-    margin: 100px auto;
     position: relative;
 
     animation: appear-down ease 1s;
