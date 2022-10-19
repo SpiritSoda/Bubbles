@@ -25,8 +25,12 @@ export default {
             this.state = !this.state
         },
         submit(){
+            if(this.state != 0)
+                return;
             if(this.username === '')
                 this.$bus.emit('error', 2001);
+            else if(this.username.length > 10)
+                this.$bus.emit('error', 2008);
             else if(this.avatar === -1)
                 this.$bus.emit('error', 2002);
             else  if(this.password === '')
@@ -71,6 +75,9 @@ export default {
         },
         set_avatar(id){
             this.avatar = id;
+        },
+        back_to_login(){
+            this.$bus.emit("switch_state", 0);
         }
     },
     computed:{
@@ -91,6 +98,8 @@ export default {
                 this.msg = 'Password too short ...'
             else if(this.error_code == 2007)
                 this.msg = 'User exists ...'
+            else if(this.error_code == 2008)
+                this.msg = 'Username should be shorter than 10 chars ...'
             return this.msg;
         }
     }
@@ -102,11 +111,11 @@ export default {
         <div class="avatar-wrapper">
             <AvatarRegister @reverse_state="reverse_state" @set_avatar="set_avatar" :avatar="this.avatar"></AvatarRegister>
         </div>
-        <form action="#" class="user-info" :style="{'transform': this.state == 1 ? 'translateX(100px)': ''}">
+        <form class="user-info" :style="{'transform': this.state == 1 ? 'translateX(100px)': ''}">
             <ul class="input">
                 <li>
                     <span>Username: </span>
-                    <input type="text" class="data" v-model="username" :class="{'shake': error_code == 2001 || error_code == 2007}">
+                    <input type="text" class="data" v-model="username" :class="{'shake': error_code == 2001 || error_code == 2007 || error_code == 2008}">
                 </li>
                 <li>
                     <span>Password: </span>
@@ -117,9 +126,14 @@ export default {
                     <input type="password" class="data" v-model="confirm_password" :class="{'shake': error_code == 2004 || error_code == 2005}">
                 </li>
             </ul>
-            <button class="register-btn" @click="submit" :class="{'waiting': waiting}">
+            <button class="register-btn btn" @click="submit" :class="{'waiting': waiting}">
                 <a href="javascript:;">
                     <i class="fas" :class="{'fa-arrow-right': !waiting, 'fa-undo rotate': waiting}"></i>
+                </a>
+            </button>
+            <button class="back-btn btn" @click="back_to_login">
+                <a href="javascript:;">
+                    <i class="fas fa-times"></i>
                 </a>
             </button>
 
@@ -142,7 +156,7 @@ export default {
     position: absolute;
     right: 310px;
     top: 110px;
-    transition: all .3s;
+    transition: all .2s;
 }
 
 .user-info input {
@@ -177,7 +191,7 @@ export default {
     color: #fff;
     margin: 8px 0;
 }
-.register-btn {
+.btn {
     width: 34px;
     height: 34px;
     border-radius: 50%;
@@ -190,39 +204,44 @@ export default {
     box-sizing: content-box;
     position: absolute;
     right: 0px;
-    bottom: -60px;
 
     box-shadow: 0 0 5px rgb(124, 179, 255, .3);
     outline: none;
 
     transition: all .3s;
 }
-.register-btn a {
+.btn a {
     width: 34px;
     height: 34px;
     line-height: 34px;
     display: block;
 }
 
-.register-btn i {
+.btn i {
     color: #424242;
     text-align: center;
     transition: all .3s;
 }
 
-.register-btn:hover {
+.btn:hover {
     background-color: rgba(255, 255, 255, 1);
     border-color: rgb(124, 179, 255);
 }
 
-.register-btn:hover i {
+.btn:hover i {
     color: rgb(124, 179, 255);
+}
+.register-btn{
+    bottom: -60px;
+}
+.back-btn{
+    top: -30px;
 }
 .error_msg {
     text-align: right;
     padding-right: 20px;
     font-size: 14px;
-    width: 270px;
+    width: 300px;
     height: 20px;
     line-height: 20px;
     color: rgba(255, 255, 255, .8);

@@ -140,7 +140,7 @@ export default {
             <span class="password" :style="{'opacity': state}" :class="{'reverse': state}">{{'Hello, ' + username}}</span>
         </div>
 
-        <form action="#" class="user-info">
+        <form class="user-info">
             <button class="login-btn btn" @click="submit" :class="{'waiting': waiting}">
                 <a href="javascript:;">
                     <i class="fas" :class="{'fa-arrow-right': !waiting, 'fa-undo rotate': waiting}"></i>
@@ -193,8 +193,10 @@ export default {
     margin: auto;
 }
 .info-msg-wrapper .password{
+    width: 300px;
+    text-align: center;
     position: absolute;
-    left: 300px;
+    left: 250px;
     right: 0;
     margin: auto;
 }
@@ -239,6 +241,9 @@ export default {
 .data:focus {
     border-color: rgb(124, 179, 255);
     background-color: rgba(255, 255, 255, 1);
+}
+.data:hover {
+    border-color: rgb(124, 179, 255);
 }
 
 .btn {

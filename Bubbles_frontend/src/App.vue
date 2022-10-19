@@ -29,6 +29,7 @@ export default {
           2005: register::empty confirmed password
           2006: register::password too short
           2007: register::user exists
+          2008: register::username too long
           3001: chatroom::refresh messages fail
       */
       error_code: 0,
