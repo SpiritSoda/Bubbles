@@ -23,6 +23,7 @@ export default {
     right: 0;
     top: 100px;
     margin: auto;
+    animation: appear-up ease 1s;
 }
 
 </style>

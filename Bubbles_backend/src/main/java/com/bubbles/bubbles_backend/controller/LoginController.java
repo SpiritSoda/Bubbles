@@ -72,7 +72,7 @@ public class LoginController {
             case 0:
                 return Result.buildSuccessResult("Register Success");
             case 1:
-                return Result.buildFailResult("User Exists");
+                return Result.buildFailResult(3, "User Exists");
             default:
                 return Result.buildFailResult("Unknown Error");
         }

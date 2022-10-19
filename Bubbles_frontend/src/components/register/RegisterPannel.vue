@@ -37,6 +37,37 @@ export default {
                 this.$bus.emit('error', 2005);
             else if(this.password != this.confirm_password)
                 this.$bus.emit('error', 2004);
+            else{
+                this.waiting = true;
+                this.$axios.post('/api/register', {
+                    username: this.username,
+                    password: this.$md5(this.password),
+                    icon: this.avatar
+
+                }).then(
+                    response => {
+                        this.waiting = false;
+                        let code = response.data.code;
+                        if(code == 3)
+                            this.$bus.emit('error', 2007);
+                        else if(code == 0){
+                            this.$bus.emit('registered', {
+                                username: this.username,
+                                avatar: this.avatar
+                            });
+                        }
+                        else{
+                            console.log(response)
+                            this.$bus.emit('error', 1000)
+                        }
+                    }
+                ).catch(
+                    e => {
+                        this.waiting = false;
+                        this.$bus.emit('error', 1000);
+                    }
+                )
+            }
         },
         set_avatar(id){
             this.avatar = id;
@@ -44,7 +75,9 @@ export default {
     },
     computed:{
         error_msg(){
-            if(this.error_code == 2001)
+            if(this.error_code == 1000)
+                this.msg = 'Can not connect to server ...'
+            else if(this.error_code == 2001)
                 this.msg = 'Username can not be empty ...'
             else if(this.error_code == 2002)
                 this.msg = "Don't forget to select an avatar ...";
@@ -56,6 +89,8 @@ export default {
                 this.msg = 'Confirm password can not be empty ...'
             else if(this.error_code == 2006)
                 this.msg = 'Password too short ...'
+            else if(this.error_code == 2007)
+                this.msg = 'User exists ...'
             return this.msg;
         }
     }
@@ -71,7 +106,7 @@ export default {
             <ul class="input">
                 <li>
                     <span>Username: </span>
-                    <input type="text" class="data" v-model="username" :class="{'shake': error_code == 2001}">
+                    <input type="text" class="data" v-model="username" :class="{'shake': error_code == 2001 || error_code == 2007}">
                 </li>
                 <li>
                     <span>Password: </span>

@@ -21,7 +21,7 @@ export default {
 
 <template>
     <div class="login-panel clearfix">
-        <AvatarLogin @set_avatar="set_avatar" :avatar="avatar"></AvatarLogin>
+        <AvatarLogin :avatar="avatar"></AvatarLogin>
 
         <!-- pass avatar to userinfo components -->
         <UserInfo @set_avatar="set_avatar" :avatar="avatar"></UserInfo>

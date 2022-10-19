@@ -20,7 +20,10 @@ public class Result {
         return new Result(0, msg, data);
     }
     static public Result buildFailResult(String msg){
-        return new Result(1, msg, null);
+        return new Result(-1, msg, null);
+    }
+    static public Result buildFailResult(int code, String msg){
+        return new Result(code, msg, null);
     }
 }
 

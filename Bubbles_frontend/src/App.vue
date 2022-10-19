@@ -11,11 +11,12 @@ export default {
     SessionView,
     Button,
     RegisterView
-},
+  },
   data() {
     return {
       /* 
         error code: 
+          error_code > 0: error_occurs
           1000: login::timeout
           1001: login::empty username
           1002: login::user not exist
@@ -27,9 +28,19 @@ export default {
           2004: register::confirmed password not match
           2005: register::empty confirmed password
           2006: register::password too short
+          2007: register::user exists
           3001: chatroom::refresh messages fail
       */
       error_code: 0,
+      /*
+          transaction signal that need to be done
+      */
+      signals: {
+        register_update: {
+          required: false,
+          data: null
+        }
+      },
       timer_id: 0,
       /*
         instance state: 
@@ -37,7 +48,7 @@ export default {
           1: register
           2: chatroom
        */
-      state: 1,
+      state: 0,
       local_id: 7,
       onlines: [
         { id: 1, icon: 1, username: 'Kazuha' },
@@ -96,14 +107,18 @@ export default {
       settings: computed(() => this.settings),
       background_color: computed(() => this.color_style.content_background_color),
       font_color: computed(() => this.color_style.content_font_color),
-      shadow_color: computed(() => this.color_style.content_shadow_color)
+      shadow_color: computed(() => this.color_style.content_shadow_color),
+      signals: computed(() => this.signals)
     }
   },
   mounted() {
     this.$bus.on('error', (error_code) => { this.set_error_code(error_code) })
+    this.$bus.on('signal_done', (signal) => { this.signals[signal].required = false })
+
     this.$bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
     this.$bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
-    this.$bus.on('switch_state', (new_state) => {this.state = new_state})
+    this.$bus.on('switch_state', (new_state) => { this.state = new_state })
+    this.$bus.on('registered', (user_info) => { this.state = 0; this.signals.register_update.required = true; this.signals.register_update.data = user_info })
   },
 }
 </script>

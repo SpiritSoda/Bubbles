@@ -1,8 +1,6 @@
 <script>
-import $axios from '../../../utils/axios';
-
 export default {
-    inject: ['error_code'],
+    inject: ['error_code', 'signals'],
     props: ['avatar'],
     data() {
         return {
@@ -91,6 +89,11 @@ export default {
             this.data = this.username;
             this.password = '';
             this.state = 0;
+        },
+        register_update(user_info){
+            this.$emit('set_avatar', user_info.avatar);
+            this.data = user_info.username 
+            this.switch_to_state_password()
         }
     },
     computed: {
@@ -119,6 +122,12 @@ export default {
                 return 'Username'
             else if (this.state == 1)
                 return 'Password';
+        },
+    },
+    mounted(){
+        if(this.signals.register_update.required){
+            this.register_update(this.signals.register_update.data);
+            this.$bus.emit('signal_done', 'register_update');
         }
     }
 }

@@ -11,6 +11,11 @@ export default {
             color: 'rgba(255,255,255, .8)'
         }
     },
+    methods: {
+        register(){
+            this.$bus.emit("switch_state", 1);
+        }
+    }
 }
 </script>
 <template>
@@ -18,7 +23,7 @@ export default {
         <div class="login-pannel-wrapper">
             <LoginPanel></LoginPanel>
         </div>
-        <a href="javascript:;" class="register-entry">
+        <a href="javascript:;" class="register-entry" @click="register">
             <span>Register</span>
             <HorizontalSplit :length="60" :top="0" :color="color"></HorizontalSplit>
         </a>
