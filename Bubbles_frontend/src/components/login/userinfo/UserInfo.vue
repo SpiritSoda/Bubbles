@@ -140,7 +140,7 @@ export default {
             <span class="password" :style="{'opacity': state}" :class="{'reverse': state}">{{'Hello, ' + username}}</span>
         </div>
 
-        <form class="user-info">
+        <form onsubmit="return false" class="user-info">
             <button class="login-btn btn" @click="submit" :class="{'waiting': waiting}">
                 <a href="javascript:;">
                     <i class="fas" :class="{'fa-arrow-right': !waiting, 'fa-undo rotate': waiting}"></i>

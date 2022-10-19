@@ -2,11 +2,17 @@ html * {
   font-family: Avant Garde, Avantgarde, Century Gothic, CenturyGothic, AppleGothic, sans-serif;
 }
 
-html,
-body {
+html{
   height: 100%;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+}
+body{
+  height: 101%;
+  width: 102%;
+  position: absolute;
+  left: -1%;
+  overflow: auto;
 }
 
 body {

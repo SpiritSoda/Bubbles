@@ -111,7 +111,7 @@ export default {
         <div class="avatar-wrapper">
             <AvatarRegister @reverse_state="reverse_state" @set_avatar="set_avatar" :avatar="this.avatar"></AvatarRegister>
         </div>
-        <form class="user-info" :style="{'transform': this.state == 1 ? 'translateX(100px)': ''}">
+        <form onsubmit="return false" class="user-info" :style="{'transform': this.state == 1 ? 'translateX(100px)': ''}">
             <ul class="input">
                 <li>
                     <span>Username: </span>

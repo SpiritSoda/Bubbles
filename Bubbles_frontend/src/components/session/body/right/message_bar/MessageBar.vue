@@ -91,7 +91,7 @@ export default {
                 </a>
             </li>
         </ul>
-        <form class="message-wrapper">
+        <form onsubmit="return false" class="message-wrapper">
             <input type="text" class="message" v-model="content">
             <button class="send-btn" @click="send_message">
                 <a href="javascript:;" class="send-a">
