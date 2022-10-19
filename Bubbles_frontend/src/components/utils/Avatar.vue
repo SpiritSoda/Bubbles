@@ -60,7 +60,7 @@ export default {
     box-shadow: 0 0px 5px rgba(0, 0, 0, .3);
 
     overflow: hidden;
-    transition: opacity .3s;
+    transition: all .3s;
 
 }
 .avatar-border .fa-user {

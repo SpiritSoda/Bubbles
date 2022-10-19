@@ -1,57 +1,56 @@
 <script>
-    export default{
-        data(){
-            return {
+export default {
+    data() {
+        return {
+        }
+    },
+    props: ['show', 'avatar_count'],
+    computed: {
+        display_height() {
+            if (!this || !this.show) {
+                return 0 + 'px';
             }
+            if (this.show === true)
+                return 340 + 'px';
+            else
+                return 0 + 'px';
         },
-        props:['show', 'avatar_count'],
-        computed:{
-            display_height(){
-                if(!this || !this.show){
-                    return 0 + 'px';
-                }
-                if(this.show === true)
-                    return 400 + 'px';
-                else
-                    return 0 + 'px';
-            },
-            display_border(){
-                if(!this || !this.show){
-                    return 0 + 'px';
-                }
-                if(this.show === true)
-                    return 5 + 'px';
-                else
-                    return 0 + 'px';
-            },
-            display_padding(){
-                if(!this || !this.show){
-                    return '0px';
-                }
-                if(this.show === true)
-                    return '20px';
-                else
-                    return '0px';
+        display_border() {
+            if (!this || !this.show) {
+                return 0 + 'px';
             }
+            if (this.show === true)
+                return 5 + 'px';
+            else
+                return 0 + 'px';
         },
-        methods: {
-            reverse_show(){
-                this.$emit("reverse_show")
-            },
-            set_avatar(id){
-                this.reverse_show()
-                this.$emit("set_avatar", id)
+        display_padding() {
+            if (!this || !this.show) {
+                return '0px';
             }
+            if (this.show === true)
+                return '20px';
+            else
+                return '0px';
+        }
+    },
+    methods: {
+        reverse_show() {
+            this.$emit("reverse_show")
         },
-    }
+        set_avatar(id) {
+            this.reverse_show()
+            this.$emit("set_avatar", id)
+        }
+    },
+}
 </script>
 
 <template>
-    <div class="avatar-list-wrapper" :style="{'height': display_height, 'border-width': display_border, 'padding': display_padding + ' 0px'}">
-        <div class="avatar-icon" 
-            v-for="id in avatar_count" 
-            :style="{'background-image':'url(\'/avatars/' + id + '.webp\')'}"
-            @click="set_avatar(id)">
+    <div class="avatar-list-wrapper"
+        :style="{'height': display_height, 'border-width': display_border, 'padding': display_padding + ' 0px'}">
+        <div class="avatar-icon" v-for="id in avatar_count"
+            :style="{'background-image':'url(\'/avatars/' + id + '.webp\')'}" @click="set_avatar(id)">
 
         </div>
         <div class="unshow" @click="reverse_show()">
@@ -61,67 +60,72 @@
 </template>
 
 <style scoped>
-    .avatar-list-wrapper{
-        position: absolute;
-        overflow: hidden;
-        width: 421px;
-        height: 0px;
-        border: 5px solid rgb(124, 179, 255);
-        border-radius: 40px;
-        background-color: rgba(255, 255, 255, 1);
-        padding-top: 0px;
+.avatar-list-wrapper {
+    position: absolute;
+    overflow: hidden;
+    width: 361px;
+    height: 0px;
+    border: 5px solid rgb(124, 179, 255);
+    border-radius: 40px;
+    background-color: rgba(255, 255, 255, 1);
+    padding-top: 0px;
 
-        box-sizing: border-box;
+    box-sizing: border-box;
 
-        top: 120px;
-        left: 0px;
-        right: 0;
-        margin: auto;
+    top: 60px;
+    left: 0px;
+    right: 0;
+    margin: auto;
 
-        transition: all .3s;
-        z-index: 1000;
-    }
-    .unshow{
-        width: 40px;
-        height: 20px;
-        line-height: 20px;
-        background-color: rgb(124, 179, 255);
+    transition: all .3s;
+    z-index: 1000;
+}
 
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
+.unshow {
+    width: 40px;
+    height: 20px;
+    line-height: 20px;
+    background-color: rgb(124, 179, 255);
 
-        border-top-left-radius: 8px ;
-        border-top-right-radius: 8px ;
-        text-align: center;
-        z-index: 999;
-        transition: all .3s;
-    }
-    .unshow i{
-        color: #fff;
-        margin-top: 2px;
-    }
-    .unshow:hover{
-        background-color: rgb(71, 147, 253);
-    }
-    .avatar-icon{
-        float: left;
-        margin: 10px 15px;
-        background-clip: padding-box;
-        background-size: 103px;
-        border: 2px solid rgb(71, 147, 253);
-        border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 
-        width: 103px;
-        height: 103px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    text-align: center;
+    z-index: 999;
+    transition: all .3s;
+}
 
-        transition: all .3s;
-    }
-    .avatar-icon:hover{
-        border-color: rgb(71, 147, 253);
-        box-shadow: 0 0 15px rgba(71, 147, 253, .8);
-        transform: perspective(800px) translateZ(100px);
-    }
+.unshow i {
+    color: #fff;
+    margin-top: 2px;
+}
+
+.unshow:hover {
+    background-color: rgb(71, 147, 253);
+}
+
+.avatar-icon {
+    float: left;
+    margin: 10px 10px;
+    background-clip: padding-box;
+    background-size: 93px;
+    border: 2px solid rgb(71, 147, 253);
+    border-radius: 50%;
+
+    width: 93px;
+    height: 93px;
+
+    transition: all .3s;
+}
+
+.avatar-icon:hover {
+    border-color: rgb(71, 147, 253);
+    box-shadow: 0 0 15px rgba(71, 147, 253, .8);
+    transform: perspective(800px) translateZ(80px);
+}
 </style>

@@ -23,8 +23,10 @@ export default {
           1004: login::password not match
           2001: register::empty username
           2002: register::unselected icon
-          2003: register::invalid password
+          2003: register::empty password
           2004: register::confirmed password not match
+          2005: register::empty confirmed password
+          2006: register::password too short
           3001: chatroom::refresh messages fail
       */
       error_code: 0,
@@ -35,7 +37,7 @@ export default {
           1: register
           2: chatroom
        */
-      state: 0,
+      state: 1,
       local_id: 7,
       onlines: [
         { id: 1, icon: 1, username: 'Kazuha' },
