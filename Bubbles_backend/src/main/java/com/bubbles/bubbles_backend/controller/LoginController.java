@@ -8,10 +8,7 @@ import com.bubbles.bubbles_backend.utils.JwtUtils;
 import com.bubbles.bubbles_backend.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -19,6 +16,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@CrossOrigin
 public class LoginController {
     private final JwtConfig jwtConfig;
     private final UserService userService;
@@ -52,7 +50,7 @@ public class LoginController {
         HashMap<String, Object> data = new HashMap<>();
         if(userService.existUsername(user)){
             data.put("result", true);
-            data.put("icon", userService.getUserIcon(user));
+            data.put("icon", userService.getUserAvatar(user));
             return Result.buildSuccessResult("User Exists", data);
         }
         else{
@@ -66,7 +64,7 @@ public class LoginController {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
-        user.setIcon(userDTO.getIcon());
+        user.setAvatar(userDTO.getIcon());
         int status = userService.registerUser(user);
         switch (status) {
             case 0:

@@ -32,14 +32,19 @@ public class UserService {
         return findResult.getUserId();
     }
 
-    public int getUserIcon(User user) throws Exception {
+    public int getUserAvatar(User user) throws Exception {
         User findResult = userRepository.findUserByUsername(user.getUsername());
         if (findResult == null)
             throw new UserNotFoundException(user.getUsername());
-        return findResult.getIcon();
+        return findResult.getAvatar();
+    }
+
+    public User getUserById(int id) throws Exception{
+        return userRepository.findUserByUserId(id);
     }
 
     public Boolean existUsername(User user){
         return userRepository.findUserByUsername(user.getUsername()) != null;
     }
+
 }

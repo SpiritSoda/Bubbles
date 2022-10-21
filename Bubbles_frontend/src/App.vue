@@ -121,6 +121,9 @@ export default {
     this.$bus.on('switch_state', (new_state) => { this.state = new_state })
     this.$bus.on('registered', (user_info) => { this.state = 0; this.signals.register_update.required = true; this.signals.register_update.data = user_info })
   },
+  beforeDestroy() {
+    this.$socket.close_websocket()
+  },
 }
 </script>
   

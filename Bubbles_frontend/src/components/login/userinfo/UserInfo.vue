@@ -8,6 +8,7 @@ export default {
             password: '',
             data: '',
             msg: '',
+            token: '',
             /*
                 0: waiting for username input
                 1: waiting for password input
@@ -62,9 +63,8 @@ export default {
                                 this.waiting = false;
                                 let code = response.data.code;
                                 if(code == 0){
-                                    let token = response.data.data.token;
-                                    let local_id = response.data.data.uid;
-                                    console.log(token, local_id)
+                                    this.token = response.data.data.token
+                                    this.$socket.create_websocket(this.token, this.on_login)
                                 }
                                 else if(code == 3){
                                     this.$bus.emit('error', 1004);
@@ -94,6 +94,12 @@ export default {
             this.$emit('set_avatar', user_info.avatar);
             this.data = user_info.username 
             this.switch_to_state_password()
+        },
+        on_login(){
+            this.$socket.send_message({type: 0}, this.on_init)
+        },
+        on_init(msg){
+            console.log("initializing: " + msg)
         }
     },
     computed: {

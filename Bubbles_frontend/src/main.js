@@ -7,10 +7,12 @@ import './iconfont/css/all.css'
 import $axios from './utils/axios'
 import $bus from './utils/eventbus'
 import $md5 from './utils/md5'
+import $socket from './utils/socket'
 
 var app = createApp(App)
 app.config.unwrapInjectedRef = true
 app.config.globalProperties.$axios = $axios
 app.config.globalProperties.$bus = $bus
 app.config.globalProperties.$md5 = $md5
+app.config.globalProperties.$socket = $socket
 app.mount('#app')
