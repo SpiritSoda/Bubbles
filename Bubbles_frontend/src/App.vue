@@ -113,6 +113,7 @@ export default {
     }
   },
   mounted() {
+    // console.log(encodeURI([1,2]))
     this.$bus.on('error', (error_code) => { this.set_error_code(error_code) })
     this.$bus.on('signal_done', (signal) => { this.signals[signal].required = false })
 

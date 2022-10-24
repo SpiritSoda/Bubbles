@@ -1,5 +1,6 @@
 package com.bubbles.bubbles_backend.entity;
 
+import com.bubbles.bubbles_backend.dto.MessageDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,9 +13,22 @@ import javax.persistence.*;
 @Table(name = "message")
 public class Message {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "message_id")
     private int messageId;
 
+    private int session;
+    private int type;
     private String content;
-    private int sendUserId;
+    private int senderId;
     private long timestamp;
+
+    public Message(MessageDTO message){
+        this.messageId = 0;
+        this.session = message.getSession();
+        this.type = message.getType();
+        this.content = message.getContent();
+        this.senderId = message.getSenderId();
+        this.timestamp = message.getTimestamp();
+    }
 }

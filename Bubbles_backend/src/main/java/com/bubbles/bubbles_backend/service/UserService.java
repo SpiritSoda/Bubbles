@@ -7,6 +7,8 @@ import com.bubbles.bubbles_backend.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private UserRepository userRepository;
@@ -41,6 +43,9 @@ public class UserService {
 
     public User getUserById(int id) throws Exception{
         return userRepository.findUserByUserId(id);
+    }
+    public List<User> getUsersByIds(List<Integer> ids) throws Exception{
+        return userRepository.findUserByUserIdIn(ids);
     }
 
     public Boolean existUsername(User user){

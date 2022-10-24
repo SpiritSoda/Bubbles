@@ -7,5 +7,5 @@ public class UserDTO {
     private int userId;
     private String username;
     private String password;
-    private int icon;
+    private int avatar;
 }

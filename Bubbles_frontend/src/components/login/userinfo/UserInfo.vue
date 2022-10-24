@@ -34,7 +34,7 @@ export default {
                                 this.$bus.emit('error', 1002);
                             }
                             else {
-                                this.$emit('set_avatar', response.data.data.icon)
+                                this.$emit('set_avatar', response.data.data.avatar)
                                 this.switch_to_state_password();
                             }
                         }
@@ -57,7 +57,7 @@ export default {
                         this.$axios.post('/api/login', {
                             username: this.username,
                             password: this.$md5(this.data),
-                            icon: this.avatar
+                            avatar: this.avatar
                         }).then(
                             response => {
                                 this.waiting = false;
