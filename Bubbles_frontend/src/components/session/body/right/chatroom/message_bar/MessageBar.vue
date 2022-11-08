@@ -2,7 +2,7 @@
 import { Picker, EmojiIndex } from "emoji-mart-vue-fast/src";
 import data from "emoji-mart-vue-fast/data/all.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
-import Button from '../../../../utils/Button.vue'
+import Button from '../../../../../utils/Button.vue'
 
 export default {
     props: ['scroll_to_bottom'],

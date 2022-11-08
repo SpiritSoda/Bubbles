@@ -97,6 +97,7 @@ export default {
         },
         on_login(){
             this.$socket.send_message({type: 0}, this.on_init)
+            localStorage.setItem("token", this.token);
         },
         on_init(msg){
             console.log("initializing: " + msg)

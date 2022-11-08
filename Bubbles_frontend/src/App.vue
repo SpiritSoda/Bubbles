@@ -37,6 +37,7 @@ export default {
           transaction signal that need to be done
       */
       signals: {
+        // update login pannel after register success
         register_update: {
           required: false,
           data: null
@@ -49,28 +50,10 @@ export default {
           1: register
           2: chatroom
        */
-      state: 0,
-      local_id: 7,
-      onlines: [
-        { id: 1, icon: 1, username: 'Kazuha' },
-        { id: 2, icon: 2, username: 'Ayaka' },
-        { id: 3, icon: 3, username: 'Kaeya' },
-        { id: 4, icon: 4, username: 'Ganyu' },
-        { id: 5, icon: 5, username: 'Tartarlia' },
-        { id: 6, icon: 6, username: 'Zhongli' },
-        { id: 7, icon: 7, username: 'You Know Who' },
-      ],
-      messages: [
-        { id: 7, content: 'Avada Kedavra' },
-        { id: 6, content: 'Stabilized!' },
-        { id: 4, content: 'XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' },
-        { id: 5, content: '~' },
-        { id: 2, content: 'Hehehehehe...' },
-        { id: 7, content: '(╯‵□′)╯︵┻━┻' }
-      ],
+      state: 2,
       settings: {
         dark_mode: { name: 'Dark Mode', value: false },
-        hide_username: { name: 'Hide usrname', value: false }
+        hide_username: { name: 'Hide timestamp', value: false }
       }
     }
   },
@@ -102,9 +85,6 @@ export default {
   provide() {
     return {
       error_code: computed(() => this.error_code),
-      onlines: computed(() => this.onlines),
-      messages: computed(() => this.messages),
-      local_id: computed(() => this.local_id),
       settings: computed(() => this.settings),
       background_color: computed(() => this.color_style.content_background_color),
       font_color: computed(() => this.color_style.content_font_color),

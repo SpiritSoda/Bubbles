@@ -1,21 +1,13 @@
 <script>
-import Avatar from '../../../../../utils/Avatar.vue';
+import Avatar from '../../../../../../utils/Avatar.vue';
 import Bubble from './Bubble.vue';
 export default {
     components: { Avatar, Bubble },
     props: ['message'],
-    inject: ['onlines', 'local_id'],
-    methods: {
-        isTarget(user) {
-            return user.id === this.message.id
-        },
-    },
+    inject: ['userinfo', 'local_id'],
     computed: {
-        user_id() {
-            return this.onlines.findIndex(this.isTarget)
-        },
         user() {
-            return this.onlines[this.user_id]
+            return this.userinfo[this.message.id]
         },
         is_local(){
             return this.message.id === this.local_id
