@@ -28,7 +28,7 @@ export default {
 <template>
     <div class="avatar-border" :style="this.avatar_border_style">
         <div class="avatar" :style="this.avatar_style"></div>
-        <i class="fas fa-user" v-if="this.avatar <= 0"></i>
+        <i class="fas fa-user" :style="{'font-size': (this.r / 2) + 'px'}" v-if="this.avatar <= 0"></i>
     </div>
 </template>
 
@@ -67,7 +67,6 @@ export default {
     width: 100%;
     height: 100%;
 
-    font-size: 60px;
     color: rgb(111, 113, 115);
     text-align: center;
 

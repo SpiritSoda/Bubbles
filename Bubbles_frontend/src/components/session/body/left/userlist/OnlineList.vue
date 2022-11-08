@@ -2,7 +2,6 @@
 import OnlineUser from "./OnlineUser.vue";
 export default {
     props: ["online_max", "onlines"],
-    inject: ["userinfo"],
     components: { OnlineUser }
 }
 </script>
@@ -11,7 +10,7 @@ export default {
     <div>
         <span class="header">Online: {{onlines.length}}/{{online_max}}</span>
         <ul class="userlist-wrapper">
-            <OnlineUser v-for="id in onlines" :userinfo="this.userinfo[id]" style="margin: 5px"></OnlineUser>
+            <OnlineUser v-for="id in onlines" :id="id" style="margin: 5px"></OnlineUser>
         </ul>
     </div>
 </template>

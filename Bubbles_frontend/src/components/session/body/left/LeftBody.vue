@@ -4,7 +4,7 @@ import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
 import OnlineList from './userlist/OnlineList.vue'
 export default {
-    inject:['onlines', "userinfo", 'local_id', 'background_color', "selected_room", "chatrooms"],
+    inject:['onlines', 'background_color', "selected_room", "chatrooms"],
     components: {
         VerticalSplit,
         HorizontalSplit,
@@ -22,10 +22,10 @@ export default {
         <HorizontalSplit :length="260" :top="5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <HorizontalSplit :length="260" :top="-5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <div class="userbar-wrapper clearfix">
-            <UserBar :local_user="this.userinfo[this.local_id]"></UserBar>
+            <UserBar></UserBar>
         </div>
         <div class="onlinelist-wrapper clearfix">
-            <OnlineList :online_max="this.chatrooms[this.selected_room].max_online" :onlines="this.onlines"></OnlineList>
+            <OnlineList :online_max="this.chatrooms[this.selected_room] == undefined ? 0 : this.chatrooms[this.selected_room].total_user" :onlines="this.onlines"></OnlineList>
         </div>
     </div>
 </template>

@@ -1,16 +1,27 @@
 <script>
 import Avatar from '../../../../utils/Avatar.vue';
 export default{
-    props: ["userinfo"],
-    components: { Avatar }
+    inject: ["userinfo", "onlines"],
+    props: ["id"],
+    components: { Avatar },
+    computed: {
+        user(){
+            let user = this.userinfo[this.id]
+            if(!user){
+                this.$bus.emit('require_userinfo', this.id)
+                return {id: "0", username: "Unknown", avatar: -1}
+            }
+            return user;
+        }
+    }
 }
 </script>
 
 <template>
     <li class="online-wrapper">
         <div class="avatar-wrapper">
-            <Avatar :avatar="this.userinfo.icon" :r="44"></Avatar>
-            <span class="username">{{this.userinfo.username}}</span>
+            <Avatar :avatar="this.user.avatar" :r="44"></Avatar>
+            <span class="username">{{this.user.username}}</span>
         </div>
     </li>
 </template>

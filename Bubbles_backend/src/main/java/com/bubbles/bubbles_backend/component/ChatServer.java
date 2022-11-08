@@ -2,7 +2,6 @@ package com.bubbles.bubbles_backend.component;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.bubbles.bubbles_backend.config.JwtConfig;
-import com.bubbles.bubbles_backend.config.WebSocketConfig;
 import com.bubbles.bubbles_backend.entity.User;
 import com.bubbles.bubbles_backend.exception.NoTokenException;
 import com.bubbles.bubbles_backend.service.UserService;

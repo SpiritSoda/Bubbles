@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.bubbles</groupId>
+    <groupId>com.messages</groupId>
     <artifactId>Bubbles_backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Bubbles_backend</name>
@@ -116,7 +116,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.bubbles.bubbles_backend.BubblesBackendApplication</mainClass>
+                    <mainClass>com.messages.bubbles_backend.BubblesBackendApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

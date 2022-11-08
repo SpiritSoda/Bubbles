@@ -46,7 +46,7 @@ export default {
                 this.$axios.post('/api/register', {
                     username: this.username,
                     password: this.$md5(this.password),
-                    icon: this.avatar
+                    avatar: this.avatar
 
                 }).then(
                     response => {

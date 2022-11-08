@@ -64,7 +64,7 @@ export default {
                                 let code = response.data.code;
                                 if(code == 0){
                                     this.token = response.data.data.token
-                                    this.$socket.create_websocket(this.token, this.on_login)
+                                    this.on_login();
                                 }
                                 else if(code == 3){
                                     this.$bus.emit('error', 1004);
@@ -96,11 +96,8 @@ export default {
             this.switch_to_state_password()
         },
         on_login(){
-            this.$socket.send_message({type: 0}, this.on_init)
-            localStorage.setItem("token", this.token);
-        },
-        on_init(msg){
-            console.log("initializing: " + msg)
+            localStorage.setItem("token", this.token)
+            this.$bus.emit('switch_state', 2)
         }
     },
     computed: {

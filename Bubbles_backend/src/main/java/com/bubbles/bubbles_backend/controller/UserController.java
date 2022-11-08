@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -78,8 +79,21 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/userinfo")
-    public Result getInfo(@RequestParam int id) throws Exception{
+    @PostMapping("/api/user/userinfo")
+    public Result getUserInfoById(@RequestBody @Valid UserDTO userDTO) throws Exception{
+        int id = userDTO.getUserId();
+        User user = userService.getUserById(id);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("id", id);
+        data.put("username", user.getUsername());
+        data.put("avatar", user.getAvatar());
+        return Result.buildSuccessResult("Success to get user info ...", data);
+    }
+    @PostMapping("/api/user/selfinfo")
+    public Result getUserInfoByToken(HttpServletRequest httpServletRequest) throws Exception{
+        String token = httpServletRequest.getHeader("token");
+        int id = JwtUtils.getUserId(token);
+//        log.info(token);
         User user = userService.getUserById(id);
         HashMap<String, Object> data = new HashMap<>();
         data.put("id", id);
@@ -88,7 +102,7 @@ public class UserController {
         return Result.buildSuccessResult("Success to get user info ...", data);
     }
 
-    @GetMapping("/api/userinfos")
+    @GetMapping("/api/user/userinfos")
     public Result getInfos(@RequestParam @Valid List<Integer> ids) throws Exception{
         List<User> users = userService.getUsersByIds(ids);
         HashMap<String, Object> data = new HashMap<>();

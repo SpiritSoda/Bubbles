@@ -50,7 +50,7 @@ export default {
           1: register
           2: chatroom
        */
-      state: 2,
+      state: 0,
       settings: {
         dark_mode: { name: 'Dark Mode', value: false },
         hide_username: { name: 'Hide timestamp', value: false }
@@ -98,9 +98,11 @@ export default {
     this.$bus.on('signal_done', (signal) => { this.signals[signal].required = false })
 
     this.$bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
-    this.$bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
     this.$bus.on('switch_state', (new_state) => { this.state = new_state })
     this.$bus.on('registered', (user_info) => { this.state = 0; this.signals.register_update.required = true; this.signals.register_update.data = user_info })
+    if(localStorage.getItem("token") != null){
+      this.state = 2
+    }
   },
   beforeDestroy() {
     this.$socket.close_websocket()

@@ -6,7 +6,9 @@ export default {
     props: ["chatroom"],
     components: { HorizontalSplit },
     methods: {
-        
+        select_chatroom(){
+            this.$bus.emit('select_chatroom', this.chatroom.id);
+        }
     },
     computed:{
         chatroom_background(){
@@ -22,13 +24,13 @@ export default {
 <template>
     <div class="chatroom-wrapper clearfix">
         <div class="chatroom-icon" :style="this.chatroom_background">
-            <a href="javascript:;" class="chatroom-icon-inner"></a>
+            <a href="javascript:;" class="chatroom-icon-inner" @click="select_chatroom"></a>
         </div>
         <div class="chatroom-info">
-            <a href="javascript:;" class="chatroom-title">{{this.chatroom.title}}</a>
+            <a href="javascript:;" class="chatroom-title" @click="select_chatroom">{{this.chatroom.title}}</a>
             <div class="underline"></div>
             <div class="chatroom-comment">{{this.chatroom.comment}}</div>
-            <div class="chatroom-online">{{"Onlines: " + chatroom.onlines + "/" + chatroom.max_online}}</div>
+            <div class="chatroom-online">{{"Onlines: " + chatroom.onlines + "/" + chatroom.total_user}}</div>
         </div>
     </div>
 </template>

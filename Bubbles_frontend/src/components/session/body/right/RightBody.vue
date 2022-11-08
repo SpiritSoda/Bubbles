@@ -19,6 +19,14 @@ export default {
             */
             state: 0,
         }
+    },
+    methods: {
+        select_chatroom(id){
+            this.state = 1
+        }
+    },
+    mounted(){
+        this.$bus.on('select_chatroom', id => {this.select_chatroom(id)})
     }
 }
 </script>

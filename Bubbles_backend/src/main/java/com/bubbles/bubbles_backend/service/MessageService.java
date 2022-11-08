@@ -34,13 +34,14 @@ public class MessageService {
         this.messageRepository.save(message);
     }
 
-    public List<Message> getFromIdWithFixedCount(int startId, int cnt){
+    public List<Message> getFromIdWithFixedCountOfChatroom(int startId, int cnt, int chatroomId){
         Sort sort = Sort.by(Sort.Direction.ASC, "timestamp");
         Specification<Message> specification = new Specification<Message>() {
             @Override
             public Predicate toPredicate(Root<Message> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.lessThan(root.get("messageId"), startId));
+                predicates.add(criteriaBuilder.equal(root.get("chatroomId"), chatroomId));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };

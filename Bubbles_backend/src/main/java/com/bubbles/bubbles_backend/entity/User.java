@@ -1,8 +1,11 @@
 package com.bubbles.bubbles_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString
@@ -19,4 +22,12 @@ public class User {
     private String password;
 
     private String username;
+
+    @ToString.Exclude
+    @ManyToMany(cascade=CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinTable(name = "user_chatroom",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "chatroom_id")})
+    List<Chatroom> chatrooms = new ArrayList<>();
 }

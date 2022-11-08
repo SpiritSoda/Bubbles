@@ -6,7 +6,7 @@ import lombok.Data;
 public class MessageDTO {
     private int messageId;
 
-    private int session;
+    private int chatroomId;
     private int type;
     private String content;
     private int senderId;

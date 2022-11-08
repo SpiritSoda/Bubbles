@@ -1,6 +1,5 @@
 package com.bubbles.bubbles_backend.interceptor;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.exception.NoTokenException;
 import com.bubbles.bubbles_backend.utils.JwtUtils;
@@ -11,8 +10,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Map;
 
 @Slf4j
@@ -23,7 +20,7 @@ public class ChatInterceptor implements HandshakeInterceptor {
         this.jwtConfig = jwtConfig;
     }
     @Override
-    public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) {
 //        String token = serverHttpRequest.getHeaders().get("token").get(0);
         String[] params = serverHttpRequest.getURI().getQuery().split("&");
         if(params.length == 0)
@@ -35,7 +32,7 @@ public class ChatInterceptor implements HandshakeInterceptor {
             if (token == null){
                 throw new NoTokenException("Token not found ...");
             }
-            Map<String, Claim> verify = JwtUtils.verify(token, jwtConfig);
+            JwtUtils.verify(token, jwtConfig);
         }
         catch (Exception e){
             return false;

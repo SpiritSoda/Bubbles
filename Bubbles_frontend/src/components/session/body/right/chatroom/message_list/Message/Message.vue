@@ -37,7 +37,7 @@ export default {
 
         <div class="clearfix" v-else style="position: relative">
             <div class="avatar-wrapper left">
-                <Avatar :avatar="this.user.icon" :r="56"></Avatar>
+                <Avatar :avatar="this.user.avatar" :r="56"></Avatar>
             </div>
             <div class="left clearfix" style="left: 13px">
                 <div class="username left">

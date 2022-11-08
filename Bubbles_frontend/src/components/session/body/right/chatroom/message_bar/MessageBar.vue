@@ -52,7 +52,7 @@ export default {
                 <div class="emoji-selector-wrapper">
                     <div class="emoji-selector" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
                         <Picker :data="emoji_index" :show-categories="true" :picker-styles="emoji_picker_style"
-                            :show-preview="false" @select="append_emoji" :color="'rgb(124, 179, 255)'"></Picker>
+                            :show-preview="false" :show-search="false" @select="append_emoji" :color="'rgb(124, 179, 255)'"></Picker>
                     </div>
                 </div>
                 <a href="javascript:;">

@@ -5,7 +5,7 @@ import DisplayBar from '../../../../utils/DisplayBar.vue'
 import VerticalSplit from '../../../../utils/VerticalSplit.vue'
 import HorizontalSplit from '../../../../utils/HorizontalSplit.vue'
 export default {
-    props:['local_user'],
+    inject:["userinfo", 'local_id'],
     components: {
         Avatar,
         Edit,
@@ -13,12 +13,22 @@ export default {
         VerticalSplit,
         HorizontalSplit
     },
+    computed: {
+        local_user(){
+            let user = this.userinfo[this.local_id]
+            if(!user){
+                this.$bus.emit('require_userinfo', this.local_id)
+                return {id: "0", username: "Unknown", avatar: -1}
+            }
+            return user;
+        }
+    }
 }
 </script>
 <template>
     <div class="user-bar clearfix">
         <div class="avatar-wrapper">
-            <Avatar :avatar="this.local_user.icon" :r="120" :shadow="true"></Avatar>
+            <Avatar :avatar="this.local_user.avatar" :r="120" :shadow="true"></Avatar>
         </div>
         <div class="edit-wrapper clearfix">
             <Edit></Edit>
