@@ -1,19 +1,25 @@
 <script>
 export default{
-    inject: ['background_color', 'shadow_color']
+    inject: ['background_color', 'shadow_color'],
+    methods: {
+        exit(){
+            localStorage.removeItem("token");
+            this.$bus.emit("switch_state", 0);
+        }
+    }
 }
 </script>
 
 <template>
-    <div class="edit" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
-        <a href="javascript:;">
-            <i class="fas fa-edit"></i>
+    <div class="exit" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
+        <a href="javascript:;" @click="exit">
+            <i class="fas fa-door-open"></i>
         </a>
     </div>
 </template>
 
 <style scoped>
-.edit {
+.exit {
     background-color: #fff;
     width: 40px;
     height: 40px;

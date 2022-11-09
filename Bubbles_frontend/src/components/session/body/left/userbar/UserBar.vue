@@ -1,6 +1,6 @@
 <script>
 import Avatar from '../../../../utils/Avatar.vue';
-import Edit from './Edit.vue';
+import Exit from './Exit.vue';
 import DisplayBar from '../../../../utils/DisplayBar.vue'
 import VerticalSplit from '../../../../utils/VerticalSplit.vue'
 import HorizontalSplit from '../../../../utils/HorizontalSplit.vue'
@@ -8,7 +8,7 @@ export default {
     inject:["userinfo", 'local_id'],
     components: {
         Avatar,
-        Edit,
+        Exit,
         DisplayBar,
         VerticalSplit,
         HorizontalSplit
@@ -31,7 +31,7 @@ export default {
             <Avatar :avatar="this.local_user.avatar" :r="120" :shadow="true"></Avatar>
         </div>
         <div class="edit-wrapper clearfix">
-            <Edit></Edit>
+            <Exit></Exit>
         </div>
         <div class="username">
             <DisplayBar :width="160" :height="30" :text="this.local_user.username"></DisplayBar>

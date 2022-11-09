@@ -25,8 +25,8 @@ export default {
             ],
             selected_room: 0,
             chatrooms: {
-                "1": { id: 1, icon: 1, title: "Default Chatroom", total_user: 500, comment: "Default Bubbles chatroom ...", onlines: 7},
-                "2": { id: 2, icon: 2, title: "Extra Chatroom", total_user: 500, comment: "Extra Bubbles chatroom ...", onlines: 3}
+                "1": { id: 1, icon: 1, title: "Default Chatroom", total_user: 233, comment: "Default Bubbles chatroom ...", onlines: 7},
+                "2": { id: 2, icon: 2, title: "Extra Chatroom", total_user: 233, comment: "Extra Bubbles chatroom ...", onlines: 3}
             }
         }
     },
@@ -52,8 +52,7 @@ export default {
                     'id': id
                 },
                 headers: {
-                    'token': token,
-                    "Access-Control-Allow-Origin": "*"
+                    'token': token
                 }
             }).then(
                 response => {
@@ -87,6 +86,7 @@ export default {
                 }).then(
                 response => {
                     if(response.data.code != 0){
+                        localStorage.removeItem("token")
                         this.$bus.emit('switch_state', 0)
                     }
                     else{
@@ -101,6 +101,9 @@ export default {
                     this.$bus.emit('error', 1000);
                 }
             )
+        }
+        else{
+            this.$bus.emit('switch_state', 0)
         }
         this.onlines = [1, 2, 3, 4, 5, 6]
     }

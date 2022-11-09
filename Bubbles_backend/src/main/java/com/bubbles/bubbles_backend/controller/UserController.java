@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
+@CrossOrigin
 public class UserController {
     private final JwtConfig jwtConfig;
     private final UserService userService;
@@ -29,7 +30,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping("/api/login")
+    @PostMapping("/api/login")
     public Result login(@RequestBody @Valid UserDTO userDTO) throws Exception{
         User user = new User();
         user.setUsername(userDTO.getUsername());
@@ -45,7 +46,7 @@ public class UserController {
         log.info("User " + user.toString() + " logged in");
         return Result.buildSuccessResult("Login Success", data);
     }
-    @RequestMapping("/api/exist")
+    @PostMapping("/api/exist")
     public Result exist(@RequestBody @Valid UserDTO userDTO) throws Exception{
         User user = new User();
         user.setUsername(userDTO.getUsername());
