@@ -23,7 +23,7 @@ public class STOMPConfig implements WebSocketMessageBrokerConfigurer {
         //注册一个名字为"/endpointSocket" 的endpoint,并指定 SockJS协议。
         //允许使用socketJs方式访问，访问点为webSocketServer，允许跨域
         //连接前缀
-        registry.addEndpoint("/ems_course_session")
+        registry.addEndpoint("/bubbles_manager")
                 .setAllowedOrigins("*")  // 跨域处理
                 .addInterceptors(createChatInterceptor())
                 .withSockJS();  //支持socketJs

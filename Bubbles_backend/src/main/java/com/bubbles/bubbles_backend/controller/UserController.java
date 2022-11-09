@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@CrossOrigin
 public class UserController {
     private final JwtConfig jwtConfig;
     private final UserService userService;
@@ -79,9 +78,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/user/userinfo")
-    public Result getUserInfoById(@RequestBody @Valid UserDTO userDTO) throws Exception{
-        int id = userDTO.getUserId();
+    @GetMapping("/api/user/userinfo")
+    public Result getUserInfoById(@RequestParam @Valid int id) throws Exception{
         User user = userService.getUserById(id);
         HashMap<String, Object> data = new HashMap<>();
         data.put("id", id);
@@ -89,7 +87,7 @@ public class UserController {
         data.put("avatar", user.getAvatar());
         return Result.buildSuccessResult("Success to get user info ...", data);
     }
-    @PostMapping("/api/user/selfinfo")
+    @GetMapping("/api/user/selfinfo")
     public Result getUserInfoByToken(HttpServletRequest httpServletRequest) throws Exception{
         String token = httpServletRequest.getHeader("token");
         int id = JwtUtils.getUserId(token);

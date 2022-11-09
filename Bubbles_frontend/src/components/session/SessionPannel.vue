@@ -46,10 +46,14 @@ export default {
         },
         fetch_userinfo(id){
             let token = localStorage.getItem("token");
-            this.$axios.post('/api/user/userinfo', {userId: id},
+            this.$axios.get('/api/user/userinfo',
             {
+                params: {
+                    'id': id
+                },
                 headers: {
-                    'token': token
+                    'token': token,
+                    "Access-Control-Allow-Origin": "*"
                 }
             }).then(
                 response => {
@@ -76,7 +80,7 @@ export default {
         this.$bus.on('require_userinfo', (id) => { this.fetch_userinfo(id) })
         let token = localStorage.getItem("token");
         if(token != null){
-            this.$axios.post('/api/user/selfinfo', {}, { 
+            this.$axios.get('/api/user/selfinfo', { 
                     headers: { 
                         'token': token  
                     }           
