@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import store from './store'
 
 import './assets/reset.css'
 import './assets/main.css'
@@ -23,6 +24,7 @@ function debounce(func, wait = 300, immediate = true){
 }
 
 var app = createApp(App)
+app.use(store);
 app.config.unwrapInjectedRef = true
 app.config.globalProperties.$axios = $axios
 app.config.globalProperties.$bus = $bus

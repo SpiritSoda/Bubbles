@@ -1,7 +1,6 @@
 <script>
 import AvatarRegister from './avatar/AvatarRegister.vue';
 export default {
-    inject: ['error_code'],
     components: { AvatarRegister },
     data() {
         return {
@@ -28,19 +27,19 @@ export default {
             if(this.state != 0)
                 return;
             if(this.username === '')
-                this.$bus.emit('error', 2001);
+                this.$store.commit('error/set_error_code', 2001);
             else if(this.username.length > 10)
-                this.$bus.emit('error', 2008);
+                this.$store.commit('error/set_error_code', 2008);
             else if(this.avatar === -1)
-                this.$bus.emit('error', 2002);
+                this.$store.commit('error/set_error_code', 2002);
             else  if(this.password === '')
-                this.$bus.emit('error', 2003); 
+                this.$store.commit('error/set_error_code', 2003); 
             else  if(this.password.length < 6)
-                this.$bus.emit('error', 2006); 
+                this.$store.commit('error/set_error_code', 2006); 
             else if(this.confirm_password === '')
-                this.$bus.emit('error', 2005);
+                this.$store.commit('error/set_error_code', 2005);
             else if(this.password != this.confirm_password)
-                this.$bus.emit('error', 2004);
+                this.$store.commit('error/set_error_code', 2004);
             else{
                 this.waiting = true;
                 this.$axios.post('/api/register', {
@@ -53,22 +52,27 @@ export default {
                         this.waiting = false;
                         let code = response.data.code;
                         if(code == 3)
-                            this.$bus.emit('error', 2007);
+                            this.$store.commit('error/set_error_code', 2007);
                         else if(code == 0){
-                            this.$bus.emit('registered', {
-                                username: this.username,
-                                avatar: this.avatar
-                            });
+                            this.$store.commit('tx/create_tx', 
+                                {
+                                    name: 'register_update',
+                                    data: {
+                                        username: this.username,
+                                        avatar: this.avatar
+                                    }
+                                }
+                            );
+                            this.back_to_login()
                         }
                         else{
-                            console.log(response)
-                            this.$bus.emit('error', 1000)
+                            this.$store.commit('error/set_error_code', 1000)
                         }
                     }
                 ).catch(
                     e => {
                         this.waiting = false;
-                        this.$bus.emit('error', 1000);
+                        this.$store.commit('error/set_error_code', 1000);
                     }
                 )
             }
@@ -81,6 +85,9 @@ export default {
         }
     },
     computed:{
+        error_code(){
+            return this.$store.state.error.error_code
+        },
         error_msg(){
             if(this.error_code == 1000)
                 this.msg = 'Can not connect to server ...'

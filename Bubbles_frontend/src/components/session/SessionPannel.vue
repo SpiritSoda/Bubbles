@@ -40,43 +40,10 @@ export default {
             chatrooms: computed(() => this.chatrooms),
         }
     },
-    methods: {
-        select_chatroom(id){
-            this.selected_room = id;
-        },
-        fetch_userinfo(id){
-            let token = localStorage.getItem("token");
-            this.$axios.get('/api/user/userinfo',
-            {
-                params: {
-                    'id': id
-                },
-                headers: {
-                    'token': token
-                }
-            }).then(
-                response => {
-                    if(response.data.code != 0){
-                        this.userinfo[id] = {id: id, avatar: -1, username: "Unknown"}
-                    }
-                    else{
-                        this.local_id = response.data.data.id;
-                        if(this.userinfo[this.local_id] == undefined){
-                            this.userinfo[this.local_id] = response.data.data
-                        }
-                    }
-                }
-            ).catch(
-                e => {
-                    this.$bus.emit('error', 1000);
-                }
-            )
-        }
-    },
     mounted(){
-        this.$bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
-        this.$bus.on('select_chatroom', (id) => { this.select_chatroom(id)} )
-        this.$bus.on('require_userinfo', (id) => { this.fetch_userinfo(id) })
+        // this.$bus.on('send', (content) => { if (content === '') return; else this.messages.push({ id: this.local_id, content: content }) })
+        // this.$bus.on('select_chatroom', (id) => { this.select_chatroom(id)} )
+        // this.$bus.on('require_userinfo', (id) => { this.fetch_userinfo(id) })
         let token = localStorage.getItem("token");
         if(token != null){
             this.$axios.get('/api/user/selfinfo', { 
@@ -90,10 +57,8 @@ export default {
                         this.$bus.emit('switch_state', 0)
                     }
                     else{
-                        this.local_id = response.data.data.id;
-                        if(this.userinfo[this.local_id] == undefined){
-                            this.userinfo[this.local_id] = response.data.data
-                        }
+                        this.$store.state.localuser.local_id = response.data.data.id;
+                        this.$store.state.userinfo.userinfo[this.local_id] = response.data.data
                     }
                 }
             ).catch(
@@ -105,7 +70,6 @@ export default {
         else{
             this.$bus.emit('switch_state', 0)
         }
-        this.onlines = [1, 2, 3, 4, 5, 6]
     }
 }
 </script>
@@ -121,8 +85,12 @@ export default {
 .session-wrapper {
     width: 1010px;
     height: 545px;
-    position: relative;
-    margin: 80px auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    margin: auto;
+    /* margin: 80px auto; */
     /* border-radius: 6px; */
     /* background-color: #f1f1f1; */
 

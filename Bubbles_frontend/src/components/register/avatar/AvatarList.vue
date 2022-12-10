@@ -49,10 +49,13 @@ export default {
 <template>
     <div class="avatar-list-wrapper"
         :style="{'height': display_height, 'border-width': display_border, 'padding': display_padding + ' 0px'}">
-        <div class="avatar-icon" v-for="id in avatar_count"
-            :style="{'background-image':'url(\'/avatars/' + id + '.webp\')'}" @click="set_avatar(id)">
+        <div class="avatar-list-roller">
+            <div class="avatar-icon" v-for="id in avatar_count"
+                :style="{'background-image':'url(\'/avatars/genshin/' + id + '.jpg\')'}" @click="set_avatar(id)">
+            </div>
 
         </div>
+
         <div class="unshow" @click="reverse_show()">
             <i class="fas fa-chevron-up"></i>
         </div>
@@ -80,7 +83,11 @@ export default {
     transition: all .3s;
     z-index: 1000;
 }
-
+.avatar-list-roller{
+    width: 103%;
+    height: 100%;
+    overflow: auto;
+}
 .unshow {
     width: 40px;
     height: 20px;

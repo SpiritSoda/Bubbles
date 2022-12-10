@@ -2,14 +2,14 @@
 import { Picker, EmojiIndex } from "emoji-mart-vue-fast/src";
 import data from "emoji-mart-vue-fast/data/all.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
-import Button from '../../../../../utils/Button.vue'
+import CheckBox from '../../../../../utils/CheckBox.vue'
 
 export default {
     props: ['scroll_to_bottom'],
     inject: ['background_color', 'settings', 'shadow_color'],
     components: {
         Picker,
-        Button
+        CheckBox
     },
     data() {
         return {
@@ -80,8 +80,8 @@ export default {
                         <div class="option" v-for="key in Object.keys(settings)">
                             <span>{{settings[key].name}}</span>
                             <div class="button-wrapper">
-                                <Button :call_back="() => {switch_setting(key)}"
-                                    :default="settings[key].value"></Button>
+                                <CheckBox :call_back="() => {switch_setting(key)}"
+                                    :default="settings[key].value"></CheckBox>
                             </div>
                         </div>
                     </div>

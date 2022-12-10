@@ -20,13 +20,13 @@ public class Chatroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chatroom_id")
-    int chatroomId;
-
-    String title;
-    String comment;
+    private int chatroomId;
+    private int admin;
+    private String title;
+    private String comment;
 
     @ToString.Exclude
     @ManyToMany(cascade=CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "chatrooms")
     @JsonIgnore
-    List<User> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 }

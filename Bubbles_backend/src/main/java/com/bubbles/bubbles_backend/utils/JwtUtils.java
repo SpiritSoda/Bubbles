@@ -29,6 +29,23 @@ public class JwtUtils {
         }
         return token;
     }
+    public static String createChatroomPassport(int maxUser, JwtConfig jwtConfig){
+        String token = null;
+        try {
+            Date expire = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
+            token = JWT.create()
+                    .withClaim("max_user", maxUser)
+                    .withClaim("timestamp", System.currentTimeMillis() / 1000l)
+                    .withClaim("salt", Math.random())
+                    // .withClaim("user_tags", user.getInterestTags())
+                    // 这里注释掉，是否传List会拖慢速度？
+                    .withExpiresAt(expire)
+                    .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
+        } catch (Exception e){
+            //e.printStackTrace();
+        }
+        return token;
+    }
 
     public static Map<String, Claim> verify(String token, JwtConfig jwtConfig){
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret())).build();

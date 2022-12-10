@@ -32,6 +32,30 @@ export default {
                 'border-radius': '50%',
                 'transition': 'all .2s',
                 'font-size': 0.36 * this.r + 'px',
+                'background-color': this.state ? 'rgb(228, 45, 45)' : 'white',
+                'color': this.state ? 'white' : '#7e8c8d'
+            }
+        },
+        icon(){
+            return !this.state ? this.fa_icon : 'fa-check'
+        }
+    },
+    data(){
+        return {
+            state: false,
+            timer: 0
+        }
+    },
+    methods: {
+        on_click(){
+            if(!this.state){
+                this.state = true;
+                timer = setTimeout(() => {this.state = false}, 2000)
+            }
+            else{
+                clearTimeout(timer)
+                this.state = false;
+                this.click()
             }
         }
     }
@@ -40,8 +64,8 @@ export default {
 
 <template>
     <div class="btn" :style="this.btn_size">
-        <a href="javascript:;" :style="this.btn_size" @click="click()" :title="title">
-            <i :class="'fas ' + fa_icon"></i>
+        <a href="javascript:;" :style="this.btn_size" @click="on_click()" :title="title">
+            <i :class="'fas ' + icon"></i>
         </a>
     </div>
 </template>
@@ -53,7 +77,7 @@ export default {
     background-color: #fff;
 }
 .btn a:hover {
-    color: rgb(124, 179, 255) !important;
+    color: rgb(124, 179, 255);
     box-shadow: 0 0 7px rgb(124, 179, 255) !important;
 }
 

@@ -3,8 +3,9 @@ import VerticalSplit from '../../../../utils/VerticalSplit.vue';
 import HorizontalSplit from '../../../../utils/HorizontalSplit.vue';
 import MessageBar from './message_bar/MessageBar.vue';
 import MessageList from './message_list/MessageList.vue'
+import ChatMenu from './chatmenu/ChatMenu.vue';
 export default {
-    inject:['error_code','background_color', 'shadow_color', 'font_color'],
+    inject:['background_color', 'shadow_color', 'font_color'],
     data(){
         return {
             msg: 'Fail to connect server...'
@@ -14,7 +15,8 @@ export default {
         VerticalSplit,
         HorizontalSplit,
         MessageBar,
-        MessageList
+        MessageList,
+        ChatMenu
     },
     methods:{
         refresh_message(){
@@ -22,7 +24,7 @@ export default {
             this.$refs.to_top_icon.className="fas fa-undo rotate"
             setTimeout(() => {
                 this.$refs.to_top_icon.className="fas fa-arrow-up"
-                this.$bus.emit('error', 3001)
+                this.$store.commit('error/set_error_code', 3001)
             }, 2000);
         },
         scroll_to_top(){
@@ -37,12 +39,12 @@ export default {
     },
     computed:{
         error_msg() {
-            if (this.error_code == 3)
+            if (this.$store.state.error.error_code == 3)
                 this.msg = 'Fail to connect server...'
             return this.msg
         },
-        show_error(){
-            return this.error_code == 3001 ? 1 : 0
+        refresh_error(){
+            return this.$store.state.error.error_code == 3001 ? 1 : 0
         }
     }
 }
@@ -59,10 +61,14 @@ export default {
 
         
         <div class="to-top">
-            <div class="error_msg" :class="{'appear-up': show_error}" :style="{'opacity': show_error}">{{error_msg}}</div>
+            <div class="error_msg" :class="{'appear-up': refresh_error}" :style="{'opacity': refresh_error}">{{error_msg}}</div>
             <a href="javascript:;" @click="scroll_to_top" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
                 <i class="fas fa-arrow-up" ref="to_top_icon"></i>
             </a>
+        </div>
+        
+        <div class="menu-wrapper clearfix">
+            <ChatMenu></ChatMenu>
         </div>
 
         <div class="chat-wrapper">
@@ -153,5 +159,10 @@ export default {
     top: -25px;
 
     transition: all .3s;
+}
+.menu{
+    position: absolute;
+    top: 18px;
+    right: 30px;
 }
 </style>

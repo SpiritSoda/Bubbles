@@ -11,7 +11,8 @@
     "emoji-mart-vue-fast": "^11.2.0",
     "js-md5": "^0.7.3",
     "mitt": "^3.0.0",
-    "vue": "^3.2.38"
+    "vue": "^3.2.38",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",

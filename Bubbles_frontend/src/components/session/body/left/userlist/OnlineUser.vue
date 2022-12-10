@@ -1,14 +1,13 @@
 <script>
 import Avatar from '../../../../utils/Avatar.vue';
 export default{
-    inject: ["userinfo", "onlines"],
-    props: ["id"],
+    props: ['id'],
     components: { Avatar },
     computed: {
         user(){
-            let user = this.userinfo[this.id]
+            let user = this.$store.state.userinfo.userinfo[this.id]
             if(!user){
-                this.$bus.emit('require_userinfo', this.id)
+                this.$store.dispatch('userinfo/fetch_userinfo', this.id)
                 return {id: "0", username: "Unknown", avatar: -1}
             }
             return user;

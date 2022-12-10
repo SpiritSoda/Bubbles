@@ -3,7 +3,6 @@ import AvatarList from "./AvatarList.vue"
 import Avatar from '../../utils/Avatar.vue'
 export default {
     props: ['avatar'],
-    inject: ['error_code'],
     components: {
         AvatarList,
         Avatar
@@ -12,10 +11,13 @@ export default {
         return {
             avatar_hover: false,
             show_list: false,
-            avatar_count: 6
+            avatar_count: 12
         }
     },
     computed: {
+        error_code(){
+            return this.$store.state.error.error_code
+        },
         avatar_show() {
             let style = this.show_list || this.avatar_hover ? { 'width': '130px', 'height': '130px', 'border': '5px solid rgb(124, 179, 255)', 'background-color': 'rgba(255, 255, 255, 1)' } : {};
             if(this.show_list){

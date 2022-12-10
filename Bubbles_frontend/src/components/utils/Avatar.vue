@@ -16,8 +16,9 @@ export default {
             return {
                 'width': (this.r - 5) + 'px', 
                 'height': (this.r - 5) + 'px', 
-                'background-image':'url(\'/avatars/' + this.avatar + '.webp\')',
-                'background-size': 'cover',
+                // 'background-image':'url(\'/avatars/' + this.avatar + '.webp\')',
+                'background-image':'url(\'/avatars/genshin/' + this.avatar + '.jpg\')',
+                'background-size': (this.r - 5) + 'px',
                 'opacity': this.avatar > 0 ? 1.0 : 0.0
             }
         }
@@ -48,6 +49,7 @@ export default {
 .avatar {
     background-color: rgba(255, 255, 255, 1);
     background-position: center;
+    background-clip: padding-box;
 
     border-radius: 50%;
     position: absolute;
@@ -61,7 +63,6 @@ export default {
 
     overflow: hidden;
     transition: all .3s;
-
 }
 .avatar-border .fa-user {
     width: 100%;

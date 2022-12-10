@@ -1,6 +1,5 @@
 <script>
 export default {
-    inject: ['error_code', 'signals'],
     props: ['avatar'],
     data() {
         return {
@@ -21,7 +20,7 @@ export default {
         submit() {
             if (this.state == 0) {
                 if (this.data === '') {
-                    this.$bus.emit('error', 1001);
+                    this.$store.commit('error/set_error_code', 1001);
                 }
                 else {
                     this.waiting = true;
@@ -31,7 +30,7 @@ export default {
                         response => {
                             this.waiting = false;
                             if (!response.data.data.result) {
-                                this.$bus.emit('error', 1002);
+                                this.$store.commit('error/set_error_code', 1002);
                             }
                             else {
                                 this.$emit('set_avatar', response.data.data.avatar)
@@ -41,7 +40,7 @@ export default {
                     ).catch(
                         e => {
                             this.waiting = false;
-                            this.$bus.emit('error', 1000);
+                            this.$store.commit('error/set_error_code', 1000);
                         }
                     )
                 }
@@ -49,7 +48,7 @@ export default {
             else
                 if (this.state == 1) {
                     if (this.data === '') {
-                        this.$bus.emit('error', 1003);
+                        this.$store.commit('error/set_error_code', 1003);
                     }
                     else {
                         // console.log(this.$md5(this.data))
@@ -67,13 +66,13 @@ export default {
                                     this.on_login();
                                 }
                                 else if(code == 3){
-                                    this.$bus.emit('error', 1004);
+                                    this.$store.commit('error/set_error_code', 1004);
                                 }
                             }
                         ).catch(
                             e => {
                                 this.waiting = false;
-                                this.$bus.emit('error', 1000);
+                                this.$store.commit('error/set_error_code', 1000);
                             }
                         )
                     }
@@ -83,16 +82,25 @@ export default {
             this.username = this.data;
             this.password = '';
             this.state = 1;
+            document.getElementById('data').className = 'data fold-back'
+            setTimeout(() => {
+                document.getElementById('data').className = 'data'
+            }, 500)
             this.data = '';
         },
         switch_to_state_username() {
             this.data = this.username;
             this.password = '';
             this.state = 0;
+            document.getElementById('data').className = 'data fold-back'
+            setTimeout(() => {
+                document.getElementById('data').className = 'data'
+            }, 500)
         },
         register_update(user_info){
             this.$emit('set_avatar', user_info.avatar);
             this.data = user_info.username 
+            console.log(user_info.username, user_info.avatar)
             this.switch_to_state_password()
         },
         on_login(){
@@ -101,6 +109,9 @@ export default {
         }
     },
     computed: {
+        error_code(){
+            return this.$store.state.error.error_code
+        },
         error_msg() {
             if (this.error_code == 1000)
                 this.msg = 'Can not connect to server ...'
@@ -129,9 +140,9 @@ export default {
         },
     },
     mounted(){
-        if(this.signals.register_update.required){
-            this.register_update(this.signals.register_update.data);
-            this.$bus.emit('signal_done', 'register_update');
+        if(this.$store.state.tx.txs.register_update.required){
+            this.register_update(this.$store.state.tx.txs.register_update.data);
+            this.$store.commit('tx/finish_tx', 'register_update')
         }
     }
 }
@@ -155,8 +166,8 @@ export default {
                     <i class="fas fa-angle-double-left"></i>
                 </a>
             </button>
-            <input :type="this.state == 0 ? 'text': 'password'" class="data" v-model="data"
-                :class="{'shake': error_code >= 1001 && error_code <= 1004, 'fold-back': this.state == 1}"
+            <input id="data" :type="this.state == 0 ? 'text': 'password'" class="data" v-model="data"
+                :class="{'shake': error_code >= 1001 && error_code <= 1004}"
                 :placeholder="placeholder">
         </form>
         <span class="error_msg" :style="{'opacity': error_code > 0 ? 1 : 0}">{{error_msg}}</span>

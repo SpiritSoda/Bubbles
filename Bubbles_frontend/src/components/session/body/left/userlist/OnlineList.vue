@@ -1,16 +1,15 @@
 <script>
 import OnlineUser from "./OnlineUser.vue";
 export default {
-    props: ["online_max", "onlines"],
     components: { OnlineUser }
 }
 </script>
 
 <template>
     <div>
-        <span class="header">Online: {{onlines.length}}/{{online_max}}</span>
+        <span class="header">Online: {{this.$store.state.chatroom.onlines.length}}/{{this.$store.state.chatroom.total_user}}</span>
         <ul class="userlist-wrapper">
-            <OnlineUser v-for="id in onlines" :id="id" style="margin: 5px"></OnlineUser>
+            <OnlineUser v-for="id in this.$store.state.chatroom.onlines" :id="id" style="margin: 5px"></OnlineUser>
         </ul>
     </div>
 </template>

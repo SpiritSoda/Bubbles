@@ -11,22 +11,10 @@ export default {
         ChatroomSelect
     },
     inject: ["background_color"],
-    data() {
-        return {
-            /*
-                0: select chatroom
-                1: chatroom body
-            */
-            state: 0,
+    computed: {
+        state(){
+            return this.$store.state.chatroom.selected_room == 0 ? 0 : 1
         }
-    },
-    methods: {
-        select_chatroom(id){
-            this.state = 1
-        }
-    },
-    mounted(){
-        this.$bus.on('select_chatroom', id => {this.select_chatroom(id)})
     }
 }
 </script>

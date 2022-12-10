@@ -1,9 +1,6 @@
 <script>
 import Message from './Message/Message.vue';
 export default {
-    inject: [
-        "messages",
-    ],
     components: { Message },
     methods:{
         at_top(){
@@ -24,7 +21,7 @@ export default {
 
 <template>
     <div class="messages-wrapper" ref="chat_body">
-        <div class="message clearfix" v-for="message in this.messages">
+        <div class="message clearfix" v-for="message in this.$store.state.chatroom.messages">
             <Message :message="message"></Message>
         </div>
     </div>

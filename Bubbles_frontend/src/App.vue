@@ -2,48 +2,20 @@
 import LoginView from './components/login/LoginView.vue';
 import SessionView from './components/session/SessionView.vue';
 import { computed } from 'vue';
-import Button from './components/utils/Button.vue';
+import CheckBox from './components/utils/CheckBox.vue';
 import RegisterView from './components/register/RegisterView.vue';
+import Popup from './components/utils/Popup.vue';
 
 export default {
   components: {
     LoginView,
     SessionView,
-    Button,
-    RegisterView
+    CheckBox,
+    RegisterView,
+    Popup
   },
   data() {
     return {
-      /* 
-        error code: 
-          error_code > 0: error_occurs
-          1000: login::timeout
-          1001: login::empty username
-          1002: login::user not exist
-          1003: login::empty password
-          1004: login::password not match
-          2001: register::empty username
-          2002: register::unselected icon
-          2003: register::empty password
-          2004: register::confirmed password not match
-          2005: register::empty confirmed password
-          2006: register::password too short
-          2007: register::user exists
-          2008: register::username too long
-          3001: chatroom::refresh messages fail
-      */
-      error_code: 0,
-      /*
-          transaction signal that need to be done
-      */
-      signals: {
-        // update login pannel after register success
-        register_update: {
-          required: false,
-          data: null
-        }
-      },
-      timer_id: 0,
       /*
         instance state: 
           0: login in
@@ -58,11 +30,7 @@ export default {
     }
   },
   methods: {
-    set_error_code(error) {
-      this.error_code = error
-      clearTimeout(this.timer_id)
-      this.timer_id = setTimeout(() => { this.error_code = 0 }, 1500)
-    }
+
   },
   computed: {
     color_style() {
@@ -84,22 +52,17 @@ export default {
   },
   provide() {
     return {
-      error_code: computed(() => this.error_code),
       settings: computed(() => this.settings),
       background_color: computed(() => this.color_style.content_background_color),
       font_color: computed(() => this.color_style.content_font_color),
       shadow_color: computed(() => this.color_style.content_shadow_color),
-      signals: computed(() => this.signals)
     }
   },
   mounted() {
     // console.log(encodeURI([1,2]))
-    this.$bus.on('error', (error_code) => { this.set_error_code(error_code) })
-    this.$bus.on('signal_done', (signal) => { this.signals[signal].required = false })
-
     this.$bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
     this.$bus.on('switch_state', (new_state) => { this.state = new_state })
-    this.$bus.on('registered', (user_info) => { this.state = 0; this.signals.register_update.required = true; this.signals.register_update.data = user_info })
+    this.$bus.on('popup', (pop) => { this.$refs.popup.show() })
     if(localStorage.getItem("token") != null){
       this.state = 2
     }
@@ -111,9 +74,18 @@ export default {
 </script>
   
 <template>
-  <div :style="{'color': color_style.content_font_color}">
+  <div class="bubbles" :style="{'color': color_style.content_font_color, 'position': 'relative'}">
     <LoginView v-if="this.state === 0"></LoginView>
-    <RegisterView v-if="this.state === 1"></RegisterView>
+    <RegisterView v-else-if="this.state === 1"></RegisterView>
     <SessionView v-else-if="this.state === 2"></SessionView>
+
+    <Popup ref="popup"></Popup>
   </div>
 </template>
+
+<style scoped>
+.bubbles{
+  width: 100%;
+  height: 100%;
+}
+</style>

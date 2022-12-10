@@ -4,7 +4,7 @@ import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
 import OnlineList from './userlist/OnlineList.vue'
 export default {
-    inject:['onlines', 'background_color', "selected_room", "chatrooms"],
+    inject:['background_color', "selected_room", "chatrooms"],
     components: {
         VerticalSplit,
         HorizontalSplit,
@@ -25,7 +25,7 @@ export default {
             <UserBar></UserBar>
         </div>
         <div class="onlinelist-wrapper clearfix">
-            <OnlineList :online_max="this.chatrooms[this.selected_room] == undefined ? 0 : this.chatrooms[this.selected_room].total_user" :onlines="this.onlines"></OnlineList>
+            <OnlineList></OnlineList>
         </div>
     </div>
 </template>
