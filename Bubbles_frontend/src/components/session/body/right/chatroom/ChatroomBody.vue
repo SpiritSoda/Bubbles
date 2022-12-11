@@ -32,7 +32,11 @@ export default {
             return this.$refs.chat_body.scrollTop === 0
         },
         scroll_to_top(){
-            this.$refs.chat_body.scrollTop = 0
+            if(this.at_top()){
+                this.refresh_message()
+            }
+            else
+                this.$refs.chat_body.scrollTop = 0
         },
         scroll_to_bottom(){
             this.$refs.chat_body.scrollTop = this.$refs.chat_body.scrollHeight
@@ -66,23 +70,22 @@ export default {
         <HorizontalSplit :length="687" :top="-126" :color="'rgba(219, 222, 226, .8)'"></HorizontalSplit>
         <HorizontalSplit :length="687" :top="64" :color="'rgba(219, 222, 226, .8)'"></HorizontalSplit>
 
-        <div class="message-bar-wrapper">
+        <div class="menu-wrapper fade-in clearfix">
+            <ChatMenu></ChatMenu>
+        </div>
+        <div class="message-bar-wrapper fade-in">
             <MessageBar :scroll_to_bottom="scroll_to_bottom"></MessageBar>
         </div>
 
         
-        <div class="to-top">
+        <div class="to-top fade-in">
             <div class="error_msg" :class="{'appear-up': refresh_error}" :style="{'opacity': refresh_error}">{{error_msg}}</div>
             <a href="javascript:;" @click="scroll_to_top" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
                 <i class="fas fa-arrow-up" ref="to_top_icon"></i>
             </a>
         </div>
         
-        <div class="menu-wrapper clearfix">
-            <ChatMenu></ChatMenu>
-        </div>
-
-        <div class="chat-wrapper">
+        <div class="chat-wrapper fade-in">
             <div class="messages-wrapper" ref="chat_body">
                 <div class="message clearfix" v-for="message in this.$store.state.chatroom.messages">
                     <Message :message="message"></Message>
@@ -137,8 +140,6 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
-
-    z-index: 10000;
 }
 
 .to-top a {
@@ -194,7 +195,6 @@ export default {
     bottom: 140px;
     right: 30px;
 
-    z-index: 10000;
     transition: all .2s;
 }
 

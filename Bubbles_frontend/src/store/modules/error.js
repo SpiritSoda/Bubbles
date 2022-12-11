@@ -25,6 +25,7 @@ export default{
                 4002: modify profile::confirmed password not match
                 4003: modify profile::password empty
                 4004: modify profile::username empty
+                5000: create charoom::timeout
             */
             error_code: 0,
         }

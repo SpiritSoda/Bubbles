@@ -13,10 +13,10 @@ export default {
 <template>
     <div>
         <span class="header">Online: {{in_chatroom ? this.$store.state.chatroom.onlines.length : 0}}/{{this.$store.state.chatroom.total_user}}</span>
-        <ul class="userlist-wrapper" v-if="in_chatroom">
+        <ul class="userlist-wrapper fade-in" v-if="in_chatroom">
             <OnlineUser v-for="id in this.$store.state.chatroom.onlines" :id="id" style="margin: 5px"></OnlineUser>
         </ul>
-        <span class="empty" v-else> You're not in a chatroom ...</span>
+        <span class="empty fade-in" v-else> You're not in a chatroom ...</span>
     </div>
 </template>
 

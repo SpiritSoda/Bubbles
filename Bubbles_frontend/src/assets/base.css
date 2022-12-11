@@ -51,6 +51,9 @@ input[type="number"]{
 .fold-back{
   animation: fold-back ease 0.3s;
 }
+.fade-in{
+  animation: fade-in ease 0.3s;
+}
 
 @keyframes shake {
 
@@ -105,5 +108,13 @@ input[type="number"]{
   }
   50%{
     transform: rotateX(90deg);
+  }
+}
+@keyframes fade-in {
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
   }
 }

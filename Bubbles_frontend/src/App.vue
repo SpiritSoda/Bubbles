@@ -6,6 +6,7 @@ import CheckBox from './components/utils/CheckBox.vue';
 import RegisterView from './components/register/RegisterView.vue';
 import Popup from './components/utils/Popup.vue';
 import ModifyUserinfo from './components/session/body/popup/ModifyUserinfo.vue';
+import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
 
 export default {
   components: {
@@ -14,8 +15,9 @@ export default {
     CheckBox,
     RegisterView,
     Popup,
-    ModifyUserinfo
-  },
+    ModifyUserinfo,
+    CreateChatroom
+},
   data() {
     return {
       /*
@@ -87,6 +89,7 @@ export default {
 
     <Popup ref="popup" :on_quit="reset_popup">
       <ModifyUserinfo v-if="this.popup == 1"></ModifyUserinfo>
+      <CreateChatroom v-else-if="this.popup == 2"></CreateChatroom>
     </Popup>
   </div>
 </template>

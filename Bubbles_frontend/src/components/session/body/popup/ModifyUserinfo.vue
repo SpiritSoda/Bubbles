@@ -47,6 +47,8 @@ export default {
             this.reverse_list()
         },
         submit() {
+            if(this.waiting)
+                return;
             if (!this.lock_username) {
                 if (this.username.length == 0) {
                     this.$store.commit('error/set_error_code', 4004)
@@ -78,7 +80,7 @@ export default {
                     on_success: () => { this.$bus.emit('close_popup'); this.waiting = false },
                     on_error: () => { this.$store.commit('error/set_error_code', 4000); this.waiting = false }
                 })
-            }, 500)
+            }, 300)
         },
         cancel() {
             this.$bus.emit('close_popup')

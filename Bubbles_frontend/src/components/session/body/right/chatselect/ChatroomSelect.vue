@@ -3,12 +3,17 @@ import ChatroomList from './ChatroomList.vue';
 import SearchBar from './SearchBar.vue';
 
 export default {
-    components: { SearchBar, ChatroomList }
+    components: { SearchBar, ChatroomList },
+    methods: {
+        create_chatroom(){
+            this.$bus.emit('popup', 2)
+        }
+    }
 }
 </script>
 
 <template>
-    <div class="select-wrapper">
+    <div class="select-wrapper fade-in">
         <div class="search-bar clearfix">
             <SearchBar></SearchBar>
         </div>

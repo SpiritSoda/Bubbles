@@ -21,6 +21,7 @@ export default{
             state.selected_room = id;
         },
         reset_chatroom(state){
+            state.total_user = 0
             state.selected_room = 0
             state.messages = []
             state.onlines = []

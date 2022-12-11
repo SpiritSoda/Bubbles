@@ -11,7 +11,7 @@ export default {
 <template>
     <div>
         <form onsubmit="return false" class="search-wrapper">
-            <input type="number" class="search" v-model="chatroom_no" :placeholder="'Search Chatroom by number ...'">
+            <input type="text" class="search" v-model="chatroom_no" :placeholder="'Search Chatroom by Invite Token ...'">
             <button class="search-btn" @click="send_message">
                 <a href="javascript:;" class="search-a">
                     <i class="fas fa-search"></i>
