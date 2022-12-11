@@ -148,7 +148,7 @@ export default {
                         :class="{ unlock: !lock_username, shake: error_code == 4004 }">
                     <div class="unlock-btn">
                         <Button :r="30" :click.once="unlock_username" :style="{ opacity: lock_username ? 1.0 : 0.0 }"
-                            :r_shadow="2" :fa_icon="'fa-edit'"></Button>
+                            :r_shadow="2" :fa_icon="'fa-edit'" :title="'Edit Username'"></Button>
                     </div>
                 </li>
                 <li>
@@ -157,7 +157,7 @@ export default {
                         :class="{ unlock: !lock_password, shake: error_code == 4001 || error_code == 4003 }">
                     <div class="unlock-btn">
                         <Button :r="30" :click.once="unlock_password" :style="{ opacity: lock_password ? 1.0 : 0.0 }"
-                            :r_shadow="2" :fa_icon="'fa-edit'"></Button>
+                            :r_shadow="2" :fa_icon="'fa-edit'" :title="'Edit Password'"></Button>
                     </div>
                 </li>
                 <li>

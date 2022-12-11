@@ -1,15 +1,22 @@
 <script>
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
+import TextButton from '../../../utils/TextButton.vue';
 import VerticalSplit from '../../../utils/VerticalSplit.vue';
 
 export default {
-    components: { HorizontalSplit, VerticalSplit },
+    components: { HorizontalSplit, VerticalSplit, TextButton },
     data() {
         return {
             passport: '',
-            verified: false,
+            verified: true,
             waiting: false,
-            msg: ''
+            msg: '',
+
+            max_user_limit: 30,
+            max_user: 30,
+            title: '',
+            comment: '',
+            icon: 0
         }
     },
     computed: {
@@ -28,11 +35,11 @@ export default {
         error_msg() {
             if (this.error_code == 5000)
                 this.msg = 'Can not connect to server ...'
-            else{
-                if(!this.verified)
+            else {
+                if (!this.verified)
                     this.msg = 'Talk to admin to get a passport ...'
                 else
-                    this.msg = 'Now let\'s create your chatroom !' 
+                    this.msg = 'Now let\'s create your chatroom !'
             }
             return this.msg
         }
@@ -61,6 +68,8 @@ export default {
                         let code = response.data.code;
                         if (code == 0) {
                             this.verified = true
+                            this.max_user_limit = response.data.data.max_user
+                            this.max_user = this.max_user_limit
                         }
                         else if (code == 3) {
                             this.$store.commit('error/set_error_code', 5000);
@@ -73,6 +82,18 @@ export default {
                     }
                 )
             }, 300)
+        },
+        submit() {
+            if(this.waiting)
+                return;
+            this.waiting = true
+            setTimeout(() => {
+                this.waiting = false;
+                this.$bus.emit('close_popup')
+            }, 300)
+        },
+        cancel() {
+            this.$bus.emit('close_popup')
         }
     }
 }
@@ -84,8 +105,8 @@ export default {
         <HorizontalSplit :length="600" :top="-5" :color="'rgba(150, 150, 150, 1)'"></HorizontalSplit>
         <HorizontalSplit :length="600" :top="45" :color="'rgba(224, 224, 224, 0.9)'"></HorizontalSplit>
         <HorizontalSplit :length="600" :top="110" :color="'rgba(224, 224, 224, 0.9)'"></HorizontalSplit>
-        <VerticalSplit :length="400" :left="5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
-        <VerticalSplit :length="400" :left="-5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
+        <VerticalSplit :length="verified ? 400 : 100" :left="5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
+        <VerticalSplit :length="verified ? 400 : 100" :left="-5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
         <div class="title">Create Your Chatroom</div>
         <form onsubmit="return false" class="search-wrapper">
             <input type="text" class="search" v-model="passport" :placeholder="'Enter your passport ...'"
@@ -96,7 +117,36 @@ export default {
                 </a>
             </button>
         </form>
-        <div class="error_msg" :class="{'on_error': error_code > 0}">{{error_msg}}</div>
+        <div class="error_msg" :class="{ 'on_error': error_code > 0 }">{{ error_msg }}</div>
+        <form onsubmit="return false" class="chatroom-info">
+            <ul class="input">
+                <li>
+                    <span>Title: </span>
+                    <input type="text" id="title" v-model="title" :class="{ shake: error_code == 4004 }">
+                </li>
+                <li>
+                    <span>Comment: </span>
+                    <textarea id="comment" v-model="comment"
+                        :class="{ shake: error_code == 4001 || error_code == 4003 }"
+                        maxlength="40">
+                    </textarea>
+                </li>
+                <li>
+                    <span>Max Users: (&le; {{max_user_limit}})</span>
+                    <input type="number" id="max_user" v-model="max_user" :max="max_user_limit">
+                </li>
+            </ul>
+        </form>
+        <div class="cancel-btn-wrapper">
+            <TextButton :width="90" :height="30" :title="'Cancel'" :click="cancel" :font_color="'rgb(239, 60, 60)'">
+            </TextButton>
+        </div>
+        <div class="submit-btn-wrapper">
+            <TextButton :width="90" :height="30" :title="'Submit'" :click="submit"></TextButton>
+        </div>
+        <div class="loading" :style="{ 'opacity': waiting && verified ? 1 : 0 }">
+            <i class="fas fa-undo rotate"></i>
+        </div>
     </div>
 </template>
 
@@ -195,7 +245,8 @@ export default {
 
     font-size: 12px;
 }
-.search-a i{
+
+.search-a i {
     transition: all .3s;
 }
 
@@ -212,6 +263,7 @@ export default {
     box-shadow: 0 0 6px rgb(124, 179, 255);
     background-color: #fff;
 }
+
 .error_msg {
     position: absolute;
     height: 20px;
@@ -227,7 +279,98 @@ export default {
 
     transition: all .3s;
 }
-.error_msg.on_error{
+
+.error_msg.on_error {
     color: rgb(239, 60, 60);
+}
+
+.chatroom-info {
+    position: absolute;
+    left: 305px;
+    top: 117px
+}
+
+.chatroom-info input {
+    width: 200px;
+    height: 24px;
+    line-height: 24px;
+    border: 2px solid rgba(101, 101, 101, 0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    outline: none;
+    padding: 0px 10px;
+
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: inherit;
+    text-align: center;
+    color: rgba(50, 50, 50, .9);
+
+    transition: all .3s;
+    margin-bottom: 10px;
+}
+
+
+#comment {
+    width: 200px;
+    height: 80px;
+    line-height: 24px;
+    border: 2px solid rgba(101, 101, 101, 0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    outline: none;
+    padding: 5px 10px;
+
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: inherit;
+    color: rgba(50, 50, 50, .9);
+    resize: none;
+
+    transition: all .3s;
+    margin-bottom: 10px;
+}
+
+.chatroom-info input:focus {
+    border-color: rgb(124, 179, 255) !important;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.chatroom-info input:hover {
+    border-color: rgb(124, 179, 255) !important;
+}
+
+.input li span {
+    display: block;
+    color: rgba(50, 50, 50, .8);
+    margin: 8px 0;
+}
+.cancel-btn-wrapper {
+    position: absolute;
+    left: 45px;
+    top: 355px
+}
+
+.submit-btn-wrapper {
+    position: absolute;
+    left: 165px;
+    top: 355px
+}
+.loading {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+
+    font-size: 14px;
+    color: rgba(36, 36, 36, 0.7);
+    text-align: center;
+    line-height: 26px;
+
+    position: absolute;
+    left: 266px;
+    top: 358px;
+
+    transition: all .2s;
 }
 </style>

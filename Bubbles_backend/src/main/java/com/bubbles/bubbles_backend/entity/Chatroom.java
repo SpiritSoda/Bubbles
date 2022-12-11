@@ -22,6 +22,7 @@ public class Chatroom {
     @Column(name = "chatroom_id")
     private int chatroomId;
     private int admin;
+    private int icon;
     private String title;
     private String comment;
 
