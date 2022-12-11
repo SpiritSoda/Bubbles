@@ -1,6 +1,19 @@
 <script>
 export default{
-    props: ['length', 'left', 'color'],
+    props: {
+        length:{
+            type: Number,
+            default: 10
+        },
+        left: {
+            type: Number,
+            default: 0
+        },
+        color:{
+            type: String,
+            default: '#000'
+        }
+    },
     computed:{
         line_style(){
             let style = {'height': this.length + 'px'}
@@ -11,7 +24,7 @@ export default{
                 style['left'] = this.left + 'px'
             else
                 style['right'] = -this.left + 'px'
-            style['background'] = 'linear-gradient(rgba(255, 255, 255, 0.0) , ' + bg_color + ' 10%, '+ bg_color + '90%, rgba(255, 255, 255, 0.0))' 
+            style['background'] = 'linear-gradient(rgba(255, 255, 255, 0.0) , ' + bg_color + ' 10%, '+ bg_color + '90%, rgba(255, 255, 255, 0.0)) !important' 
             return style 
         }
     }

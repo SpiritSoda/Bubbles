@@ -1,6 +1,15 @@
 <script>
 export default {
-    props: ['call_back', 'default'],
+    props: {
+        call_back:{
+            type: Function,
+            default: () => {}
+        },
+        default:{
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             state: false

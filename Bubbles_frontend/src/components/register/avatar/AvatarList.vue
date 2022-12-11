@@ -4,8 +4,11 @@ export default {
         return {
         }
     },
-    props: ['show', 'avatar_count'],
+    props: ['show'],
     computed: {
+        avatar_count(){
+            return this.$store.state.global.avatar_count
+        },
         display_height() {
             if (!this || !this.show) {
                 return 0 + 'px';
@@ -53,7 +56,6 @@ export default {
             <div class="avatar-icon" v-for="id in avatar_count"
                 :style="{'background-image':'url(\'/avatars/genshin/' + id + '.jpg\')'}" @click="set_avatar(id)">
             </div>
-
         </div>
 
         <div class="unshow" @click="reverse_show()">

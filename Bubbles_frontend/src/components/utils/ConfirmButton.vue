@@ -50,10 +50,10 @@ export default {
         on_click(){
             if(!this.state){
                 this.state = true;
-                timer = setTimeout(() => {this.state = false}, 2000)
+                this.timer = setTimeout(() => {this.state = false}, 2000)
             }
             else{
-                clearTimeout(timer)
+                clearTimeout(this.timer)
                 this.state = false;
                 this.click()
             }

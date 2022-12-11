@@ -1,5 +1,11 @@
 <script>
 export default {
+    props:{
+        on_quit:{
+            type: Function,
+            default: () => {}
+        }
+    },
     data(){
         return{
             /*
@@ -17,7 +23,7 @@ export default {
             }
             else if(this.state == 2){
                 this.state = 1
-                setTimeout(() => {this.state = 0}, 300)
+                setTimeout(() => {this.state = 0; this.on_quit()}, 300)
             }
         },
         show(){

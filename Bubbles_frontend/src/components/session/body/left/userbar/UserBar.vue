@@ -4,13 +4,15 @@ import DisplayBar from '../../../../utils/DisplayBar.vue'
 import VerticalSplit from '../../../../utils/VerticalSplit.vue'
 import HorizontalSplit from '../../../../utils/HorizontalSplit.vue'
 import Button from '../../../../utils/Button.vue';
+import ConfirmButton from '../../../../utils/ConfirmButton.vue';
 export default {
     components: {
         Avatar,
         DisplayBar,
         VerticalSplit,
         HorizontalSplit,
-        Button
+        Button,
+        ConfirmButton
     },
     computed: {
         local_user(){
@@ -28,7 +30,7 @@ export default {
             this.$bus.emit("switch_state", 0);
         },
         edit(){
-
+            this.$bus.emit("popup", 1);
         }
     }
 }
@@ -39,10 +41,10 @@ export default {
             <Avatar :avatar="this.local_user.avatar" :r="120" :shadow="true"></Avatar>
         </div>
         <div class="exit-wrapper clearfix">
-            <Button :r="40" :click="exit" :fa_icon="'fa-door-open'" :title="'Exit'"></Button>
+            <ConfirmButton :r="40" :click="exit" :fa_icon="'fa-door-open'" :title="'Log Out'"></ConfirmButton>
         </div>
         <div class="edit-wrapper clearfix">
-            <Button :r="40" :click="edit" :fa_icon="'fa-edit'" :title="'Edit'"></Button>
+            <Button :r="40" :click="edit" :fa_icon="'fa-edit'" :title="'Edit Profile'"></Button>
         </div>
         <div class="username">
             <DisplayBar :width="160" :height="30" :text="this.local_user.username"></DisplayBar>

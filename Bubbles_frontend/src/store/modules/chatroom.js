@@ -3,10 +3,10 @@ export default{
     namespaced: true, // 为每个模块添加一个前缀名，保证模块命明不冲突 
     state: () => {
         return {
-            onlines: [1, 2, 3, 4, 5],
-            total_user: 0,
+            onlines: [1, 2, 6, 4, 5, 10],
+            total_user: 20,
             messages: [
-                { id: 7, content: 'Avada Kedavra' },
+                { id: 7, content: 'Now you shall perish !' },
                 { id: 6, content: 'Stabilized!' },
                 { id: 4, content: 'XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' },
                 { id: 5, content: '~' },

@@ -55,7 +55,7 @@ export default {
                 <Avatar :avatar="avatar" :r="130"></Avatar>
             </div>
         </div>
-        <AvatarList :show=show_list :avatar_count=avatar_count @set_avatar=set_avatar @reverse_show=reverse_show></AvatarList>
+        <AvatarList :show=show_list @set_avatar=set_avatar @reverse_show=reverse_show></AvatarList>
     </div>
 </template>
 

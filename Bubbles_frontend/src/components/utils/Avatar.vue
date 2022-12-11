@@ -1,6 +1,19 @@
 <script>
 export default {
-    props: ['avatar', 'r', 'shadow'],
+    props: {
+        avatar: {
+            type: Number,
+            default: 0
+        },
+        r: {
+            type: Number,
+            default: 20
+        },
+        shadow: {
+            type: Boolean,
+            default: false
+        }
+    },
     computed:{
         avatar_border_style(){
             let style = {

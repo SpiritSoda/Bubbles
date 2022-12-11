@@ -1,20 +1,30 @@
 <script>
-import Avatar from '../../../../../../utils/Avatar.vue';
+import Avatar from '../../../../../utils/Avatar.vue';
 import Bubble from './Bubble.vue';
 export default {
     components: { Avatar, Bubble },
     props: ['message'],
-    inject: ['userinfo', 'local_id'],
     computed: {
+        local_id(){
+            return this.$store.state.localuser.local_id
+        },
+        userinfo(){
+            return this.$store.state.userinfo.userinfo
+        },
         user() {
-            return this.userinfo[this.message.id]
+            let user = this.userinfo[this.message.id]
+            if(!user){
+                this.$store.dispatch('userinfo/fetch_userinfo', this.message.id)
+                return {id: "0", username: "Unknown", avatar: -1}
+            }
+            return user
         },
         is_local(){
             return this.message.id === this.local_id
         },
         bubble_color(){
             return this.is_local ? 'rgb(124, 179, 255, .1)' : 'rgba(255, 255, 255, .1)'
-        }
+        },
     }
 }
 </script>
@@ -23,7 +33,7 @@ export default {
     <div v-if="this.user" class="clearfix" style="padding-bottom: 3px; width: 100%;">
         <div class="clearfix" v-if="this.is_local" style="position: relative">
             <div class="avatar-wrapper right">
-                <Avatar :avatar="this.user.icon" :r="56"></Avatar>
+                <Avatar :avatar="this.user.avatar" :r="56"></Avatar>
             </div>
             <div class="right clearfix" style="right: 13px">
                 <div class="username right">

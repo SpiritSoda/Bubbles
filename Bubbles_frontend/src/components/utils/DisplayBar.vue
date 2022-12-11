@@ -1,10 +1,19 @@
 <script>
 export default{
-    props: [
-        'width',
-        'height',
-        'text'
-    ],
+    props: {
+        width: {
+            type: Number,
+            default: 80
+        },
+        height: {
+            type: Number,
+            default: 20
+        },
+        text: {
+            type: String,
+            default: '......'
+        }
+    },
     computed:{
         bar_style(){
             return {

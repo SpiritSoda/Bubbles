@@ -4,7 +4,7 @@ import HorizontalSplit from '../../../utils/HorizontalSplit.vue'
 import UserBar from './userbar/UserBar.vue'
 import OnlineList from './userlist/OnlineList.vue'
 export default {
-    inject:['background_color', "selected_room", "chatrooms"],
+    inject:['background_color'],
     components: {
         VerticalSplit,
         HorizontalSplit,

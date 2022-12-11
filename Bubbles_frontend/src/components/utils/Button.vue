@@ -7,7 +7,7 @@ export default {
         },
         fa_icon: {
             type: String,
-            default: 'fa_edit'
+            default: 'fa-edit'
         },
         click: {
             type: Function,

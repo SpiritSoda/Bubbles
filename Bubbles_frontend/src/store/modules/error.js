@@ -20,6 +20,11 @@ export default{
                 2007: register::user exists
                 2008: register::username too long
                 3001: chatroom::refresh messages fail
+                4000: modify profile::timeout
+                4001: modify profile::password too short
+                4002: modify profile::confirmed password not match
+                4003: modify profile::password empty
+                4004: modify profile::username empty
             */
             error_code: 0,
         }

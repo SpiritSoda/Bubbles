@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import CheckBox from './components/utils/CheckBox.vue';
 import RegisterView from './components/register/RegisterView.vue';
 import Popup from './components/utils/Popup.vue';
+import ModifyUserinfo from './components/session/body/popup/ModifyUserinfo.vue';
 
 export default {
   components: {
@@ -12,7 +13,8 @@ export default {
     SessionView,
     CheckBox,
     RegisterView,
-    Popup
+    Popup,
+    ModifyUserinfo
   },
   data() {
     return {
@@ -26,11 +28,14 @@ export default {
       settings: {
         dark_mode: { name: 'Dark Mode', value: false },
         hide_username: { name: 'Hide timestamp', value: false }
-      }
+      },
+      popup: 0
     }
   },
   methods: {
-
+    reset_popup(){
+      this.popup = 0
+    }
   },
   computed: {
     color_style() {
@@ -62,7 +67,8 @@ export default {
     // console.log(encodeURI([1,2]))
     this.$bus.on('setting', (option) => { this.settings[option].value = !this.settings[option].value })
     this.$bus.on('switch_state', (new_state) => { this.state = new_state })
-    this.$bus.on('popup', (pop) => { this.$refs.popup.show() })
+    this.$bus.on('popup', (pop) => { this.popup = pop; this.$refs.popup.show() })
+    this.$bus.on('close_popup', (pop) => { this.popup = pop; this.$refs.popup.hide() })
     if(localStorage.getItem("token") != null){
       this.state = 2
     }
@@ -79,7 +85,9 @@ export default {
     <RegisterView v-else-if="this.state === 1"></RegisterView>
     <SessionView v-else-if="this.state === 2"></SessionView>
 
-    <Popup ref="popup"></Popup>
+    <Popup ref="popup" :on_quit="reset_popup">
+      <ModifyUserinfo v-if="this.popup == 1"></ModifyUserinfo>
+    </Popup>
   </div>
 </template>
 

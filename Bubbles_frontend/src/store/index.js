@@ -5,24 +5,47 @@ import localuser from './modules/localuser'
 import settings from './modules/settings'
 import error from './modules/error'
 import tx from './modules/tx'
+import global from './modules/global'
+import $axios from '../utils/axios'
 
 export default new createStore({
-  //数据，相当于data
   state: {
 
   },
   getters: {
     
   },
-  //里面定义方法，操作state方发
   mutations: {
     reset_chatroom(state){
       this.commit('chatroom/reset_chatroom', {})
-    }
+    },
   },
-  // 操作异步操作mutation
   actions: {
-    
+    modify_userinfo(context, payload){
+      // send new info to server first
+      let token = this.state.localuser.token;
+      $axios.post('/api/user/modifyUser',
+      {
+          params: payload.data,
+          headers: {
+              'token': token
+          }
+      }).then(
+          response => {
+              if(response.data.code != 0){
+                payload.on_error()
+              }
+              else{
+                this.dispatch('userinfo/fetch_userinfo', this.state.localuser.local_id)
+                payload.on_success()
+              }
+          }
+      ).catch(
+        e => {
+          payload.on_error()
+        }
+      )
+    }
   },
   modules: {
     userinfo,
@@ -30,6 +53,7 @@ export default new createStore({
     localuser,
     settings,
     error,
-    tx
+    tx,
+    global
   },
 })
