@@ -105,6 +105,7 @@ export default {
         },
         on_login(){
             localStorage.setItem("token", this.token)
+            this.$store.commit('localuser/save_token', this.token)
             this.$bus.emit('switch_state', 2)
         }
     },

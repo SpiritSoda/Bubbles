@@ -1,8 +1,11 @@
 package com.bubbles.bubbles_backend.controller;
 
 import com.bubbles.bubbles_backend.config.JwtConfig;
+import com.bubbles.bubbles_backend.dto.ChatroomDTO;
 import com.bubbles.bubbles_backend.dto.UserDTO;
+import com.bubbles.bubbles_backend.entity.Chatroom;
 import com.bubbles.bubbles_backend.entity.User;
+import com.bubbles.bubbles_backend.exception.UserNotFoundException;
 import com.bubbles.bubbles_backend.service.UserService;
 import com.bubbles.bubbles_backend.utils.JwtUtils;
 import com.bubbles.bubbles_backend.utils.Result;
@@ -35,7 +38,7 @@ public class UserController {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
-        user.setUserId(userService.getUserId(user));
+        user.setUserId(userService.verifyLogin(user));
 
         String token = JwtUtils.sign(user, jwtConfig);
 
@@ -48,12 +51,10 @@ public class UserController {
     }
     @PostMapping("/api/exist")
     public Result exist(@RequestBody @Valid UserDTO userDTO) throws Exception{
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
         HashMap<String, Object> data = new HashMap<>();
-        if(userService.existUsername(user)){
+        if(userService.existUsername(userDTO.getUsername())){
             data.put("result", true);
-            data.put("avatar", userService.getUserAvatar(user));
+            data.put("avatar", userService.getUserAvatarByUsername(userDTO.getUsername()));
             return Result.buildSuccessResult("User Exists", data);
         }
         else{
@@ -79,7 +80,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/user/userinfo")
+    @GetMapping("/api/user/userInfo")
     public Result getUserInfoById(@RequestParam @Valid int id) throws Exception{
         User user = userService.getUserById(id);
         HashMap<String, Object> data = new HashMap<>();
@@ -88,20 +89,20 @@ public class UserController {
         data.put("avatar", user.getAvatar());
         return Result.buildSuccessResult("Success to get user info ...", data);
     }
-    @GetMapping("/api/user/selfinfo")
+    @GetMapping("/api/user/selfInfo")
     public Result getUserInfoByToken(HttpServletRequest httpServletRequest) throws Exception{
         String token = httpServletRequest.getHeader("token");
-        int id = JwtUtils.getUserId(token);
-//        log.info(token);
-        User user = userService.getUserById(id);
+        User user = userService.findByToken(token);
         HashMap<String, Object> data = new HashMap<>();
-        data.put("id", id);
+        List<ChatroomDTO> chatrooms = user.getChatrooms().stream().map(chatroom -> new ChatroomDTO(chatroom)).collect(Collectors.toList());
+        data.put("id", user.getUserId());
         data.put("username", user.getUsername());
         data.put("avatar", user.getAvatar());
+        data.put("chatrooms", chatrooms);
         return Result.buildSuccessResult("Success to get user info ...", data);
     }
 
-    @GetMapping("/api/user/userinfos")
+    @GetMapping("/api/user/userInfos")
     public Result getInfos(@RequestParam @Valid List<Integer> ids) throws Exception{
         List<User> users = userService.getUsersByIds(ids);
         HashMap<String, Object> data = new HashMap<>();
@@ -114,5 +115,12 @@ public class UserController {
         }).collect(Collectors.toList());
         data.put("users", userInfos);
         return Result.buildSuccessResult("Success to get user info ...", data);
+    }
+    @PostMapping("/api/user/edit")
+    public Result edit(@RequestBody @Valid UserDTO userDTO, HttpServletRequest httpServletRequest) throws Exception {
+        String token = httpServletRequest.getHeader("token");
+        User user = userService.findByToken(token);
+        userService.editUserInfo(user, userDTO);
+        return Result.buildSuccessResult("Success to edit user info ...");
     }
 }

@@ -1,6 +1,6 @@
 import $axios from '../../utils/axios'
-export default{
-    namespaced: true, // 为每个模块添加一个前缀名，保证模块命明不冲突 
+export default {
+    namespaced: true, 
     state: () => {
         return {
             onlines: [1, 2, 6, 4, 5, 10],
@@ -17,10 +17,10 @@ export default{
         }
     },
     mutations: {
-        select_chatroom(state, id){
+        select_chatroom(state, id) {
             state.selected_room = id;
         },
-        reset_chatroom(state){
+        reset_chatroom(state) {
             state.total_user = 0
             state.selected_room = 0
             state.messages = []

@@ -16,26 +16,14 @@ export default {
     mounted(){
         let token = localStorage.getItem("token");
         if(token != null){
-            this.$axios.get('/api/user/selfinfo', { 
-                    headers: { 
-                        'token': token  
-                    }           
-                }).then(
-                response => {
-                    if(response.data.code != 0){
-                        localStorage.removeItem("token")
-                        this.$bus.emit('switch_state', 0)
-                    }
-                    else{
-                        this.$store.state.localuser.local_id = response.data.data.id;
-                        this.$store.state.userinfo.userinfo[this.$store.state.localuser.local_id] = response.data.data
-                    }
+            this.$store.dispatch('update_localuser', {
+                on_success: () => {},
+                on_error: () => {
+                    localStorage.removeItem("token")
+                    this.$bus.emit('error', 1000)
+                    this.$bus.emit('switch_state', 0)
                 }
-            ).catch(
-                e => {
-                    this.$bus.emit('error', 1000);
-                }
-            )
+            });
         }
         else{
             this.$bus.emit('switch_state', 0)

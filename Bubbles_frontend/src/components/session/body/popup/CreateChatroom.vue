@@ -1,11 +1,12 @@
 <script>
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
 import Icon from '../../../utils/Icon.vue';
+import LoadingTextButton from '../../../utils/LoadingTextButton.vue';
 import TextButton from '../../../utils/TextButton.vue';
 import VerticalSplit from '../../../utils/VerticalSplit.vue';
 
 export default {
-    components: { HorizontalSplit, VerticalSplit, TextButton, Icon },
+    components: { HorizontalSplit, VerticalSplit, TextButton, Icon, LoadingTextButton },
     data() {
         return {
             passport: '',
@@ -44,13 +45,16 @@ export default {
                 this.msg = 'Title can not be empty ...'
             }
             else if(this.error_code == 5003){
-                this.msg = 'Max user is not valid (less than 2) ...'
+                this.msg = 'Max user is not valid (less than 2 or greater than ' + this.max_user_limit + ') ...'
             }
             else if(this.error_code == 5004){
                 this.msg = 'Don\'t forget to choose an icon ...'
             }
             else if(this.error_code == 5005){
                 this.msg = 'Comment can not be empty ...'
+            }
+            else if(this.error_code == 5006){
+                this.msg = 'Passport not valid ...'
             }
             else if(this.error_code == 0){
                 if (!this.verified)
@@ -99,7 +103,7 @@ export default {
                             this.max_user = this.max_user_limit
                         }
                         else {
-                            this.$store.commit('error/set_error_code', 5000);
+                            this.$store.commit('error/set_error_code', 5006);
                         }
                     }
                 ).catch(
@@ -117,7 +121,7 @@ export default {
                 this.$store.commit('error/set_error_code', 5002)
                 return
             }
-            else if(this.max_user < 2){
+            else if(this.max_user < 2 || this.max_user > this.max_user_limit){
                 this.$store.commit('error/set_error_code', 5003)
                 return
             }
@@ -131,8 +135,39 @@ export default {
             }
             this.waiting = true
             setTimeout(() => {
-                this.waiting = false;
-                this.$bus.emit('close_popup')
+                this.$axios.post(
+                    '/api/chatroom/createChatroom',
+                    {
+                        title: this.title,
+                        icon: this.icon,
+                        comment: this.comment,
+                        max_user: this.max_user,
+                        passport: this.passport
+                    },
+                    {
+                        headers:{
+                            'token': this.token
+                        }
+                    }
+                ).then((response) => {
+                    this.waiting = false;
+                    let code = response.data.code;
+                    console.log(response)
+                    if(code == 0){
+                        this.$store.dispatch('update_localuser', {
+                            on_error: () => {},
+                            on_success: () => {}
+                        });
+                        this.$bus.emit('close_popup')
+                    } 
+                    else if(code == 6){
+                        this.$store.commit('error/set_error_code', 5006);
+                    }
+                })
+                .catch((e) => {
+                    this.waiting = false;
+                    this.$store.commit('error/set_error_code', 5000)
+                })
             }, 300)
         },
         cancel() {
@@ -190,7 +225,7 @@ export default {
             </button>
         </form>
         <!-- error message -->
-        <div class="error_msg" :class="{ 'on_error': error_code > 0 }">{{ error_msg }}</div>
+        <div class="error_msg" :class="{ 'on_error': error_code > 0, 'shake': error_code > 0}">{{ error_msg }}</div>
         <!-- select chatroom icon -->
         <div class="icon-select">
             <a href="javascript:;" class="icon-show" @click="reverse_list"
@@ -229,10 +264,7 @@ export default {
             </TextButton>
         </div>
         <div class="submit-btn-wrapper">
-            <TextButton :width="90" :height="30" :title="'Submit'" :click="submit"></TextButton>
-        </div>
-        <div class="loading" :style="{ 'opacity': waiting && verified ? 1 : 0 }">
-            <i class="fas fa-undo rotate"></i>
+            <LoadingTextButton :width="90" :height="30" :title="'Submit'" :click="submit" :signal="verified && waiting"></LoadingTextButton>
         </div>
     </div>
 </template>
@@ -454,24 +486,6 @@ export default {
     top: 355px
 }
 
-.loading {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-
-    font-size: 14px;
-    color: rgba(36, 36, 36, 0.7);
-    text-align: center;
-    line-height: 26px;
-
-    position: absolute;
-    left: 266px;
-    top: 358px;
-
-    transition: all .2s;
-}
-
 .icon-select {
     width: 240px;
     height: 140px;
@@ -538,7 +552,7 @@ export default {
 
 .icon-list-roller {
     height: 101%;
-    padding-top: 8px;
+    padding-top: 10px;
     padding-left: 8px;
     padding-right: 3px;
     border-radius: 45px;
@@ -554,7 +568,7 @@ export default {
     margin-right: 8px;
     background-clip: padding-box;
     background-size: 70px;
-    border: 2px solid rgb(200, 200, 200);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .6);
     border-radius: 50%;
 
     width: 70px;
@@ -565,7 +579,7 @@ export default {
 
 .icon-item:hover {
     border-color: rgb(71, 147, 253);
-    box-shadow: 0 0 4px rgba(71, 147, 253, .8);
-    transform: perspective(800px) translateZ(30px);
+    box-shadow: 0 0 6px rgba(71, 147, 253, 1);
+    transform: perspective(800px) translateZ(40px);
 }
 </style>

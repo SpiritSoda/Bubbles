@@ -1,8 +1,6 @@
 package com.bubbles.bubbles_backend.controller;
 
-import com.bubbles.bubbles_backend.exception.NoTokenException;
-import com.bubbles.bubbles_backend.exception.PasswordNotValidException;
-import com.bubbles.bubbles_backend.exception.UserNotFoundException;
+import com.bubbles.bubbles_backend.exception.*;
 import com.bubbles.bubbles_backend.utils.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,5 +25,20 @@ public class ErrorController {
     @ExceptionHandler(PasswordNotValidException.class)
     public Result handlePasswordNotValidException(PasswordNotValidException e){
         return new Result(3, e.getMessage(), null);
+    }
+
+    @ExceptionHandler(UserHasJoinedChatroomException.class)
+    public Result handleUserHasJoinedChatroomException(UserHasJoinedChatroomException e){
+        return new Result(4, e.getMessage(), null);
+    }
+
+    @ExceptionHandler(ChatroomNotFoundException.class)
+    public Result handlerChatroomNotFoundException(ChatroomNotFoundException e){
+        return new Result(5, e.getMessage(), null);
+    }
+
+    @ExceptionHandler(InvalidPassportException.class)
+    public Result handlerInvalidPassportException(InvalidPassportException e){
+        return new Result(6, e.getMessage(), null);
     }
 }

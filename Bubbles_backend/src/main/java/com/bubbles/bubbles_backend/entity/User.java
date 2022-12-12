@@ -30,4 +30,9 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "chatroom_id")})
     private List<Chatroom> chatrooms = new ArrayList<>();
+
+    @Override
+    public int hashCode(){
+        return userId;
+    }
 }

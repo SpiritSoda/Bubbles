@@ -5,7 +5,7 @@ import { computed } from 'vue';
 import CheckBox from './components/utils/CheckBox.vue';
 import RegisterView from './components/register/RegisterView.vue';
 import Popup from './components/utils/Popup.vue';
-import ModifyUserinfo from './components/session/body/popup/ModifyUserinfo.vue';
+import EditUserInfo from './components/session/body/popup/EditUserInfo.vue';
 import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
 
 export default {
@@ -15,7 +15,7 @@ export default {
     CheckBox,
     RegisterView,
     Popup,
-    ModifyUserinfo,
+    EditUserInfo,
     CreateChatroom
 },
   data() {
@@ -88,7 +88,7 @@ export default {
     <SessionView v-else-if="this.state === 2"></SessionView>
 
     <Popup ref="popup" :on_quit="reset_popup">
-      <ModifyUserinfo v-if="this.popup == 1"></ModifyUserinfo>
+      <EditUserInfo v-if="this.popup == 1"></EditUserInfo>
       <CreateChatroom v-else-if="this.popup == 2"></CreateChatroom>
     </Popup>
   </div>

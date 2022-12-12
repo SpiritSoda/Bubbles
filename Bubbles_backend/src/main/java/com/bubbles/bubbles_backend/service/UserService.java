@@ -1,9 +1,12 @@
 package com.bubbles.bubbles_backend.service;
 
+import com.bubbles.bubbles_backend.dto.UserDTO;
 import com.bubbles.bubbles_backend.entity.User;
 import com.bubbles.bubbles_backend.exception.PasswordNotValidException;
 import com.bubbles.bubbles_backend.exception.UserNotFoundException;
 import com.bubbles.bubbles_backend.repo.UserRepository;
+import com.bubbles.bubbles_backend.utils.JwtUtils;
+import com.bubbles.bubbles_backend.utils.ValidUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +28,7 @@ public class UserService {
         return 0;
     }
 
-    public int getUserId(User user) throws Exception {
+    public int verifyLogin(User user) throws Exception {
         User findResult = userRepository.findUserByUsername(user.getUsername());
         if (findResult == null)
             throw new UserNotFoundException(user.getUsername());
@@ -34,10 +37,10 @@ public class UserService {
         return findResult.getUserId();
     }
 
-    public int getUserAvatar(User user) throws Exception {
-        User findResult = userRepository.findUserByUsername(user.getUsername());
+    public int getUserAvatarByUsername(String username) throws Exception {
+        User findResult = userRepository.findUserByUsername(username);
         if (findResult == null)
-            throw new UserNotFoundException(user.getUsername());
+            throw new UserNotFoundException(username);
         return findResult.getAvatar();
     }
 
@@ -48,8 +51,26 @@ public class UserService {
         return userRepository.findUserByUserIdIn(ids);
     }
 
-    public Boolean existUsername(User user){
-        return userRepository.findUserByUsername(user.getUsername()) != null;
+    public Boolean existUsername(String username){
+        return userRepository.findUserByUsername(username) != null;
     }
 
+    public User findByToken(String token) throws Exception{
+        int id = JwtUtils.getUserId(token);
+//        log.info(token);
+        User user = getUserById(id);
+        if(user == null)
+            throw new UserNotFoundException(id);
+        return user;
+    }
+
+    public void editUserInfo(User user, UserDTO userDTO){
+        if(ValidUtils.isValid(userDTO.getUsername()))
+            user.setUsername(userDTO.getUsername());
+        if(ValidUtils.isValid(userDTO.getPassword()))
+            user.setPassword(userDTO.getPassword());
+        if(ValidUtils.isValid(userDTO.getAvatar()))
+            user.setAvatar(userDTO.getAvatar());
+        userRepository.save(user);
+    }
 }

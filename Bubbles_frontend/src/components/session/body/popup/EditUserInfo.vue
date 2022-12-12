@@ -4,13 +4,15 @@ import Avatar from '../../../utils/Avatar.vue';
 import VerticalSplit from '../../../utils/VerticalSplit.vue';
 import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
 import TextButton from '../../../utils/TextButton.vue';
+import LoadingTextButton from '../../../utils/LoadingTextButton.vue';
 export default {
     components: {
         Button,
         Avatar,
         VerticalSplit,
         HorizontalSplit,
-        TextButton
+        TextButton,
+        LoadingTextButton
     },
     data() {
         return {
@@ -71,11 +73,11 @@ export default {
             }
             this.waiting = true
             setTimeout(() => {
-                this.$store.dispatch('modify_userinfo', {
+                this.$store.dispatch('edit_userinfo', {
                     data: {
                         avatar: this.avatar,
                         username: this.lock_username ? '' : this.username,
-                        password: this.lock_password ? '' : this.password,
+                        password: this.lock_password ? '' : this.$md5(this.password),
                     },
                     on_success: () => { this.$bus.emit('close_popup'); this.waiting = false },
                     on_error: () => { this.$store.commit('error/set_error_code', 4000); this.waiting = false }
@@ -174,12 +176,12 @@ export default {
             </TextButton>
         </div>
         <div class="submit-btn-wrapper">
-            <TextButton :width="90" :height="30" :title="'Submit'" :click="submit"></TextButton>
+            <LoadingTextButton :width="90" :height="30" :title="'Submit'" :click="submit" :signal="waiting"></LoadingTextButton>
         </div>
         <span class="error_msg" :style="{ 'opacity': error_code > 0 ? 1 : 0 }">{{ error_msg }}</span>
-        <div class="loading" :style="{ 'opacity': waiting > 0 ? 1 : 0 }">
+        <!-- <div class="loading" :style="{ 'opacity': waiting > 0 ? 1 : 0 }">
             <i class="fas fa-undo rotate"></i>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -201,7 +203,7 @@ export default {
 .user-info {
     position: absolute;
     left: 258px;
-    top: 65px
+    top: 85px
 }
 
 .user-info input {
@@ -251,7 +253,7 @@ export default {
     height: 140px;
     position: absolute;
     left: 60px;
-    top: 115px
+    top: 135px
 }
 
 .avatar-show {
@@ -275,7 +277,7 @@ export default {
 
 .avatar-show.show_list {
     border-color: rgb(124, 179, 255) !important;
-    transform: translateY(-50px);
+    transform: translateY(-70px);
 }
 
 .avatar-list {
@@ -297,6 +299,7 @@ export default {
 
 .avatar-list.show_list {
     height: 270px;
+    top:-10px
 }
 
 .avatar-list-roller {
@@ -346,13 +349,13 @@ export default {
 .cancel-btn-wrapper {
     position: absolute;
     left: 258px;
-    top: 300px
+    top: 320px
 }
 
 .submit-btn-wrapper {
     position: absolute;
     left: 390px;
-    top: 300px
+    top: 320px
 }
 
 .error_msg {
@@ -368,24 +371,6 @@ export default {
     top: 347px;
 
     opacity: 0;
-    transition: all .2s;
-}
-
-.loading {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-
-    font-size: 14px;
-    color: rgba(36, 36, 36, 0.7);
-    text-align: center;
-    line-height: 26px;
-
-    position: absolute;
-    left: 491px;
-    top: 303px;
-
     transition: all .2s;
 }
 </style>

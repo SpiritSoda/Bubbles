@@ -15,6 +15,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .excludePathPatterns("/api/login")
                 .excludePathPatterns("/api/register")
                 .excludePathPatterns("/api/exist")
+                .excludePathPatterns("/api/chatroom/generatePassport")
                 .excludePathPatterns("/chat/**");
     }
     @Bean

@@ -16,7 +16,7 @@ export default{
     actions: {
         fetch_userinfo(context, id){
             let token = localStorage.getItem("token");
-            $axios.get('/api/user/userinfo',
+            $axios.get('/api/user/userInfo',
             {
                 params: {
                     'id': id
