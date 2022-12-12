@@ -36,7 +36,7 @@ export default new createStore({
                 payload.on_error()
               }
               else{
-                this.dispatch('userinfo/fetch_userinfo', this.state.localuser.local_id)
+                this.dispatch('/api/user/fetchUserinfo', this.state.localuser.local_id)
                 payload.on_success()
               }
           }

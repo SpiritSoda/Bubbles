@@ -25,7 +25,12 @@ export default{
                 4002: modify profile::confirmed password not match
                 4003: modify profile::password empty
                 4004: modify profile::username empty
-                5000: create charoom::timeout
+                5000: create chatroom::timeout
+                5001: create chatroom::passport empty
+                5002: create chatroom::title empty
+                5003: create chatroom::max user invalid
+                5004: create chatroom::icon empty
+                5005: create chatroom::comment empty
             */
             error_code: 0,
         }

@@ -38,6 +38,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         String token = request.getHeader("token");
+        log.info(token);
 
         if (token == null){
             throw new NoTokenException("Token not found ...");

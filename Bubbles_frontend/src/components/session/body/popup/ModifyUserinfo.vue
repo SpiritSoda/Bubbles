@@ -127,10 +127,11 @@ export default {
         <VerticalSplit :length="400" :left="5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
         <VerticalSplit :length="400" :left="-5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
         <div class="title">Edit Your Profile</div>
+        <!-- select avatar -->
         <div class="avatar-select">
-            <div class="avatar-show" @click="reverse_list" :class="{ show_list: show_list }">
+            <a href="javascript:;" class="avatar-show" @click="reverse_list" :class="{ show_list: show_list }">
                 <Avatar :avatar="avatar" :r="130" :shadow="false"></Avatar>
-            </div>
+            </a>
             <div class="avatar-list" :class="{ show_list: show_list }">
                 <div class="avatar-list-roller">
                     <div class="avatar-icon" v-for="id in avatar_count"
@@ -140,6 +141,7 @@ export default {
                 </div>
             </div>
         </div>
+        <!-- change user info -->
         <form onsubmit="return false" class="user-info">
             <ul class="input">
                 <li>
@@ -253,6 +255,7 @@ export default {
 }
 
 .avatar-show {
+    display: block;
     width: 130px;
     height: 130px;
     background-color: rgba(255, 255, 255, .9);
@@ -266,7 +269,6 @@ export default {
     transition: all .3s;
     z-index: 500;
 }
-
 .avatar-show:hover {
     border-color: rgb(124, 179, 255);
 }

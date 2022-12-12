@@ -22,7 +22,7 @@ export default {
 </script>
 
 <template>
-    <div class="chatroom-wrapper clearfix">
+    <div class="chatroom-wrapper clearfix fade-in">
         <div class="chatroom-icon" :style="this.chatroom_background">
             <a href="javascript:;" class="chatroom-icon-inner" @click="select_chatroom"></a>
         </div>
