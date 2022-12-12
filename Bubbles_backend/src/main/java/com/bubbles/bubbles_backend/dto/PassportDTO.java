@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class PassportDTO {
-    private String passport;
+    private String token;
 }

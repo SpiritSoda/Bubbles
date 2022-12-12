@@ -56,6 +56,9 @@ export default {
             else if(this.error_code == 5006){
                 this.msg = 'Passport not valid ...'
             }
+            else if(this.error_code == 5007){
+                this.msg = 'Passport expired ...'
+            }
             else if(this.error_code == 0){
                 if (!this.verified)
                     this.msg = 'Talk to admin to get a passport ...'
@@ -86,7 +89,7 @@ export default {
                 // return
                 this.$axios.post('/api/chatroom/verifyPassport',
                     {
-                        'passport': this.passport
+                        'token': this.passport
                     },
                     {
                         headers: {
@@ -101,6 +104,9 @@ export default {
                             this.verified = true
                             this.max_user_limit = response.data.data.max_user
                             this.max_user = this.max_user_limit
+                        }
+                        else if(code == 7){
+                            this.$store.commit('error/set_error_code', 5007);
                         }
                         else {
                             this.$store.commit('error/set_error_code', 5006);

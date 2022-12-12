@@ -32,6 +32,7 @@ export default{
                 5004: create chatroom::icon empty
                 5005: create chatroom::comment empty
                 5006: create chatroom::passport not valid
+                5007: create chatroom::passport expired
             */
             error_code: 0,
         }

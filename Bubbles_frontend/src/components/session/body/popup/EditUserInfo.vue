@@ -284,7 +284,7 @@ export default {
     width: 120px;
     height: 120px;
     border: 2px rgb(124, 179, 255) solid;
-    border-radius: 55px;
+    border-radius: 60px;
     background-color: rgb(253, 253, 253);
     position: absolute;
     right: 0;
@@ -368,7 +368,7 @@ export default {
 
     position: absolute;
     left: 174px;
-    top: 347px;
+    top: 365px;
 
     opacity: 0;
     transition: all .2s;

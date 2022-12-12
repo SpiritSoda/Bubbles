@@ -7,6 +7,7 @@ import RegisterView from './components/register/RegisterView.vue';
 import Popup from './components/utils/Popup.vue';
 import EditUserInfo from './components/session/body/popup/EditUserInfo.vue';
 import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
+import InviteToken from './components/session/body/popup/InviteToken.vue';
 
 export default {
   components: {
@@ -16,7 +17,8 @@ export default {
     RegisterView,
     Popup,
     EditUserInfo,
-    CreateChatroom
+    CreateChatroom,
+    InviteToken
 },
   data() {
     return {
@@ -90,6 +92,7 @@ export default {
     <Popup ref="popup" :on_quit="reset_popup">
       <EditUserInfo v-if="this.popup == 1"></EditUserInfo>
       <CreateChatroom v-else-if="this.popup == 2"></CreateChatroom>
+      <InviteToken v-else-if="this.popup == 3"></InviteToken>
     </Popup>
   </div>
 </template>

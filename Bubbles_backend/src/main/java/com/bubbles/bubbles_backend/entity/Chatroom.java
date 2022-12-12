@@ -30,7 +30,7 @@ public class Chatroom {
     private int maxUser;
 
     @ToString.Exclude
-    @ManyToMany(cascade=CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "chatrooms")
+    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "chatrooms")
     @JsonIgnore
     private List<User> users = new ArrayList<>();
 
@@ -38,6 +38,12 @@ public class Chatroom {
     @Override
     public int hashCode(){
         return chatroomId;
+    }
+    @Override
+    public boolean equals(Object o){
+        if(o.getClass() != Chatroom.class)
+            return false;
+        return this.chatroomId == ((Chatroom) o).getChatroomId();
     }
 
 }

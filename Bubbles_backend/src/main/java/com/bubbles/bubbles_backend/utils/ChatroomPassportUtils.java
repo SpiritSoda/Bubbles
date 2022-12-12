@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bubbles.bubbles_backend.config.JwtConfig;
+import io.jsonwebtoken.ExpiredJwtException;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -49,6 +50,9 @@ public class ChatroomPassportUtils {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret())).build();
         try {
             DecodedJWT jwt = verifier.verify(innerToken);
+        }
+        catch (ExpiredJwtException e){
+            throw e;
         }
         catch (Exception e){
             return false;

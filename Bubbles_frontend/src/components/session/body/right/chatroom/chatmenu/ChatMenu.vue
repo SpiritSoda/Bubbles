@@ -19,7 +19,7 @@ export default {
             this.$store.commit('reset_chatroom', {})
         },
         generate_invite(){
-            
+            this.$bus.emit('popup', 3)
         }
     }
 }

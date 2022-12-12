@@ -42,8 +42,15 @@ public class ChatroomService {
             throw new UserNotFoundException(userId);
         if(chatroom == null)
             throw new ChatroomNotFoundException(chatroomId);
-        joinChatroom(user, chatroom);
-        return 0;
+        return joinChatroom(user, chatroom);
+    }
+    public int joinChatroom(User user, int chatroomId) throws Exception{
+        if(user == null)
+            throw new UserNotFoundException(-1);
+        Chatroom chatroom = chatroomRepository.findChatroomByChatroomId(chatroomId);
+        if(chatroom == null)
+            throw new ChatroomNotFoundException(chatroomId);
+        return joinChatroom(user, chatroom);
     }
     public Chatroom createChatroom(ChatroomDTO chatroomDTO){
         Chatroom chatroom = new Chatroom();
@@ -53,5 +60,22 @@ public class ChatroomService {
         chatroom.setComment(chatroomDTO.getComment());
         chatroom.setMaxUser(chatroomDTO.getMaxUser());
         return chatroomRepository.save(chatroom);
+    }
+    public void leaveChatroom(User user, int chatroomId) throws Exception {
+        Chatroom chatroom = chatroomRepository.findChatroomByChatroomId(chatroomId);
+        if(chatroom == null)
+            throw new ChatroomNotFoundException(chatroomId);
+        leaveChatroom(user, chatroom);
+    }
+    public void leaveChatroom(User user, Chatroom chatroom) throws Exception{
+        if(user == null)
+            throw new UserNotFoundException(-1);
+        if(chatroom == null)
+            throw new ChatroomNotFoundException(-1);
+        user.getChatrooms().remove(chatroom);
+        userRepository.save(user);
+    }
+    public boolean existChatroomById(int id){
+        return chatroomRepository.existsById(id);
     }
 }

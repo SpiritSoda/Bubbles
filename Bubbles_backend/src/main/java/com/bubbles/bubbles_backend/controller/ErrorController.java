@@ -2,6 +2,7 @@ package com.bubbles.bubbles_backend.controller;
 
 import com.bubbles.bubbles_backend.exception.*;
 import com.bubbles.bubbles_backend.utils.Result;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -40,5 +41,10 @@ public class ErrorController {
     @ExceptionHandler(InvalidPassportException.class)
     public Result handlerInvalidPassportException(InvalidPassportException e){
         return new Result(6, e.getMessage(), null);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public Result handlerExpiredJwtException(ExpiredJwtException e){
+        return new Result(7, e.getMessage(), null);
     }
 }
