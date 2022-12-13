@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +26,5 @@ public class ChatController {
         this.messageService = messageService;
         this.userService = userService;
         this.chatroomService = chatroomService;
-    }
-
-    @SubscribeMapping("/{chatroomId}")
-    public Result subscribe(@DestinationVariable int chatroomId, @Header String token){
-        return Result.buildSuccessResult("订阅成功");
     }
 }

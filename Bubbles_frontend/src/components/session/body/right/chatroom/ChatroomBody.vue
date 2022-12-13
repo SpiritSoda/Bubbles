@@ -9,7 +9,8 @@ export default {
     data(){
         return {
             msg: 'Fail to connect server...',
-            not_at_bottom: true
+            not_at_bottom: true,
+            refresh_online: null
         }
     },
     components: {
@@ -57,10 +58,18 @@ export default {
     },
     mounted(){
         window.addEventListener('scroll', this.check_at_bottom, false)
+        this.refresh_online = setInterval(
+            () => {
+                this.$store.dispatch('update_onlines')
+            },
+            2000
+        )
         // this.scroll_to_bottom()
     },
     destroyed() {
         window.removeEventListener('scroll', this.check_at_bottom, false)
+        if(this.refresh_online)
+            clearInterval(this.refresh_online)
     }
 }
 </script>

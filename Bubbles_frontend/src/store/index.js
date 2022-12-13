@@ -27,6 +27,8 @@ export default new createStore({
     logout(state) {
       this.commit('chatroom/reset_chatroom', {})
       this.commit('localuser/reset_localuser', {})
+      $socket.unsubscribe_all()
+      $socket.disconnect()
     }
   },
   actions: {
@@ -91,7 +93,10 @@ export default new createStore({
       context.dispatch('update_onlines', id)
     },
 
-    update_onlines(context, id){
+    update_onlines(context){
+      let id = this.state.chatroom.selected_room
+      if(id <= 0)
+        return
       $axios.post(
         '/api/chatroom/onlines',
         {

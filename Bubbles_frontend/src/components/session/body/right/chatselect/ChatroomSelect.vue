@@ -5,11 +5,31 @@ import SearchBar from './SearchBar.vue';
 
 export default {
     components: { SearchBar, ChatroomList, HorizontalSplit },
+    data(){
+        return {
+            refresh_local: null
+        }
+    },
     methods: {
         create_chatroom(){
             this.$bus.emit('popup', 2)
         }
-    }
+    },
+    mounted(){
+        this.refresh_local = setInterval(
+            () => {
+                this.$store.dispatch('update_localuser', {
+                    on_success: () => {},
+                    on_error: () => {}
+                })
+            },
+            5000
+        )
+    },
+    destroyed() {
+        if(this.refresh_local)
+            clearInterval(this.refresh_local)  
+    },
 }
 </script>
 

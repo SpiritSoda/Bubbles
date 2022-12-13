@@ -9,6 +9,7 @@ import EditUserInfo from './components/session/body/popup/EditUserInfo.vue';
 import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
 import InviteToken from './components/session/body/popup/InviteToken.vue';
 import InviteFriend from './components/session/body/popup/InviteFriend.vue';
+import MultiLogin from './components/session/body/popup/MultiLogin.vue';
 
 export default {
   components: {
@@ -20,7 +21,8 @@ export default {
     EditUserInfo,
     CreateChatroom,
     InviteToken,
-    InviteFriend
+    InviteFriend,
+    MultiLogin
 },
   data() {
     return {
@@ -80,8 +82,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$socket.unsubscribe_all()
-    this.$socket.disconnect()
+    
   },
 }
 </script>
@@ -97,6 +98,7 @@ export default {
       <CreateChatroom v-else-if="this.popup == 2"></CreateChatroom>
       <InviteToken v-else-if="this.popup == 3"></InviteToken>
       <InviteFriend v-else-if="this.popup == 4"></InviteFriend>
+      <MultiLogin v-else-if="this.popup == 5"></MultiLogin>
     </Popup>
   </div>
 </template>

@@ -12,14 +12,27 @@ export default {
 
         }
     },
-    mounted(){
+    methods: {
+        process_self_message(res) {
+            let message = JSON.parse(res.body)
+            if (message.type == 3) {
+                this.$store.commit('logout')
+                this.$bus.emit('popup', 5)
+                this.$bus.emit("switch_state", 0)
+            }
+        }
+    },
+    mounted() {
         let token = localStorage.getItem("token");
-        if(token != null){
+        if (token != null) {
             this.$store.dispatch('update_localuser', {
                 on_success: () => {
                     this.$socket.connect(token, () => {
                         console.log("Connected to Bubbles chat manager ...")
-                        this.$store.dispatch('update_localuser', {on_success: () => {}, on_error: () => {}})
+                        this.$store.dispatch('update_localuser', { on_success: () => { }, on_error: () => { } })
+                        this.$socket.subscribe_self(this.$store.state.localuser.local_id, (res) => {
+                            this.process_self_message(res)
+                        })
                     })
                 },
                 on_error: () => {
@@ -29,7 +42,7 @@ export default {
                 }
             });
         }
-        else{
+        else {
             this.$bus.emit('switch_state', 0)
         }
     }
