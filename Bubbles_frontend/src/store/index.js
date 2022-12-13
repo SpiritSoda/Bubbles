@@ -88,6 +88,10 @@ export default new createStore({
 
     select_chatroom(context, id) {
       this.state.chatroom.selected_room = id;
+      context.dispatch('update_onlines', id)
+    },
+
+    update_onlines(context, id){
       $axios.post(
         '/api/chatroom/onlines',
         {
@@ -108,7 +112,7 @@ export default new createStore({
           }
         }
       )
-    },
+    }
   },
   modules: {
     userinfo,
