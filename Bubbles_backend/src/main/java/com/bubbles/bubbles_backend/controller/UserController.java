@@ -1,5 +1,6 @@
 package com.bubbles.bubbles_backend.controller;
 
+import com.bubbles.bubbles_backend.component.ChatroomManager;
 import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
 import com.bubbles.bubbles_backend.dto.UserDTO;
@@ -27,11 +28,13 @@ import java.util.stream.Collectors;
 public class UserController {
     private final JwtConfig jwtConfig;
     private final UserService userService;
+    private final ChatroomManager chatroomManager;
 
     @Autowired
-    public UserController(JwtConfig jwtConfig, UserService userService){
+    public UserController(JwtConfig jwtConfig, UserService userService, ChatroomManager chatroomManager){
         this.jwtConfig = jwtConfig;
         this.userService = userService;
+        this.chatroomManager = chatroomManager;
     }
 
     @PostMapping("/api/login")
@@ -47,7 +50,7 @@ public class UserController {
         data.put("token", token);
         data.put("uid", user.getUserId());
 
-        log.info("User " + user.toString() + " logged in");
+//        log.info("User " + user.toString() + " logged in");
         return Result.buildSuccessResult("Login Success", data);
     }
     @PostMapping("/api/exist")
@@ -96,7 +99,11 @@ public class UserController {
         String token = httpServletRequest.getHeader("token");
         User user = userService.findByToken(token);
         HashMap<String, Object> data = new HashMap<>();
-        List<ChatroomDTO> chatrooms = user.getChatrooms().stream().map(chatroom -> new ChatroomDTO(chatroom)).collect(Collectors.toList());
+        List<ChatroomDTO> chatrooms = user.getChatrooms().stream().map(chatroom -> {
+            ChatroomDTO chatroomDTO = new ChatroomDTO(chatroom);
+            chatroomDTO.setOnlines(chatroomManager.chatroomOnline(chatroom));
+            return chatroomDTO;
+        }).collect(Collectors.toList());
         data.put("id", user.getUserId());
         data.put("username", user.getUsername());
         data.put("avatar", user.getAvatar());

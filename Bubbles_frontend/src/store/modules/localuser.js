@@ -6,18 +6,28 @@ export default {
             local_id: 0,
             token: localStorage.getItem("token"),
             chatrooms: {
-                "1": { id: 1, icon: 1, title: "Default Chatroom", total_user: 233, comment: "Default Bubbles chatroom ...", onlines: 7 },
-                "2": { id: 2, icon: 3, title: "Extra Chatroom", total_user: 233, comment: "Extra Bubbles chatroom ...", onlines: 3 }
+                
             }
         }
     },
     mutations: {
         save_localuser(state, data){
             state.local_id = data.id;
-            state.chatrooms = data.chatrooms
+            state.chatrooms = {}
+            let i = 0
+            for (i in data.chatrooms){
+                let room = data.chatrooms[i]
+                state.chatrooms[room.id] = room
+            }
         },
         save_token(state, token){
             state.token = token
+        },
+        reset_localuser(state){
+            localStorage.removeItem("token")
+            state.token = ''
+            state.local_id = 0
+            state.chatrooms = []
         }
     },
     actions: {

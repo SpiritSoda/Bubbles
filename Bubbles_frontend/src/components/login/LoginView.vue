@@ -22,11 +22,11 @@ export default {
     <div>
         <div class="login-pannel-wrapper">
             <LoginPanel></LoginPanel>
+            <a href="javascript:;" class="register-entry" @click="register">
+                <span>Register</span>
+                <HorizontalSplit :length="60" :top="0" :color="color"></HorizontalSplit>
+            </a>
         </div>
-        <a href="javascript:;" class="register-entry" @click="register">
-            <span>Register</span>
-            <HorizontalSplit :length="60" :top="0" :color="color"></HorizontalSplit>
-        </a>
     </div>
 </template>
 
@@ -45,7 +45,7 @@ export default {
     height: 22px;
     line-height: 22px;
     position: absolute;
-    top: 460px;
+    top: 360px;
     left: 0;
     right: 0;
     margin: auto;

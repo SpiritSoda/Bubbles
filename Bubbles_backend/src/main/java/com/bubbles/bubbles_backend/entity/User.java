@@ -2,12 +2,14 @@ package com.bubbles.bubbles_backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,10 @@ public class User {
     private String username;
 
     @ToString.Exclude
-    @ManyToMany(cascade=CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade= {CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.REFRESH,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinTable(name = "user_chatroom",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -34,5 +39,11 @@ public class User {
     @Override
     public int hashCode(){
         return userId;
+    }
+    @Override
+    public boolean equals(Object o){
+        if(o.getClass() != User.class)
+            return false;
+        return this.userId == ((User) o).getUserId();
     }
 }

@@ -75,7 +75,6 @@ export default {
                     response => {
                         this.invite_waiting = false;
                         let code = response.data.code;
-                        console.log(response)
                         if (code == 0) {
                             this.success = true
                             setTimeout(() => {this.$bus.emit('close_popup')}, 800)
@@ -157,7 +156,7 @@ export default {
             <input type="text" class="search" v-model="username" :placeholder="'Enter your friend\'s username ...'">
             <button class="search-btn" @click="search_friend">
                 <LoadingButton :r="28" :signal="search_waiting" :click="search_friend" :fa_icon="'fa-search'"
-                    :title="'search'">
+                    :title="'Search'">
                 </LoadingButton>
             </button>
         </form>
@@ -171,7 +170,7 @@ export default {
                 <HorizontalSplit :length="120" :top="24" :color="'rgba(190, 190, 190, 1)'"></HorizontalSplit>
             </div>
             <div class="invite-btn">              
-                <LoadingButton :r="30" :click="invite_friend" :fa_icon="'fa-check'" :signal="invite_waiting"></LoadingButton>
+                <LoadingButton :r="30" :click="invite_friend" :fa_icon="'fa-check'" :signal="invite_waiting" :title="'Invite'"></LoadingButton>
             </div>
         </div>
     </div>

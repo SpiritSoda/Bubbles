@@ -80,7 +80,8 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$socket.close_websocket()
+    this.$socket.unsubscribe_all()
+    this.$socket.disconnect()
   },
 }
 </script>

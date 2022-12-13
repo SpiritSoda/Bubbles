@@ -1,7 +1,6 @@
 <script>
 import LeftBody from './body/left/LeftBody.vue'
 import RightBody from './body/right/RightBody.vue'
-import { computed } from 'vue';
 
 export default {
     components: {
@@ -17,7 +16,12 @@ export default {
         let token = localStorage.getItem("token");
         if(token != null){
             this.$store.dispatch('update_localuser', {
-                on_success: () => {},
+                on_success: () => {
+                    this.$socket.connect(token, () => {
+                        console.log("Connected to Bubbles chat manager ...")
+                        this.$store.dispatch('update_localuser', {on_success: () => {}, on_error: () => {}})
+                    })
+                },
                 on_error: () => {
                     localStorage.removeItem("token")
                     this.$bus.emit('error', 1000)

@@ -23,7 +23,7 @@ public class STOMPConfig implements WebSocketMessageBrokerConfigurer {
         //注册一个名字为"/endpointSocket" 的endpoint,并指定 SockJS协议。
         //允许使用socketJs方式访问，访问点为webSocketServer，允许跨域
         //连接前缀
-        registry.addEndpoint("/bubbles_manager")
+        registry.addEndpoint("/chat")
                 .setAllowedOrigins("*")  // 跨域处理
                 .addInterceptors(createChatInterceptor())
                 .withSockJS();  //支持socketJs
@@ -34,10 +34,10 @@ public class STOMPConfig implements WebSocketMessageBrokerConfigurer {
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/api/chatroom", "/user");
+        config.enableSimpleBroker("/chat/chatroom", "/user");
 
         // 全局使用的消息前缀（客户端订阅路径上会体现出来）
-        config.setApplicationDestinationPrefixes("/api/chatroom");
+        config.setApplicationDestinationPrefixes("/chat/chatroom");
 
         // 修改convertAndSendToUser方法前缀
         // 点对点使用的订阅前缀（客户端订阅路径上会体现出来），

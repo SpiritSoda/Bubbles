@@ -3,16 +3,14 @@ package com.bubbles.bubbles_backend.entity;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +28,10 @@ public class Chatroom {
     private int maxUser;
 
     @ToString.Exclude
-    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "chatrooms")
+    @ManyToMany(cascade={CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.REFRESH,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "chatrooms")
     @JsonIgnore
     private List<User> users = new ArrayList<>();
 

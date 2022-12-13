@@ -14,17 +14,25 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ChatroomService chatroomService;
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, ChatroomService chatroomService){
         this.userRepository = userRepository;
+        this.chatroomService = chatroomService;
     }
 
     public Integer registerUser(User user){
         if (userRepository.existsUserByUsername(user.getUsername()))
             return 1;
-        userRepository.save(user);
+        user = userRepository.save(user);
+        try {
+            chatroomService.joinChatroom(user, 1);
+        }
+        catch (Exception e){
+            return -1;
+        }
         return 0;
     }
 

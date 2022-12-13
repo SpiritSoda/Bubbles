@@ -7,6 +7,7 @@ import error from './modules/error'
 import tx from './modules/tx'
 import global from './modules/global'
 import $axios from '../utils/axios'
+import $socket from '../utils/socket'
 
 export default new createStore({
   state: {
@@ -23,6 +24,10 @@ export default new createStore({
         on_success: () => {},
       })
     },
+    logout(state){
+      this.commit('chatroom/reset_chatroom', {})
+      this.commit('localuser/reset_localuser', {})
+    }
   },
   actions: {
     edit_userinfo(context, payload) {
@@ -67,6 +72,7 @@ export default new createStore({
               username: response.data.data.username
             }
             this.commit('userinfo/save_user', userinfo)
+            $socket.subscribe_all(Object.keys(this.state.localuser.chatrooms))
             callback.on_success()
           }
           else {

@@ -26,7 +26,7 @@ export default {
     },
     methods: {  
         exit(){
-            localStorage.removeItem("token");
+            this.$store.commit('logout')
             this.$bus.emit("switch_state", 0);
         },
         edit(){
