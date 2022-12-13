@@ -3,12 +3,13 @@ package com.bubbles.bubbles_backend.controller;
 import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
 import com.bubbles.bubbles_backend.dto.UserDTO;
-import com.bubbles.bubbles_backend.entity.Chatroom;
 import com.bubbles.bubbles_backend.entity.User;
+import com.bubbles.bubbles_backend.exception.UserExistsException;
 import com.bubbles.bubbles_backend.exception.UserNotFoundException;
 import com.bubbles.bubbles_backend.service.UserService;
 import com.bubbles.bubbles_backend.utils.JwtUtils;
 import com.bubbles.bubbles_backend.utils.Result;
+import com.bubbles.bubbles_backend.utils.ValidUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,13 +54,14 @@ public class UserController {
     public Result exist(@RequestBody @Valid UserDTO userDTO) throws Exception{
         HashMap<String, Object> data = new HashMap<>();
         if(userService.existUsername(userDTO.getUsername())){
+            User user = userService.findByUsername(userDTO.getUsername());
             data.put("result", true);
-            data.put("avatar", userService.getUserAvatarByUsername(userDTO.getUsername()));
+            data.put("avatar", user.getAvatar());
+            data.put("id", user.getUserId());
             return Result.buildSuccessResult("User Exists", data);
         }
         else{
-            data.put("result", false);
-            return Result.buildSuccessResult("User Not Exist", data);
+            throw new UserNotFoundException(userDTO.getUsername());
         }
     }
 
@@ -82,7 +84,7 @@ public class UserController {
 
     @GetMapping("/api/user/userInfo")
     public Result getUserInfoById(@RequestParam @Valid int id) throws Exception{
-        User user = userService.getUserById(id);
+        User user = userService.findById(id);
         HashMap<String, Object> data = new HashMap<>();
         data.put("id", id);
         data.put("username", user.getUsername());
@@ -120,6 +122,10 @@ public class UserController {
     public Result edit(@RequestBody @Valid UserDTO userDTO, HttpServletRequest httpServletRequest) throws Exception {
         String token = httpServletRequest.getHeader("token");
         User user = userService.findByToken(token);
+        if(ValidUtils.isValid(userDTO.getUsername())
+                && !userDTO.getUsername().equals(user.getUsername())
+                && userService.existUsername(userDTO.getUsername()))
+            throw new UserExistsException(userDTO.getUsername());
         userService.editUserInfo(user, userDTO);
         return Result.buildSuccessResult("Success to edit user info ...");
     }

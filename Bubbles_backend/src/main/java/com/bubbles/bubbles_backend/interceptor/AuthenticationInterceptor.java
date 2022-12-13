@@ -1,8 +1,7 @@
 package com.bubbles.bubbles_backend.interceptor;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.bubbles.bubbles_backend.config.JwtConfig;
-import com.bubbles.bubbles_backend.exception.NoTokenException;
+import com.bubbles.bubbles_backend.exception.TokenNotFoundException;
 import com.bubbles.bubbles_backend.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -14,8 +13,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
-import java.util.Map;
 
 @Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -41,7 +38,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //        log.info(token);
 
         if (token == null){
-            throw new NoTokenException("Token not found ...");
+            throw new TokenNotFoundException("Token not found ...");
         }
 
         // logger.info("认证 {}", token);

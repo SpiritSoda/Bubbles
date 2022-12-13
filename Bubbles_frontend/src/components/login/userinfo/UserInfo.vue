@@ -29,12 +29,15 @@ export default {
                     }).then(
                         response => {
                             this.waiting = false;
-                            if (!response.data.data.result) {
-                                this.$store.commit('error/set_error_code', 1002);
-                            }
-                            else {
+                            let code = response.data.code;
+                            if(code == 0){
                                 this.$emit('set_avatar', response.data.data.avatar)
                                 this.switch_to_state_password();
+                            }
+                            else if(code == 2)
+                                this.$store.commit('error/set_error_code', 1002);
+                            else {
+                                this.$store.commit('error/set_error_code', 1000);
                             }
                         }
                     ).catch(

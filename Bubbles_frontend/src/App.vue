@@ -8,6 +8,7 @@ import Popup from './components/utils/Popup.vue';
 import EditUserInfo from './components/session/body/popup/EditUserInfo.vue';
 import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
 import InviteToken from './components/session/body/popup/InviteToken.vue';
+import InviteFriend from './components/session/body/popup/InviteFriend.vue';
 
 export default {
   components: {
@@ -18,7 +19,8 @@ export default {
     Popup,
     EditUserInfo,
     CreateChatroom,
-    InviteToken
+    InviteToken,
+    InviteFriend
 },
   data() {
     return {
@@ -93,6 +95,7 @@ export default {
       <EditUserInfo v-if="this.popup == 1"></EditUserInfo>
       <CreateChatroom v-else-if="this.popup == 2"></CreateChatroom>
       <InviteToken v-else-if="this.popup == 3"></InviteToken>
+      <InviteFriend v-else-if="this.popup == 4"></InviteFriend>
     </Popup>
   </div>
 </template>

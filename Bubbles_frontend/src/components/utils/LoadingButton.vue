@@ -45,7 +45,7 @@ export default {
 <template>
     <div class="btn" :style="this.btn_size">
         <a href="javascript:;" :style="this.btn_size" @click="click()" :title="title">
-            <i :class="'fas ' + signal ? 'fa-undo rotate': fa_icon"></i>
+            <i :class="'fas ' + (signal ? 'fa-undo rotate': fa_icon)"></i>
         </a>
     </div>
 </template>

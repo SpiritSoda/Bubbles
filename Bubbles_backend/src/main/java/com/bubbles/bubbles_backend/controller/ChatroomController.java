@@ -2,11 +2,11 @@ package com.bubbles.bubbles_backend.controller;
 
 import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
+import com.bubbles.bubbles_backend.dto.InviteDTO;
 import com.bubbles.bubbles_backend.dto.PassportDTO;
 import com.bubbles.bubbles_backend.entity.Chatroom;
 import com.bubbles.bubbles_backend.entity.User;
-import com.bubbles.bubbles_backend.exception.ChatroomNotFoundException;
-import com.bubbles.bubbles_backend.exception.InvalidPassportException;
+import com.bubbles.bubbles_backend.exception.*;
 import com.bubbles.bubbles_backend.service.ChatroomService;
 import com.bubbles.bubbles_backend.service.PassportService;
 import com.bubbles.bubbles_backend.service.UserService;
@@ -63,19 +63,25 @@ public class ChatroomController {
         String token = request.getHeader("token");
         User user = userService.findByToken(token);
         if(!passportService.consume(chatroomDTO.getPassport()))
-            throw new InvalidPassportException(chatroomDTO.getPassport());
+            throw new PassportNotValidException(chatroomDTO.getPassport());
+        chatroomDTO.setAdmin(user.getUserId());
         Chatroom chatroom = chatroomService.createChatroom(chatroomDTO);
         chatroomService.joinChatroom(user, chatroom);
         return Result.buildSuccessResult("Success to create chatroom");
     }
 
     @PostMapping("/api/chatroom/inviteToken")
-    public Result generateInviteToken(@RequestBody @Valid ChatroomDTO chatroomDTO) throws Exception{
+    public Result generateInviteToken(@RequestBody @Valid ChatroomDTO chatroomDTO, HttpServletRequest request) throws Exception{
         int id = chatroomDTO.getId();
         if(!chatroomService.existChatroomById(id)){
             throw new ChatroomNotFoundException(id);
         }
-        String token = InviteTokenUtils.generateInviteToken(id, jwtConfig);
+        String token = request.getHeader("token");
+        User user = userService.findByToken(token);
+        if(!chatroomService.inChatroom(user, id)){
+            throw new UserNotInChatroomException(user.getUserId(), id);
+        }
+        token = InviteTokenUtils.generateInviteToken(id, jwtConfig);
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("token", token);
@@ -87,10 +93,26 @@ public class ChatroomController {
         String token = passportDTO.getToken();
         int id = InviteTokenUtils.verifyInviteToken(token, jwtConfig);
         if(id == 0)
-            return Result.buildFailResult("Invalid Token");
+            throw new PassportNotValidException(token);
         token = request.getHeader("token");
         User user = userService.findByToken(token);
         chatroomService.joinChatroom(user, id);
         return Result.buildSuccessResult("Success to join chatroom");
+    }
+    @PostMapping("/api/chatroom/invite")
+    public Result inviteToChatroom(@RequestBody @Valid InviteDTO inviteDTO, HttpServletRequest request) throws Exception {
+        String token = request.getHeader("token");
+        User user = userService.findByToken(token);
+        if(!chatroomService.inChatroom(user, inviteDTO.getChatroomId()))
+            throw new UserNotInChatroomException(user.getUserId(), inviteDTO.getChatroomId());
+        chatroomService.joinChatroom(inviteDTO.getUserId(), inviteDTO.getChatroomId());
+        return Result.buildSuccessResult("Success to join chatroom");
+    }
+    @PostMapping("/api/chatroom/leave")
+    public Result leaveChatroom(@RequestBody @Valid ChatroomDTO chatroomDTO, HttpServletRequest request) throws Exception{
+        String token = request.getHeader("token");
+        User user = userService.findByToken(token);
+        chatroomService.leaveChatroom(user, chatroomDTO.getId());
+        return Result.buildSuccessResult("Success to leave chatroom");
     }
 }

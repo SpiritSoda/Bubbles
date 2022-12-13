@@ -20,13 +20,39 @@ export default {
         },
         generate_invite(){
             this.$bus.emit('popup', 3)
+        },
+        invite_friend(){
+            this.$bus.emit('popup', 4)
+        },
+        leave_chatroom(){
+            this.$axios.post(
+                '/api/chatroom/leave',
+                {
+                    id: this.$store.state.chatroom.selected_room
+                },
+                {
+                    headers: {
+                        'token': this.$store.state.localuser.token
+                    }
+                }
+            )
+            .then(
+                (response) => {
+                    this.$store.commit('reset_chatroom', {});
+                }
+            )
+            .catch(
+                (e) => {
+                    this.$store.commit('reset_chatroom', {});
+                }
+            )
         }
     }
 }
 </script>
 
 <template>
-    <div class="menu clearfix" :style="{width: show_menu ? '140px': '34px'}">
+    <div class="menu clearfix" :style="{width: show_menu ? '174px': '34px'}">
         <div class="menu-entry">
             <Button :r="35" :click="change_menu" :fa_icon="'fa-window-maximize'" :title="'Menu'"></Button>
         </div>
@@ -35,10 +61,13 @@ export default {
                 <Button :r="30" :click="back_to_select" :fa_icon="'fa-home'" :title="'Home'"></Button>
             </div>
             <div class="menu-item" :style="{left: 34 * 1 + 'px'}">
-                <Button :r="30" :click="generate_invite" :fa_icon="'fa-users'" :title="'Invite Friend'"></Button>
+                <Button :r="30" :click="generate_invite" :fa_icon="'fa-users'" :title="'Invite Token'"></Button>
             </div>
             <div class="menu-item" :style="{left: 34 * 2 + 'px'}">
-                <ConfirmButton :r="30" :click="generate_invite" :fa_icon="'fa-running'" :title="'Quit Chatroom'"></ConfirmButton>
+                <Button :r="30" :click="invite_friend" :fa_icon="'fa-plus'" :title="'Invite Friend'"></Button>
+            </div>
+            <div class="menu-item" :style="{left: 34 * 3 + 'px'}">
+                <ConfirmButton :r="30" :click="leave_chatroom" :fa_icon="'fa-running'" :title="'Quit Chatroom'"></ConfirmButton>
             </div>
         </div>
     </div>

@@ -13,38 +13,43 @@ public class ErrorController {
     public Result handlerException(Exception e){
         return new Result(-1, e.getClass().getSimpleName() + ": " + e.getMessage(), null);
     }
-    @ExceptionHandler(NoTokenException.class)
-    public Result handlerNoTokenException(NoTokenException e){
-        return new Result(1, e.getMessage(), null);
-    }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public Result handlerUserNotFoundException(UserNotFoundException e){
-        return new Result(2, e.getMessage(), null);
+    @ExceptionHandler(BubblesException.class)
+    public Result handlerBubblesException(BubblesException e){
+        return e.result();
     }
-
-    @ExceptionHandler(PasswordNotValidException.class)
-    public Result handlePasswordNotValidException(PasswordNotValidException e){
-        return new Result(3, e.getMessage(), null);
-    }
-
-    @ExceptionHandler(UserHasJoinedChatroomException.class)
-    public Result handleUserHasJoinedChatroomException(UserHasJoinedChatroomException e){
-        return new Result(4, e.getMessage(), null);
-    }
-
-    @ExceptionHandler(ChatroomNotFoundException.class)
-    public Result handlerChatroomNotFoundException(ChatroomNotFoundException e){
-        return new Result(5, e.getMessage(), null);
-    }
-
-    @ExceptionHandler(InvalidPassportException.class)
-    public Result handlerInvalidPassportException(InvalidPassportException e){
-        return new Result(6, e.getMessage(), null);
-    }
+//    @ExceptionHandler(NoTokenException.class)
+//    public Result handlerNoTokenException(NoTokenException e){
+//        return new Result(1, e.getMessage(), null);
+//    }
+//
+//    @ExceptionHandler(UserNotFoundException.class)
+//    public Result handlerUserNotFoundException(UserNotFoundException e){
+//        return new Result(2, e.getMessage(), null);
+//    }
+//
+//    @ExceptionHandler(PasswordNotValidException.class)
+//    public Result handlePasswordNotValidException(PasswordNotValidException e){
+//        return new Result(3, e.getMessage(), null);
+//    }
+//
+//    @ExceptionHandler(UserHasJoinedChatroomException.class)
+//    public Result handleUserHasJoinedChatroomException(UserHasJoinedChatroomException e){
+//        return new Result(4, e.getMessage(), null);
+//    }
+//
+//    @ExceptionHandler(ChatroomNotFoundException.class)
+//    public Result handlerChatroomNotFoundException(ChatroomNotFoundException e){
+//        return new Result(5, e.getMessage(), null);
+//    }
+//
+//    @ExceptionHandler(InvalidPassportException.class)
+//    public Result handlerInvalidPassportException(InvalidPassportException e){
+//        return new Result(6, e.getMessage(), null);
+//    }
 
     @ExceptionHandler(ExpiredJwtException.class)
     public Result handlerExpiredJwtException(ExpiredJwtException e){
-        return new Result(7, e.getMessage(), null);
+        return new Result(ErrorCode.TOKEN_EXPIRED, e.getMessage(), null);
     }
 }

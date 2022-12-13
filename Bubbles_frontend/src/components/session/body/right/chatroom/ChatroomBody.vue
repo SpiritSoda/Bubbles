@@ -56,11 +56,11 @@ export default {
         }
     },
     mounted(){
-        window.addEventListener('scroll', this.check_at_bottom, true)
+        window.addEventListener('scroll', this.check_at_bottom, false)
         // this.scroll_to_bottom()
     },
     destroyed() {
-        window.removeEventListener('scroll', this.check_at_bottom, true)
+        window.removeEventListener('scroll', this.check_at_bottom, false)
     }
 }
 </script>

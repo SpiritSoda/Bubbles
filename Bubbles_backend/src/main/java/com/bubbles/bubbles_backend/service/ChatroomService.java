@@ -3,6 +3,7 @@ package com.bubbles.bubbles_backend.service;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
 import com.bubbles.bubbles_backend.entity.Chatroom;
 import com.bubbles.bubbles_backend.entity.User;
+import com.bubbles.bubbles_backend.exception.ChatroomFullException;
 import com.bubbles.bubbles_backend.exception.ChatroomNotFoundException;
 import com.bubbles.bubbles_backend.exception.UserHasJoinedChatroomException;
 import com.bubbles.bubbles_backend.exception.UserNotFoundException;
@@ -28,6 +29,8 @@ public class ChatroomService {
             throw new UserNotFoundException(-1);
         if(chatroom == null)
             throw new ChatroomNotFoundException(-1);
+        if(chatroom.getUsers().size() >= chatroom.getMaxUser())
+            throw new ChatroomFullException(chatroom.getChatroomId());
         List<Chatroom> joined = user.getChatrooms();
         if(joined.contains(chatroom))
             throw new UserHasJoinedChatroomException(user.getUserId(), chatroom.getChatroomId());
@@ -77,5 +80,18 @@ public class ChatroomService {
     }
     public boolean existChatroomById(int id){
         return chatroomRepository.existsById(id);
+    }
+    /*
+        Whether a user joins given chatroom
+     */
+    public boolean inChatroom(User user, int chatroomId) throws ChatroomNotFoundException {
+        Chatroom chatroom = chatroomRepository.findChatroomByChatroomId(chatroomId);
+        if(chatroom == null)
+            throw new ChatroomNotFoundException(chatroomId);
+        List<Chatroom> joined = user.getChatrooms();
+        if(!joined.contains(chatroom))
+            return false;
+        else
+            return true;
     }
 }

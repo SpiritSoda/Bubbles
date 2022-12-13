@@ -37,15 +37,18 @@ public class UserService {
         return findResult.getUserId();
     }
 
-    public int getUserAvatarByUsername(String username) throws Exception {
+    public User findByUsername(String username) throws Exception {
         User findResult = userRepository.findUserByUsername(username);
         if (findResult == null)
             throw new UserNotFoundException(username);
-        return findResult.getAvatar();
+        return findResult;
     }
 
-    public User getUserById(int id) throws Exception{
-        return userRepository.findUserByUserId(id);
+    public User findById(int id) throws Exception{
+        User user = userRepository.findUserByUserId(id);
+        if(user == null)
+            throw new UserNotFoundException(id);
+        return user;
     }
     public List<User> getUsersByIds(List<Integer> ids) throws Exception{
         return userRepository.findUserByUserIdIn(ids);
@@ -58,7 +61,7 @@ public class UserService {
     public User findByToken(String token) throws Exception{
         int id = JwtUtils.getUserId(token);
 //        log.info(token);
-        User user = getUserById(id);
+        User user = findById(id);
         if(user == null)
             throw new UserNotFoundException(id);
         return user;

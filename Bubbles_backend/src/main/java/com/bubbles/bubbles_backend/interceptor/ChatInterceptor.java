@@ -1,7 +1,7 @@
 package com.bubbles.bubbles_backend.interceptor;
 
 import com.bubbles.bubbles_backend.config.JwtConfig;
-import com.bubbles.bubbles_backend.exception.NoTokenException;
+import com.bubbles.bubbles_backend.exception.TokenNotFoundException;
 import com.bubbles.bubbles_backend.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class ChatInterceptor implements HandshakeInterceptor {
 //         log.info("认证 {}", token);
         try{
             if (token == null){
-                throw new NoTokenException("Token not found ...");
+                throw new TokenNotFoundException("Token not found ...");
             }
             JwtUtils.verify(token, jwtConfig);
         }

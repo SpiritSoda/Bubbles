@@ -18,6 +18,10 @@ export default new createStore({
   mutations: {
     reset_chatroom(state) {
       this.commit('chatroom/reset_chatroom', {})
+      this.dispatch('update_localuser', {
+        on_error: () => {},
+        on_success: () => {},
+      })
     },
   },
   actions: {
@@ -32,8 +36,9 @@ export default new createStore({
         }
       ).then(
         response => {
-          if (response.data.code != 0) {
-            payload.on_error()
+          let code = response.data.code
+          if (code != 0) {
+            payload.on_error(code)
           }
           else {
             this.dispatch('userinfo/fetch_userinfo', this.state.localuser.local_id)
@@ -42,37 +47,38 @@ export default new createStore({
         }
       ).catch(
         e => {
-          payload.on_error()
+          payload.on_error(-1)
         }
       )
     },
     update_localuser(context, callback) {
       $axios.get('/api/user/selfInfo', {
-          headers: {
-              'token': this.state.localuser.token
-          }
+        headers: {
+          'token': this.state.localuser.token
+        }
       }).then(
-          response => {
-              if (response.data.code != 0) {
-                  callback.on_error()
-              }
-              else {
-                  this.commit('localuser/save_localuser', response.data.data)
-                  let userinfo = {
-                    id: response.data.data.id,
-                    avatar: response.data.data.avatar,
-                    username: response.data.data.username
-                  }
-                  this.commit('userinfo/save_user', userinfo)
-                  callback.on_success()
-              }
+        response => {
+          let code = response.data.code;
+          if (code == 0) {
+            this.commit('localuser/save_localuser', response.data.data)
+            let userinfo = {
+              id: response.data.data.id,
+              avatar: response.data.data.avatar,
+              username: response.data.data.username
+            }
+            this.commit('userinfo/save_user', userinfo)
+            callback.on_success()
           }
+          else {
+            callback.on_error()
+          }
+        }
       ).catch(
-          e => {
-              callback.on_error()
-          }
+        e => {
+          callback.on_error()
+        }
       )
-  }
+    }
   },
   modules: {
     userinfo,

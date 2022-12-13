@@ -41,8 +41,8 @@ export default {
 
 <template>
     <div class="avatar-border" :style="this.avatar_border_style">
-        <div class="avatar" :style="this.avatar_style"></div>
-        <i class="fas fa-user" :style="{'font-size': (this.r / 2) + 'px'}" v-if="this.avatar <= 0"></i>
+        <div class="avatar" :style="this.avatar_style" v-if="this.avatar > 0"></div>
+        <i class="fas fa-user" :style="{'font-size': (this.r / 2) + 'px'}" v-else></i>
     </div>
 </template>
 

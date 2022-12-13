@@ -1,9 +1,10 @@
 <script>
+import HorizontalSplit from '../../../../utils/HorizontalSplit.vue';
 import ChatroomList from './ChatroomList.vue';
 import SearchBar from './SearchBar.vue';
 
 export default {
-    components: { SearchBar, ChatroomList },
+    components: { SearchBar, ChatroomList, HorizontalSplit },
     methods: {
         create_chatroom(){
             this.$bus.emit('popup', 2)
@@ -67,5 +68,9 @@ export default {
 }
 .add-btn:hover {
     box-shadow: 0 0 10px rgb(124, 179, 255);
+}
+.chatroom-list{
+    position: absolute;
+    top: 95px;
 }
 </style>

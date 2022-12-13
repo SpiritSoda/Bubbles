@@ -80,7 +80,13 @@ export default {
                         password: this.lock_password ? '' : this.$md5(this.password),
                     },
                     on_success: () => { this.$bus.emit('close_popup'); this.waiting = false },
-                    on_error: () => { this.$store.commit('error/set_error_code', 4000); this.waiting = false }
+                    on_error: (code) => { 
+                        if(code == 8)
+                            this.$store.commit('error/set_error_code', 4005)
+                        else
+                            this.$store.commit('error/set_error_code', 4000)
+                        this.waiting = false 
+                    }
                 })
             }, 300)
         },
@@ -106,6 +112,8 @@ export default {
                 this.msg = 'Password can not be empty ...'
             else if (this.error_code == 4004)
                 this.msg = 'Username can not be empty ...'
+            else if (this.error_code == 4005)
+                this.msg = 'Username exists ...'
             return this.msg
         }
     },
@@ -131,12 +139,19 @@ export default {
         <div class="title">Edit Your Profile</div>
         <!-- select avatar -->
         <div class="avatar-select">
-            <a href="javascript:;" class="avatar-show" @click="reverse_list" :class="{ show_list: show_list }">
-                <Avatar :avatar="avatar" :r="130" :shadow="false"></Avatar>
+            <a href="javascript:;" 
+                class="avatar-show" 
+                @click="reverse_list" 
+                :class="{ show_list: show_list }">
+                <Avatar :avatar="avatar" 
+                    :r="130" 
+                    :shadow="false">
+                </Avatar>
             </a>
             <div class="avatar-list" :class="{ show_list: show_list }">
                 <div class="avatar-list-roller">
-                    <div class="avatar-icon" v-for="id in avatar_count"
+                    <div class="avatar-icon" 
+                        v-for="id in avatar_count"
                         :style="{ 'background-image': 'url(\'/avatars/genshin/' + id + '.jpg\')' }"
                         @click="set_avatar(id)">
                     </div>
@@ -148,20 +163,35 @@ export default {
             <ul class="input">
                 <li>
                     <span>Username: </span>
-                    <input type="text" id="username" v-model="username" :disabled="lock_username"
-                        :class="{ unlock: !lock_username, shake: error_code == 4004 }">
+                    <input type="text" id="username" 
+                        v-model="username" 
+                        :disabled="lock_username"
+                        :class="{ unlock: !lock_username, shake: error_code == 4004 || error_code == 4005 }">
                     <div class="unlock-btn">
-                        <Button :r="30" :click.once="unlock_username" :style="{ opacity: lock_username ? 1.0 : 0.0 }"
-                            :r_shadow="2" :fa_icon="'fa-edit'" :title="'Edit Username'"></Button>
+                        <Button :r="30" 
+                            :click.once="unlock_username" 
+                            :style="{ opacity: lock_username ? 1.0 : 0.0 }"
+                            :r_shadow="2" 
+                            :fa_icon="'fa-edit'" 
+                            :title="'Edit Username'">
+                        </Button>
                     </div>
                 </li>
                 <li>
                     <span>Password: </span>
-                    <input type="password" id="password" v-model="password" :disabled="lock_password"
+                    <input type="password" 
+                        id="password" 
+                        v-model="password" 
+                        :disabled="lock_password"
                         :class="{ unlock: !lock_password, shake: error_code == 4001 || error_code == 4003 }">
                     <div class="unlock-btn">
-                        <Button :r="30" :click.once="unlock_password" :style="{ opacity: lock_password ? 1.0 : 0.0 }"
-                            :r_shadow="2" :fa_icon="'fa-edit'" :title="'Edit Password'"></Button>
+                        <Button :r="30" 
+                            :click.once="unlock_password" 
+                            :style="{ opacity: lock_password ? 1.0 : 0.0 }"
+                            :r_shadow="2" 
+                            :fa_icon="'fa-edit'" 
+                            :title="'Edit Password'">
+                        </Button>
                     </div>
                 </li>
                 <li>
@@ -172,11 +202,22 @@ export default {
             </ul>
         </form>
         <div class="cancel-btn-wrapper">
-            <TextButton :width="90" :height="30" :title="'Cancel'" :click="cancel" :font_color="'rgb(239, 60, 60)'">
+            <TextButton 
+                :width="90" 
+                :height="30" 
+                :title="'Cancel'" 
+                :click="cancel" 
+                :font_color="'rgb(239, 60, 60)'">
             </TextButton>
         </div>
         <div class="submit-btn-wrapper">
-            <LoadingTextButton :width="90" :height="30" :title="'Submit'" :click="submit" :signal="waiting"></LoadingTextButton>
+            <LoadingTextButton 
+                :width="90" 
+                :height="30" 
+                :title="'Submit'" 
+                :click="submit" 
+                :signal="waiting">
+            </LoadingTextButton>
         </div>
         <span class="error_msg" :style="{ 'opacity': error_code > 0 ? 1 : 0 }">{{ error_msg }}</span>
         <!-- <div class="loading" :style="{ 'opacity': waiting > 0 ? 1 : 0 }">

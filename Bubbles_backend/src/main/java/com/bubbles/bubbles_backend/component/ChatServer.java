@@ -1,14 +1,11 @@
 package com.bubbles.bubbles_backend.component;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.entity.User;
-import com.bubbles.bubbles_backend.exception.NoTokenException;
+import com.bubbles.bubbles_backend.exception.TokenNotFoundException;
 import com.bubbles.bubbles_backend.service.UserService;
 import com.bubbles.bubbles_backend.utils.ChatRequestMessage;
 import com.bubbles.bubbles_backend.utils.ChatResponseMessage;
 import com.bubbles.bubbles_backend.utils.JwtUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
 import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,18 +35,18 @@ public class ChatServer implements WebSocketHandler {
 //        String token = session.getHandshakeHeaders().get("token").get(0);
         String[] params = session.getUri().getQuery().split("&");
         if(params.length == 0)
-            throw new NoTokenException("Token not found ...");
+            throw new TokenNotFoundException("Token not found ...");
         String token = params[0].split("=")[1];
 
         int userId = JwtUtils.getUserId(token);
-        User user = this.userService.getUserById(userId);
+        User user = this.userService.findById(userId);
         log.info("User " + user.getUsername() + "-" + userId + " enter the chatroom ...");
         sessionMap.put(session, userId);
 
     }
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        User user = this.userService.getUserById(sessionMap.get(session));
+        User user = this.userService.findById(sessionMap.get(session));
         log.info("User " + user.getUsername() + "-" + sessionMap.get(session) + " exit the chatroom ...");
         sessionMap.remove(session);
     }
@@ -61,7 +57,7 @@ public class ChatServer implements WebSocketHandler {
         Gson gson = new Gson();
         ChatRequestMessage request = gson.fromJson(msg, ChatRequestMessage.class);
         if(request.getType() == 0){
-            User user = userService.getUserById(sessionMap.get(session));
+            User user = userService.findById(sessionMap.get(session));
             LinkedHashMap<String, Object> data = new LinkedHashMap<>();
             data.put("userId", user.getUserId());
             data.put("avatar", user.getAvatar());
