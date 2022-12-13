@@ -7,7 +7,7 @@ export default {
     components: { HorizontalSplit },
     methods: {
         select_chatroom(){
-            this.$store.commit('chatroom/select_chatroom', this.chatroom.id);
+            this.$store.dispatch('select_chatroom', this.chatroom.id);
         }
     },
     computed:{

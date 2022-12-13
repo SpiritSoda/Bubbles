@@ -101,7 +101,7 @@ public class UserController {
         HashMap<String, Object> data = new HashMap<>();
         List<ChatroomDTO> chatrooms = user.getChatrooms().stream().map(chatroom -> {
             ChatroomDTO chatroomDTO = new ChatroomDTO(chatroom);
-            chatroomDTO.setOnlines(chatroomManager.chatroomOnline(chatroom));
+            chatroomDTO.setOnlines(chatroomManager.chatroomOnlineCnt(chatroom));
             return chatroomDTO;
         }).collect(Collectors.toList());
         data.put("id", user.getUserId());

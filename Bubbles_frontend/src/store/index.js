@@ -20,11 +20,11 @@ export default new createStore({
     reset_chatroom(state) {
       this.commit('chatroom/reset_chatroom', {})
       this.dispatch('update_localuser', {
-        on_error: () => {},
-        on_success: () => {},
+        on_error: () => { },
+        on_success: () => { },
       })
     },
-    logout(state){
+    logout(state) {
       this.commit('chatroom/reset_chatroom', {})
       this.commit('localuser/reset_localuser', {})
     }
@@ -84,7 +84,31 @@ export default new createStore({
           callback.on_error()
         }
       )
-    }
+    },
+
+    select_chatroom(context, id) {
+      this.state.chatroom.selected_room = id;
+      $axios.post(
+        '/api/chatroom/onlines',
+        {
+          id
+        },
+        {
+          headers: {
+            'token': this.state.localuser.token
+          }
+        }
+      )
+      .then(
+        (response) => {
+          let code = response.data.code
+          if(code == 0){
+            let onlines = response.data.data.onlines
+            this.state.chatroom.onlines = onlines;
+          }
+        }
+      )
+    },
   },
   modules: {
     userinfo,

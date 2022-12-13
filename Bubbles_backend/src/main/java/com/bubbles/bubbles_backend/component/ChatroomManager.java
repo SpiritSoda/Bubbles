@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -25,8 +27,12 @@ public class ChatroomManager {
         online.remove(id);
 //        log.info("logout: " + id);
     }
-    public int chatroomOnline(Chatroom chatroom){
+    public int chatroomOnlineCnt(Chatroom chatroom){
 //        log.info("calculating: " + chatroom.getChatroomId());
         return (int) chatroom.getUsers().stream().filter(user -> online.contains(user.getUserId())).count();
+    }
+    public List<Integer> chatroomOnline(Chatroom chatroom){
+//        log.info("calculating: " + chatroom.getChatroomId());
+        return chatroom.getUsers().stream().filter(user -> online.contains(user.getUserId())).map(user -> user.getUserId()).collect(Collectors.toList());
     }
 }

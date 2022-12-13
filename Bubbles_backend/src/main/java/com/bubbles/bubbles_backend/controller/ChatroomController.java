@@ -1,5 +1,6 @@
 package com.bubbles.bubbles_backend.controller;
 
+import com.bubbles.bubbles_backend.component.ChatroomManager;
 import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
 import com.bubbles.bubbles_backend.dto.InviteDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -31,13 +33,15 @@ public class ChatroomController {
     private final ChatroomService chatroomService;
     private final UserService userService;
     private final PassportService passportService;
+    private final ChatroomManager chatroomManager;
     private final JwtConfig jwtConfig;
 
     @Autowired
-    public ChatroomController(ChatroomService chatroomService, UserService userService, PassportService passportService, JwtConfig jwtConfig) {
+    public ChatroomController(ChatroomService chatroomService, UserService userService, PassportService passportService, ChatroomManager chatroomManager, JwtConfig jwtConfig) {
         this.chatroomService = chatroomService;
         this.userService = userService;
         this.passportService = passportService;
+        this.chatroomManager = chatroomManager;
         this.jwtConfig = jwtConfig;
     }
 
@@ -114,5 +118,17 @@ public class ChatroomController {
         User user = userService.findByToken(token);
         chatroomService.leaveChatroom(user, chatroomDTO.getId());
         return Result.buildSuccessResult("Success to leave chatroom");
+    }
+
+    @PostMapping("/api/chatroom/onlines")
+    public Result getOnlineUsers(@RequestBody @Valid ChatroomDTO chatroomDTO, HttpServletRequest request) throws Exception{
+        String token = request.getHeader("token");
+        User user = userService.findByToken(token);
+        if(!chatroomService.inChatroom(user, chatroomDTO.getId()))
+            throw new UserNotInChatroomException(user.getUserId(), chatroomDTO.getId());
+        List<Integer> onlines = chatroomManager.chatroomOnline(chatroomService.findById(chatroomDTO.getId()));
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("onlines", onlines);
+        return Result.buildSuccessResult("Success to get online user", data);
     }
 }

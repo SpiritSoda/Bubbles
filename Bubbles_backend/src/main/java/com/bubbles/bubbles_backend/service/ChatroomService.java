@@ -26,6 +26,12 @@ public class ChatroomService {
         this.userRepository = userRepository;
     }
 
+    public Chatroom findById(int id) throws Exception{
+        Chatroom chatroom = chatroomRepository.findChatroomByChatroomId(id);
+        if(chatroom == null)
+            throw new ChatroomNotFoundException(id);
+        return chatroom;
+    }
     public int joinChatroom(User user, Chatroom chatroom) throws Exception{
         if(user == null)
             throw new UserNotFoundException(-1);

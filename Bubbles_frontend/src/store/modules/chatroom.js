@@ -3,8 +3,7 @@ export default {
     namespaced: true, 
     state: () => {
         return {
-            onlines: [1, 2, 6, 4, 5, 10],
-            total_user: 20,
+            onlines: [],
             messages: [
                 { id: 7, content: 'Now you shall perish !' },
                 { id: 6, content: 'Stabilized!' },
@@ -17,9 +16,6 @@ export default {
         }
     },
     mutations: {
-        select_chatroom(state, id) {
-            state.selected_room = id;
-        },
         reset_chatroom(state) {
             state.total_user = 0
             state.selected_room = 0
@@ -27,5 +23,7 @@ export default {
             state.onlines = []
         }
     },
-    actions: {}
+    actions: {
+        
+    }
 }

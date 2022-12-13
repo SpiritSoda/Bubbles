@@ -4,7 +4,13 @@ export default {
     components: { OnlineUser },
     computed: {
         in_chatroom(){
-            return this.$store.state.chatroom.total_user > 0
+            return this.$store.state.chatroom.selected_room > 0
+        },
+        total_user(){
+            return this.in_chatroom ? this.$store.state.localuser.chatrooms[this.$store.state.chatroom.selected_room].total_user : 0
+        },
+        online_user(){
+            return this.in_chatroom ? this.$store.state.chatroom.onlines.length : 0
         }
     }
 }
@@ -12,7 +18,7 @@ export default {
 
 <template>
     <div>
-        <span class="header">Online: {{in_chatroom ? this.$store.state.chatroom.onlines.length : 0}}/{{this.$store.state.chatroom.total_user}}</span>
+        <span class="header">Online: {{online_user}}/{{total_user}}</span>
         <ul class="userlist-wrapper fade-in" v-if="in_chatroom">
             <OnlineUser v-for="id in this.$store.state.chatroom.onlines" :id="id" style="margin: 5px"></OnlineUser>
         </ul>
