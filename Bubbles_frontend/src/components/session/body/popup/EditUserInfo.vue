@@ -166,7 +166,7 @@ export default {
                     <input type="text" id="username" 
                         v-model="username" 
                         :disabled="lock_username"
-                        :class="{ unlock: !lock_username, shake: error_code == 4004 || error_code == 4005 }">
+                        :class="{ unlock: !lock_username, shake: error_code == 4004 || error_code == 4005 }" autocomplete="off">
                     <div class="unlock-btn">
                         <Button :r="30" 
                             :click.once="unlock_username" 

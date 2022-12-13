@@ -38,7 +38,7 @@ export default {
         <VerticalSplit :length="100" :left="-5" :color="'rgba(150, 150, 150, 1)'"></VerticalSplit>
         <HorizontalSplit :length="600" :top="45" :color="'rgba(224, 224, 224, 0.9)'"></HorizontalSplit>
         <div class="title">Send Invite Token to Your Friends</div>
-        <input type="text" class="token" v-model="token" :placeholder="'...'" readonly>
+        <input type="text" class="token" v-model="token" :placeholder="'...'" readonly autocomplete="off">
     </div>
 </template>
 

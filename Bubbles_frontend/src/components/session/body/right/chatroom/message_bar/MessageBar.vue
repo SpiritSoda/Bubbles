@@ -92,7 +92,7 @@ export default {
             </li>
         </ul>
         <form onsubmit="return false" class="message-wrapper">
-            <input type="text" class="message" v-model="content">
+            <input type="text" class="message" v-model="content" autocomplete="off">
             <button class="send-btn" @click="send_message">
                 <a href="javascript:;" class="send-a">
                     <i class="fas fa-share"></i>

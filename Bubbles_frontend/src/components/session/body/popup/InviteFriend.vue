@@ -153,7 +153,7 @@ export default {
         <div class="error_msg" :class="{ 'on_error': error_code > 0, 'success': success, 'shake': error_code > 0 }">{{ error_msg }}</div>
         <!-- search username -->
         <form onsubmit="return false" class="search-wrapper">
-            <input type="text" class="search" v-model="username" :placeholder="'Enter your friend\'s username ...'">
+            <input type="text" class="search" v-model="username" :placeholder="'Enter your friend\'s username ...'" autocomplete="off">
             <button class="search-btn" @click="search_friend">
                 <LoadingButton :r="28" :signal="search_waiting" :click="search_friend" :fa_icon="'fa-search'"
                     :title="'Search'">

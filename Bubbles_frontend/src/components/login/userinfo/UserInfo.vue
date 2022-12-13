@@ -172,7 +172,7 @@ export default {
             </button>
             <input id="data" :type="this.state == 0 ? 'text': 'password'" class="data" v-model="data"
                 :class="{'shake': error_code >= 1001 && error_code <= 1004}"
-                :placeholder="placeholder">
+                :placeholder="placeholder" autocomplete="off">
         </form>
         <span class="error_msg" :style="{'opacity': error_code > 0 ? 1 : 0}">{{error_msg}}</span>
     </div>

@@ -122,7 +122,7 @@ export default {
             <ul class="input">
                 <li>
                     <span>Username: </span>
-                    <input type="text" class="data" v-model="username" :class="{'shake': error_code == 2001 || error_code == 2007 || error_code == 2008}">
+                    <input type="text" class="data" v-model="username" :class="{'shake': error_code == 2001 || error_code == 2007 || error_code == 2008}" autocomplete="off">
                 </li>
                 <li>
                     <span>Password: </span>

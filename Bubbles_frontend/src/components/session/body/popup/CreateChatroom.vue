@@ -223,7 +223,7 @@ export default {
         <!-- enter passport -->
         <form onsubmit="return false" class="search-wrapper">
             <input type="text" class="search" v-model="passport" :placeholder="'Enter your passport ...'"
-                :disabled="verified">
+                :disabled="verified" autocomplete="off">
             <button class="search-btn" @click="verify_passport">
                 <a :href="verified ? null : 'javascript:;'" class="search-a">
                     <i class="fas " :class="waiting_for_verify ? 'fa-undo rotate' : 'fa-search'"></i>
@@ -251,7 +251,7 @@ export default {
             <ul class="input">
                 <li>
                     <span>Title: </span>
-                    <input type="text" id="title" v-model="title" :class="{ shake: error_code == 5002 }">
+                    <input type="text" id="title" v-model="title" :class="{ shake: error_code == 5002 }" autocomplete="off">
                 </li>
                 <li>
                     <span>Comment: </span>
@@ -261,7 +261,7 @@ export default {
                 </li>
                 <li>
                     <span>Max Users: (&le; {{ max_user_limit }})</span>
-                    <input type="number" id="max_user" v-model="max_user" :max="max_user_limit" :class="{ shake: error_code == 5003 }">
+                    <input type="number" id="max_user" v-model="max_user" :max="max_user_limit" :class="{ shake: error_code == 5003 }" autocomplete="off">
                 </li>
             </ul>
         </form>
