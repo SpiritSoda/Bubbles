@@ -82,7 +82,10 @@ export default {
 
     transition: all .3s;
     overflow: hidden;
-    position: relative;
+    
+    position: absolute;
+    top: 18px;
+    right: 30px;
 }
 .menu-entry{
     position: absolute;

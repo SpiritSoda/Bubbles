@@ -22,7 +22,7 @@ export default {
 <template>
     <div class="right-body clearfix">
         <VerticalSplit :length="510" :left="-5" :color="'rgb(150, 150, 150)'"></VerticalSplit>
-        <!-- <VerticalSplit :length="510" :left="5" :color="'rgb(150, 150, 150)'"></VerticalSplit> -->
+        <VerticalSplit :length="510" :left="1" :color="'rgb(150, 150, 150)'"></VerticalSplit>
         <HorizontalSplit :length="687" :top="-5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
         <HorizontalSplit :length="687" :top="5" :color="'rgb(150, 150, 150)'"></HorizontalSplit>
 

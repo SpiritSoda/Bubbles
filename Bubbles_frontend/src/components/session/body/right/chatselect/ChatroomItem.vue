@@ -16,6 +16,9 @@ export default {
                 'background-image': 'url(\'/chatroom/' + this.chatroom.icon + '.jpg\')',
                 'background-size': 'cover'
             }
+        },
+        has_new_message(){
+            return this.$store.state.localuser.has_new_message[this.chatroom.id]
         }
     }
 }
@@ -27,7 +30,12 @@ export default {
             <a href="javascript:;" class="chatroom-icon-inner" @click="select_chatroom"></a>
         </div>
         <div class="chatroom-info">
-            <a href="javascript:;" class="chatroom-title" @click="select_chatroom">{{this.chatroom.title}}</a>
+            <a href="javascript:;" class="chatroom-title" @click="select_chatroom">
+                {{this.chatroom.title}}
+                <div class="new-message-tip fas fa-comment" :style="{opacity: has_new_message ? 1.0 : 0.0}">
+                    <span>{{has_new_message < 10 ? has_new_message : '..'}}</span>
+                </div>
+            </a>
             <div class="underline"></div>
             <div class="chatroom-comment">{{this.chatroom.comment}}</div>
             <div class="chatroom-online">{{"Onlines: " + chatroom.onlines + "/" + chatroom.total_user}}</div>
@@ -108,5 +116,28 @@ export default {
     position: absolute;
     top: 20px;
     right: 0px;
+}
+.new-message-tip{
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    /* background-color: rgb(124, 179, 255); */
+    color: rgb(124, 179, 255);
+    font-size: 18px;
+    text-align: center;
+    line-height: 18px;
+
+    transition: all .3s;
+}
+.new-message-tip span{
+    width: 16px;
+    height: 16px;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    line-height: 12px;
+    position: relative;
+    left: -12px;
+    bottom: 3px;
 }
 </style>

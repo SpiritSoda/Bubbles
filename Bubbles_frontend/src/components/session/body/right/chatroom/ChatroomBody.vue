@@ -12,8 +12,7 @@ export default {
             not_at_bottom: true,
             refreshing_message: false,
             refresh_online_timer: null,
-            has_new_message: false,
-            new_message_timer: null
+            has_new_message: false
         }
     },
     components: {
@@ -83,7 +82,11 @@ export default {
             })
         },
         check_at_bottom() {
-            this.not_at_bottom = (this.$refs.chat_body.scrollTop + 341 < this.$refs.chat_body.scrollHeight)
+            let element = document.getElementById('messages-wrapper')
+            this.not_at_bottom = (element.scrollTop + 341 < element.scrollHeight)
+            if(!this.not_at_bottom){
+                this.has_new_message = false
+            }
         }
     },
     computed: {
@@ -95,19 +98,21 @@ export default {
                 this.msg = 'Fail to connect server...'
             else if (this.error_code == 3002)
                 this.msg = 'No more messages ...'
+            else if (this.error_code == 3003)
+                this.msg = 'Message too long ...'
             return this.msg
         },
         refresh_error() {
-            return this.error_code > 3000 && this.error_code < 3003
+            return this.error_code > 3000 && this.error_code < 4000
         },
         chatroom_title(){
             return this.$store.state.localuser.chatrooms[this.$store.state.chatroom.selected_room].title
         }
     },
     mounted() {
-        window.addEventListener('scroll', this.check_at_bottom, true)
+        document.getElementById('messages-wrapper').addEventListener('scroll', this.check_at_bottom, true)
         this.$store.dispatch("get_message", {
-            on_success: () => { this.$nextTick(() => { this.scroll_to_bottom_immediate() }) }
+            on_success: () => { this.$nextTick(() => { this.scroll_to_bottom_immediate(); this.check_at_bottom() }) }
         })
         this.refresh_online_timer = setInterval(
             () => {
@@ -118,20 +123,15 @@ export default {
         this.$bus.on('scroll_to_bottom', () => {
             this.$nextTick(() => { this.scroll_to_bottom() })
         })
-        this.$bus.on('new_message', () => {
+        this.$bus.on('new_message', (msg) => {
             if(!this.not_at_bottom)
                 this.$nextTick(() => { this.scroll_to_bottom() })
             this.has_new_message = true;
-            clearTimeout(this.new_message_timer)
-            this.new_message_timer = setTimeout(
-                () => {this.has_new_message = false},
-                3000
-            )
         })
         // this.scroll_to_bottom()
     },
     destroyed() {
-        window.removeEventListener('scroll', this.check_at_bottom, true)
+        document.getElementById('messages-wrapper').removeEventListener('scroll', this.check_at_bottom, true)
         if (this.refresh_online_timer)
             clearInterval(this.refresh_online_timer)
     }
@@ -143,17 +143,24 @@ export default {
         <HorizontalSplit :length="687" :top="-126" :color="'rgba(219, 222, 226, .8)'"></HorizontalSplit>
         <HorizontalSplit :length="687" :top="64" :color="'rgba(219, 222, 226, .8)'"></HorizontalSplit>
         <div class="new-message-tip" :style="{opacity: has_new_message ? 1.0 : 0.0}"></div>
-
-        <div class="menu-wrapper fade-in clearfix">
+        <div class="header fade-in clearfix">
+            <div class="title">
+                <i class="icon fas fa-chevron-left"></i>
+                <!-- <i class="icon fas fa-caret-left"></i> -->
+                <span>{{this.chatroom_title}}</span>
+                <!-- <i class="icon fas fa-caret-right"></i> -->
+                <i class="icon fas fa-chevron-right"></i>
+            </div>
             <ChatMenu></ChatMenu>
         </div>
+
         <div class="message-bar-wrapper fade-in">
             <MessageBar></MessageBar>
         </div>
 
 
         <div class="to-top fade-in">
-            <div class="error_msg" :class="{ 'appear-up': refresh_error }" :style="{ 'opacity': refresh_error ? 1.0 : 0.0 }">
+            <div class="error_msg" :class="{ 'appear-down': refresh_error }" :style="{ 'opacity': refresh_error ? 1.0 : 0.0 }">
                 {{ error_msg }}</div>
             <a href="javascript:;" @click="scroll_to_top"
                 :style="{ 'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color }">
@@ -162,7 +169,7 @@ export default {
         </div>
 
         <div class="chat-wrapper fade-in">
-            <div class="messages-wrapper" ref="chat_body">
+            <div class="messages-wrapper" ref="chat_body" id="messages-wrapper">
                 <div class="message clearfix" v-for="message in this.$store.state.chatroom.messages">
                     <Message :message="message"></Message>
                 </div>
@@ -213,7 +220,7 @@ export default {
     height: 30px;
     border-radius: 50%;
     position: absolute;
-    top: 50px;
+    top: 57px;
     left: 0;
     right: 0;
     margin: auto;
@@ -235,6 +242,7 @@ export default {
     margin: auto;
 
     transition: all .2s;
+    z-index: 99999;
 }
 
 .to-top a:hover {
@@ -255,15 +263,9 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
-    top: -25px;
+    top: 35px;
 
     transition: all .3s;
-}
-
-.menu {
-    position: absolute;
-    top: 18px;
-    right: 30px;
 }
 
 .to-bottom {
@@ -325,5 +327,30 @@ export default {
 
     /* box-shadow: 0 0 6px rgb(124, 179, 255); */
     transition: all .3s;
+}
+.header{
+    height: 64px;
+    position: relative;
+}
+.title{
+    line-height: 20px;
+    font-size: 20px;
+    text-align: center;
+    color: #626262;
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transition: all .3s;
+}
+.title i{
+    font-size: 18px;
+    color: #8b8b8b;
+    display: inline-block;
+}
+.title span{
+    display: inline-block;
+    margin: 0 15px;
 }
 </style>

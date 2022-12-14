@@ -37,6 +37,8 @@ export default new createStore({
       // send message, scroll to bottom
       if(msg.senderId == state.localuser.local_id)
         $bus.emit('scroll_to_bottom')
+      else
+        $bus.emit('new_message', msg)
     }
   },
   actions: {
@@ -105,6 +107,7 @@ export default new createStore({
     // select a chatroom
     select_chatroom(context, id) {
       this.state.chatroom.selected_room = id;
+      this.state.localuser.has_new_message[id] = 0;
       context.dispatch('update_onlines', id)
       document.title = "Bubbles: " + this.state.localuser.chatrooms[this.state.chatroom.selected_room].title
     },
@@ -139,11 +142,12 @@ export default new createStore({
       let message = JSON.parse(res.body)
       if (message.type == 2) {
         let msg = message.data;
-        if(msg.chatroomId != this.state.chatroom.selected_room)
+        if(msg.chatroomId != this.state.chatroom.selected_room){
+          this.commit('localuser/has_new_message', msg.chatroomId)
           return;
+        }
         msg['state'] = 0
         context.commit('save_message', msg)
-        $bus.emit('new_message')
       }
     },
 

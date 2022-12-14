@@ -19,6 +19,12 @@ export default {
     },
     methods: {
         send_message() {
+            if(this.content.length == 0)
+                return
+            if(this.content.length > 60){
+                this.$store.commit('error/set_error_code', 3003)
+                return
+            }
             this.$store.dispatch('send_message', this.content)
             this.content = ''
         },

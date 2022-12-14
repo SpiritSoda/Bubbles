@@ -7,6 +7,9 @@ export default {
             token: localStorage.getItem("token"),
             chatrooms: {
                 
+            },
+            has_new_message: {
+
             }
         }
     },
@@ -28,6 +31,14 @@ export default {
             state.token = ''
             state.local_id = 0
             state.chatrooms = []
+        },
+        clear_new_message(state){
+            state.has_new_message = {}
+        },
+        has_new_message(state, id){
+            if(state.has_new_message[id] == undefined)
+                state.has_new_message[id] = 0
+            state.has_new_message[id] ++
         }
     },
     actions: {
