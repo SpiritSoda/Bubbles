@@ -31,7 +31,7 @@ export default {
             this.refreshing_message = true
             setTimeout(() => {
                 let message = this.$store.state.chatroom.messages[0]
-                let messageId = message ? message.Id : 0
+                let messageId = message ? message.messageId : 0
                 this.$store.dispatch("get_message", {
                     startId: messageId,
                     on_success: (cnt) => {
