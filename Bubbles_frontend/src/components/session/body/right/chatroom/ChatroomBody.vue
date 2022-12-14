@@ -36,11 +36,12 @@ export default {
                     on_success: (cnt) => {
                         if(cnt > 0)
                             this.$nextTick(() => {
-                                this.$refs.chat_body.scrollTo({
+                                let element = document.getElementById('messages-wrapper')
+                                element.scrollTo({
                                     top: 69 * cnt,
                                     behavior: "auto"
                                 })
-                                this.$refs.chat_body.scrollTo({
+                                element.scrollTo({
                                     top: 69 * cnt - 20,
                                     behavior: "smooth"
                                 })
@@ -57,27 +58,31 @@ export default {
             }, 500);
         },
         at_top() {
-            return this.$refs.chat_body.scrollTop === 0
+            return document.getElementById('messages-wrapper').scrollTop === 0
         },
         scroll_to_top() {
             if (this.at_top()) {
                 this.refresh_message()
             }
-            else
-                this.$refs.chat_body.scrollTo({
+            else{
+                let element = document.getElementById('messages-wrapper')
+                element.scrollTo({
                     top: 0,
                     behavior: "smooth"
                 })
+            }
         },
         scroll_to_bottom() {
-            this.$refs.chat_body.scrollTo({
-                top: this.$refs.chat_body.scrollHeight,
+            let element = document.getElementById('messages-wrapper')
+            element.scrollTo({
+                top: element.scrollHeight,
                 behavior: "smooth"
             })
         },
         scroll_to_bottom_immediate() {
-            this.$refs.chat_body.scrollTo({
-                top: this.$refs.chat_body.scrollHeight,
+            let element = document.getElementById('messages-wrapper')
+            element.scrollTo({
+                top: element.scrollHeight,
                 behavior: "auto"
             })
         },
@@ -124,6 +129,7 @@ export default {
             this.$nextTick(() => { this.scroll_to_bottom() })
         })
         this.$bus.on('new_message', (msg) => {
+            this.check_at_bottom()
             if(!this.not_at_bottom)
                 this.$nextTick(() => { this.scroll_to_bottom() })
             this.has_new_message = true;
@@ -169,7 +175,7 @@ export default {
         </div>
 
         <div class="chat-wrapper fade-in">
-            <div class="messages-wrapper" ref="chat_body" id="messages-wrapper">
+            <div class="messages-wrapper" id="messages-wrapper">
                 <div class="message clearfix" v-for="message in this.$store.state.chatroom.messages">
                     <Message :message="message"></Message>
                 </div>
