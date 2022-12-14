@@ -8,6 +8,7 @@ import tx from './modules/tx'
 import global from './modules/global'
 import $axios from '../utils/axios'
 import $socket from '../utils/socket'
+import $bus from '../utils/eventbus'
 
 export default new createStore({
   state: {
@@ -23,15 +24,23 @@ export default new createStore({
         on_error: () => { },
         on_success: () => { },
       })
+      document.title = "Bubbles"
     },
     logout(state) {
       this.commit('chatroom/reset_chatroom', {})
       this.commit('localuser/reset_localuser', {})
       $socket.unsubscribe_all()
       $socket.disconnect()
+    },
+    save_message(state, msg) {
+      this.commit('chatroom/save_message', msg)
+      // send message, scroll to bottom
+      if(msg.senderId == state.localuser.local_id)
+        $bus.emit('scroll_to_bottom')
     }
   },
   actions: {
+    // edit self user info
     edit_userinfo(context, payload) {
       // send new info to server first
       let token = this.state.localuser.token;
@@ -58,7 +67,10 @@ export default new createStore({
         }
       )
     },
+    // update self user info
     update_localuser(context, callback) {
+      let on_error = callback.on_error ? callback.on_error : () => {}
+      let on_success = callback.on_success ? callback.on_success : () => {}
       $axios.get('/api/user/selfInfo', {
         headers: {
           'token': this.state.localuser.token
@@ -74,28 +86,33 @@ export default new createStore({
               username: response.data.data.username
             }
             this.commit('userinfo/save_user', userinfo)
-            $socket.subscribe_all(Object.keys(this.state.localuser.chatrooms))
-            callback.on_success()
+            $socket.subscribe_all(Object.keys(this.state.localuser.chatrooms), (res) => {
+              this.dispatch('process_chatroom_message', res)
+            })
+            on_success()
           }
           else {
-            callback.on_error()
+            on_error()
           }
         }
       ).catch(
         e => {
-          callback.on_error()
+          on_error()
         }
       )
     },
 
+    // select a chatroom
     select_chatroom(context, id) {
       this.state.chatroom.selected_room = id;
       context.dispatch('update_onlines', id)
+      document.title = "Bubbles: " + this.state.localuser.chatrooms[this.state.chatroom.selected_room].title
     },
 
-    update_onlines(context){
+    // update online users
+    update_onlines(context) {
       let id = this.state.chatroom.selected_room
-      if(id <= 0)
+      if (id <= 0)
         return
       $axios.post(
         '/api/chatroom/onlines',
@@ -106,15 +123,99 @@ export default new createStore({
           headers: {
             'token': this.state.localuser.token
           }
+        })
+        .then(
+          (response) => {
+            let code = response.data.code
+            if (code == 0) {
+              let onlines = response.data.data.onlines
+              this.state.chatroom.onlines = onlines;
+            }
+          }
+        )
+    },
+    // process websocket message
+    process_chatroom_message(context, res) {
+      let message = JSON.parse(res.body)
+      if (message.type == 2) {
+        let msg = message.data;
+        if(msg.chatroomId != this.state.chatroom.selected_room)
+          return;
+        msg['state'] = 0
+        context.commit('save_message', msg)
+        $bus.emit('new_message')
+      }
+    },
+
+    // send message to chatroom
+    send_message(context, content) {
+      if (this.state.chatroom.selected_room == 0)
+        return;
+      let token = this.state.localuser.token
+      let msg = {
+        type: 0,
+        content: content,
+        chatroomId: this.state.chatroom.selected_room
+      }
+      let on_error = (msg) => {
+        msg['state'] = 1
+        this.commit('save_message', msg)
+      }
+      $axios.post(
+        '/api/chat/send',
+        msg,
+        {
+          headers: {
+            'token': token
+          }
+        })
+        .then(
+          (response) => {
+            let code = response.data.code;
+            if (code != 0) {
+              on_error(msg)
+            }
+          }
+        )
+        .catch(
+          (e) => {
+            on_error(msg)
+          }
+        )
+    },
+    // get history message
+    get_message(context, payload){
+      if (this.state.chatroom.selected_room == 0)
+        return;
+      let on_error = payload.on_error ? payload.on_error : () => {}
+      let on_success = payload.on_success ? payload.on_success : (cnt) => {}
+      $axios.post(
+        '/api/chat/get',
+        {
+          startId: (payload.startId ? payload.startId : 0),
+          cnt: this.state.global.message_per_post,
+          chatroomId: this.state.chatroom.selected_room
+        },
+        {
+          headers: {
+            'token': this.state.localuser.token
+          }
         }
-      )
-      .then(
+      ).then(
         (response) => {
           let code = response.data.code
           if(code == 0){
-            let onlines = response.data.data.onlines
-            this.state.chatroom.onlines = onlines;
+            this.commit('chatroom/save_messages_to_front', response.data.data.msg)
+            on_success(response.data.data.count)
           }
+          else{
+            on_error()
+          }
+        }
+      )
+      .catch(
+        (e) => {
+          on_error()
         }
       )
     }

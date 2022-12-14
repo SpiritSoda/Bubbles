@@ -5,7 +5,6 @@ import "emoji-mart-vue-fast/css/emoji-mart.css";
 import CheckBox from '../../../../../utils/CheckBox.vue'
 
 export default {
-    props: ['scroll_to_bottom'],
     inject: ['background_color', 'settings', 'shadow_color'],
     components: {
         Picker,
@@ -20,9 +19,8 @@ export default {
     },
     methods: {
         send_message() {
-            this.$bus.emit('send', this.content)
+            this.$store.dispatch('send_message', this.content)
             this.content = ''
-            this.$nextTick(() => { this.scroll_to_bottom() })
         },
         append_emoji(e) {
             this.content += e.native
@@ -50,9 +48,11 @@ export default {
         <ul class="toolbar">
             <li class="emoji">
                 <div class="emoji-selector-wrapper">
-                    <div class="emoji-selector" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
+                    <div class="emoji-selector"
+                        :style="{ 'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color }">
                         <Picker :data="emoji_index" :show-categories="true" :picker-styles="emoji_picker_style"
-                            :show-preview="false" :show-search="false" @select="append_emoji" :color="'rgb(124, 179, 255)'"></Picker>
+                            :show-preview="false" :show-search="false" @select="append_emoji"
+                            :color="'rgb(124, 179, 255)'"></Picker>
                     </div>
                 </div>
                 <a href="javascript:;">
@@ -76,12 +76,13 @@ export default {
             </li>
             <li class="setting">
                 <div class="setting-menu-wrapper">
-                    <div class="setting-menu" :style="{'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color}">
+                    <div class="setting-menu"
+                        :style="{ 'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color }">
                         <div class="option" v-for="key in Object.keys(settings)">
-                            <span>{{settings[key].name}}</span>
+                            <span>{{ settings[key].name }}</span>
                             <div class="button-wrapper">
-                                <CheckBox :call_back="() => {switch_setting(key)}"
-                                    :default="settings[key].value"></CheckBox>
+                                <CheckBox :call_back="() => { switch_setting(key) }" :default="settings[key].value">
+                                </CheckBox>
                             </div>
                         </div>
                     </div>

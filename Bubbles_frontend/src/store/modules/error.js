@@ -22,6 +22,7 @@ export default{
                 2008: register::username too long
 
                 3001: chatroom::refresh messages fail
+                3002: chatroom::no more messages
 
                 4000: modify profile::timeout
                 4001: modify profile::password too short

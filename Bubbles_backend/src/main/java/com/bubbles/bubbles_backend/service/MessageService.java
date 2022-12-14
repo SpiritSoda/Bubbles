@@ -1,8 +1,10 @@
 package com.bubbles.bubbles_backend.service;
 
 import com.bubbles.bubbles_backend.dto.MessageDTO;
+import com.bubbles.bubbles_backend.dto.MessageQueryDTO;
 import com.bubbles.bubbles_backend.entity.Message;
 import com.bubbles.bubbles_backend.repo.MessageRepository;
+import com.bubbles.bubbles_backend.utils.ValidUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,19 +30,26 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public void saveMessage(MessageDTO messageDTO){
+    public Message saveMessage(MessageDTO messageDTO){
         Message message = new Message(messageDTO);
 //        log.info(message.toString());
-        this.messageRepository.save(message);
+        return this.messageRepository.save(message);
     }
 
-    public List<Message> getFromIdWithFixedCountOfChatroom(int startId, int cnt, int chatroomId){
-        Sort sort = Sort.by(Sort.Direction.ASC, "timestamp");
+    public List<Message> getMessage(MessageQueryDTO messageQueryDTO){
+        int startId = messageQueryDTO.getStartId();
+        int cnt = messageQueryDTO.getCnt();
+        int chatroomId = messageQueryDTO.getChatroomId();
+        if(!ValidUtils.isValid(chatroomId))
+            return new ArrayList<>();
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "messageId");
         Specification<Message> specification = new Specification<Message>() {
             @Override
             public Predicate toPredicate(Root<Message> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                predicates.add(criteriaBuilder.lessThan(root.get("messageId"), startId));
+                if(ValidUtils.isValid(startId))
+                    predicates.add(criteriaBuilder.lessThan(root.get("messageId"), startId));
                 predicates.add(criteriaBuilder.equal(root.get("chatroomId"), chatroomId));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

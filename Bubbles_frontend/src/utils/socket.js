@@ -29,15 +29,14 @@ function connect(token, on_connect, on_error) {
         stomp.connect(token, "", () => { active = true; on_connect() })
     }, 2000)
 }
-function subscribe(chatroom) {
+function subscribe(chatroom, callback) {
     if (!active)
         return
     var sub = "/chat/chatroom/" + chatroom
     if (subscribes[chatroom])
         unsubscribe(chatroom)
     subscribes[chatroom] = stomp.subscribe(sub, function (res) {
-        console.log("Subscribed chatroom " + chatroom)
-        console.log(res)
+        callback(res)
     });
 }
 function subscribe_self(id, callback) {
@@ -63,7 +62,7 @@ function disconnect(callback) {
     clearInterval(interval)
     active = false
 }
-function subscribe_all(chatrooms) {
+function subscribe_all(chatrooms, callback) {
     if (!active)
         return
     // console.log(chatrooms)
@@ -71,7 +70,7 @@ function subscribe_all(chatrooms) {
     let id = 0
     for (id of chatrooms) {
         if (!subscribes[id])
-            subscribe(id)
+            subscribe(id, callback)
     }
     for (id in subscribes) {
         if (chatrooms.indexOf(id) == -1)

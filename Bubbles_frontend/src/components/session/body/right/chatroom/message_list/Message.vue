@@ -12,18 +12,18 @@ export default {
             return this.$store.state.userinfo.userinfo
         },
         user() {
-            let user = this.userinfo[this.message.id]
+            let user = this.userinfo[this.message.senderId]
             if(!user){
-                this.$store.dispatch('userinfo/fetch_userinfo', this.message.id)
+                this.$store.dispatch('userinfo/fetch_userinfo', this.message.senderId)
                 return {id: "0", username: "Unknown", avatar: -1}
             }
             return user
         },
         is_local(){
-            return this.message.id === this.local_id
+            return this.message.senderId === this.local_id
         },
         bubble_color(){
-            return this.is_local ? 'rgb(124, 179, 255, .1)' : 'rgba(255, 255, 255, .1)'
+            return this.is_local ? 'rgb(124, 179, 255, .6)' : 'rgba(255, 255, 255, .1)'
         },
     }
 }

@@ -77,7 +77,7 @@ export default {
                         let code = response.data.code;
                         if (code == 0) {
                             this.success = true
-                            setTimeout(() => {this.$bus.emit('close_popup')}, 800)
+                            setTimeout(() => {this.$bus.emit('close_popup')}, 1000)
                         }
                         else if (code == 2)
                             this.$store.commit('error/set_error_code', 6001);

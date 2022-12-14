@@ -3,7 +3,8 @@ export default{
     state: () => {
         return {
             avatar_count: 15,
-            icon_count: 4
+            icon_count: 4,
+            message_per_post: 15
         }
     },
     getters: {
