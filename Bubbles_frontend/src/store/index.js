@@ -35,7 +35,7 @@ export default new createStore({
     save_message(state, msg) {
       this.commit('chatroom/save_message', msg)
       // send message, scroll to bottom
-      if(msg.senderId == state.localuser.local_id)
+      if (msg.senderId == state.localuser.local_id)
         $bus.emit('scroll_to_bottom')
       else
         $bus.emit('new_message', msg)
@@ -71,8 +71,8 @@ export default new createStore({
     },
     // update self user info
     update_localuser(context, callback) {
-      let on_error = callback.on_error ? callback.on_error : () => {}
-      let on_success = callback.on_success ? callback.on_success : () => {}
+      let on_error = callback.on_error ? callback.on_error : () => { }
+      let on_success = callback.on_success ? callback.on_success : () => { }
       $axios.get('/api/user/selfInfo', {
         headers: {
           'token': this.state.localuser.token
@@ -142,7 +142,7 @@ export default new createStore({
       let message = JSON.parse(res.body)
       if (message.type == 2) {
         let msg = message.data;
-        if(msg.chatroomId != this.state.chatroom.selected_room){
+        if (msg.chatroomId != this.state.chatroom.selected_room) {
           this.commit('localuser/has_new_message', msg.chatroomId)
           return;
         }
@@ -187,12 +187,67 @@ export default new createStore({
           }
         )
     },
+    // upload file
+    upload_file(context, payload) {
+      let token = this.state.localuser.token
+      $axios.post(
+        '/api/chat/uploadFile',
+        payload.data,
+        {
+          headers: {
+            'token': token
+          }
+        })
+        .then(
+          (response) => {
+            console.log(response)
+          }
+        )
+        .catch(
+          (e) => {
+            console.log(e)
+          }
+        )
+    },
+    // download file
+    download_file(context, payload) {
+      let token = this.state.localuser.token
+      $axios.get(
+        '/api/chat/downloadFile',
+        {
+          params: {
+            message: payload.id
+          },
+          headers: {
+            'token': token
+          },
+          responseType: 'blob'
+        })
+        .then(
+          (response) => {
+            const blob = new Blob([response.data]);
+            // const filename = response.headers["content-disposition"].split(";")[1].split("filename=")[1]
+            console.log(response.headers)
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = payload.filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+          }
+        )
+        .catch(
+          (e) => {
+            console.log(e)
+          }
+        )
+    },
     // get history message
-    get_message(context, payload){
+    get_message(context, payload) {
       if (this.state.chatroom.selected_room == 0)
         return;
-      let on_error = payload.on_error ? payload.on_error : () => {}
-      let on_success = payload.on_success ? payload.on_success : (cnt) => {}
+      let on_error = payload.on_error ? payload.on_error : () => { }
+      let on_success = payload.on_success ? payload.on_success : (cnt) => { }
       $axios.post(
         '/api/chat/get',
         {
@@ -208,20 +263,20 @@ export default new createStore({
       ).then(
         (response) => {
           let code = response.data.code
-          if(code == 0){
+          if (code == 0) {
             this.commit('chatroom/save_messages_to_front', response.data.data.msg)
             on_success(response.data.data.count)
           }
-          else{
+          else {
             on_error()
           }
         }
       )
-      .catch(
-        (e) => {
-          on_error()
-        }
-      )
+        .catch(
+          (e) => {
+            on_error()
+          }
+        )
     }
   },
   modules: {

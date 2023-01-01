@@ -1,16 +1,14 @@
 package com.bubbles.bubbles_backend.component;
 
 import com.bubbles.bubbles_backend.entity.Chatroom;
-import com.bubbles.bubbles_backend.utils.MessageType;
+import com.bubbles.bubbles_backend.utils.STOMPMessageType;
 import com.bubbles.bubbles_backend.utils.STOMPMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -28,7 +26,7 @@ public class ChatroomManager {
     public void online(int id, String sessionId){
         if(sessions.containsValue(id) && !sessions.contains(sessionId)){
 //            log.info("repeat: " + id + " " + sessionId);
-            simpMessagingTemplate.convertAndSendToUser(String.valueOf(id), "/receive", STOMPMessage.buildMessage(MessageType.RE_LOGIN_MESSAGE, 0));
+            simpMessagingTemplate.convertAndSendToUser(String.valueOf(id), "/receive", STOMPMessage.buildMessage(STOMPMessageType.RE_LOGIN_MESSAGE, 0));
 
         }
 

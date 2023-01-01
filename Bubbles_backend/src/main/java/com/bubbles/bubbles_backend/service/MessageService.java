@@ -3,6 +3,7 @@ package com.bubbles.bubbles_backend.service;
 import com.bubbles.bubbles_backend.dto.MessageDTO;
 import com.bubbles.bubbles_backend.dto.MessageQueryDTO;
 import com.bubbles.bubbles_backend.entity.Message;
+import com.bubbles.bubbles_backend.exception.MessageNotFoundException;
 import com.bubbles.bubbles_backend.repo.MessageRepository;
 import com.bubbles.bubbles_backend.utils.ValidUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,13 @@ public class MessageService {
         Message message = new Message(messageDTO);
 //        log.info(message.toString());
         return this.messageRepository.save(message);
+    }
+
+    public Message findById(int id) throws Exception{
+        Message message = messageRepository.findMessagesByMessageId(id);
+        if(message == null)
+            throw new MessageNotFoundException(id);
+        return message;
     }
 
     public List<Message> getMessage(MessageQueryDTO messageQueryDTO){

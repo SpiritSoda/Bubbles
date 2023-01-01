@@ -24,6 +24,7 @@ export default{
                 3001: chatroom::refresh messages fail
                 3002: chatroom::no more messages
                 3003: chatroom::message too long
+                3004: chatroom:file too large
 
                 4000: modify profile::timeout
                 4001: modify profile::password too short

@@ -36,6 +36,26 @@ export default {
         },
         logout(obj) {
             console.log(obj)
+        },
+        upload_file(event) {
+            const file = event.target.files[0]
+            if(!file)
+                return
+            const size = file.size
+            console.log(file.size, this.$store.state.global.max_file_size)
+            if(size > this.$store.state.global.max_file_size){
+                this.$store.commit("error/set_error_code", 3004)
+                document.getElementById("file-select").value = ""
+                return
+            }
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("chatroom", this.$store.state.chatroom.selected_room);
+            this.$store.dispatch("upload_file", 
+                {
+                    data: formData
+                }
+            )
         }
     },
     computed: {
@@ -72,7 +92,8 @@ export default {
             </li>
             <li class="file">
                 <a href="javascript:;">
-                    <i class="fas fa-file"></i>
+                    <input id="file-select" type="file" @change="upload_file" title="Send File">
+                    <i class="fas fa-folder-open"></i>
                 </a>
             </li>
             <li class="history">
@@ -323,5 +344,19 @@ export default {
     bottom: 0;
     right: 5px;
     margin: auto;
+}
+#file-select{
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    display: inline;
+    transition: color .2s, box-shadow .2s;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 50%;
+    opacity: 0;
 }
 </style>

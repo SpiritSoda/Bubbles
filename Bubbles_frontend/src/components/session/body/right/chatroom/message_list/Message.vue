@@ -40,7 +40,7 @@ export default {
                     {{this.user.username}}
                 </div>
                 <div class="bubble-wrapper clearfix right">
-                    <Bubble :content="this.message.content" :color="this.bubble_color"></Bubble>
+                    <Bubble :message="this.message" :color="this.bubble_color"></Bubble>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@ export default {
                     {{this.user.username}}
                 </div>
                 <div class="bubble-wrapper clearfix left">
-                    <Bubble :content="this.message.content" :color="this.bubble_color"></Bubble>
+                    <Bubble :message="this.message" :color="this.bubble_color"></Bubble>
                 </div>
             </div>
         </div>

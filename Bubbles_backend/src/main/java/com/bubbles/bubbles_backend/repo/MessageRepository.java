@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Integer> {
+    Message findMessagesByMessageId(int id);
     List<Message> findAll(Specification<Message> specification, Pageable pageable);
 }

@@ -105,9 +105,11 @@ export default {
                 this.msg = 'No more messages ...'
             else if (this.error_code == 3003)
                 this.msg = 'Message too long ...'
+            else if (this.error_code == 3004)
+                this.msg = 'File too large (>' + this.$store.state.global.max_file_size / (1024 * 1024) + "MB) ..."
             return this.msg
         },
-        refresh_error() {
+        has_error() {
             return this.error_code > 3000 && this.error_code < 4000
         },
         chatroom_title(){
@@ -166,7 +168,7 @@ export default {
 
 
         <div class="to-top fade-in">
-            <div class="error_msg" :class="{ 'appear-down': refresh_error }" :style="{ 'opacity': refresh_error ? 1.0 : 0.0 }">
+            <div class="error_msg" :class="{ 'appear-down': has_error }" :style="{ 'opacity': has_error ? 1.0 : 0.0 }">
                 {{ error_msg }}</div>
             <a href="javascript:;" @click="scroll_to_top"
                 :style="{ 'background-color': this.background_color, 'box-shadow': '0 0 5px ' + this.shadow_color }">

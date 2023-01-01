@@ -12,4 +12,5 @@ public class ErrorCode {
     public static int CHATROOM_FULL = 9;
     public static int NOT_IN_CHATROOM = 10;
     public static int USER_BANNED = 11;
+    public static int MESSAGE_NOT_FOUND = 12;
 }
