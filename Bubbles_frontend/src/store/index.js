@@ -195,7 +195,8 @@ export default new createStore({
         payload.data,
         {
           headers: {
-            'token': token
+            'token': token,
+            'Content-Type': 'multipart/form-data'
           }
         })
         .then(
