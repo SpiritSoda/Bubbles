@@ -9,9 +9,12 @@ export default {
         download(){
             this.$store.dispatch("download_file", {
                 id: this.message.messageId,
-                filename: this.filename
+                info: {
+                    filename: this.filename,
+                    filesize: this.filesize
+                }
+                
             })
-            console.log("dowloading ...")
         }
     },
     computed:{
@@ -25,10 +28,27 @@ export default {
             if(this.type != 1)
                 return '-NOT FILE MESSAGE-';
             const content = this.message.content
-            const dot = content.indexOf('.')
-            const date = content.substr(0, dot)
-            const filename = content.substr(dot + 1)
+            let dot = content.indexOf('.')
+            const size_filename = content.substr(dot + 1)
+            dot = size_filename.indexOf('.')
+            const filename = size_filename.substr(dot + 1)
             return filename
+        },
+        filesize(){
+            if(this.type != 1)
+                return 0;
+            const content = this.message.content
+            let dot = content.indexOf('.')
+            const size_filename = content.substr(dot + 1)
+            dot = size_filename.indexOf('.')
+            const size = size_filename.substr(0, dot)
+            if(size > 1024 * 1024)
+                return (size / (1024 * 1024)).toFixed(2) + 'MB'
+            else if(size > 1024)
+                return (size / 1024).toFixed(2) + 'KB'
+            else
+                return size + 'B'
+
         },
         is_local(){
             return this.message.senderId == this.$store.state.localuser.local_id
@@ -44,8 +64,11 @@ export default {
             <div class="file-logo">
                 <i class="fas fa-folder"></i>
             </div>
-            <HorizontalSplit :length="90" :top="80" :color="'rgb(110, 123, 141, .6)'"></HorizontalSplit>
-            <span class="filename" style="color:black">{{this.filename}}</span>
+            <div class="fileinfo" style="color:black">  
+                <div class="filename">{{this.filename}}</div>
+                <HorizontalSplit :length="150" :top="24" :color="'rgba(110, 123, 141, .6)'"></HorizontalSplit>
+                <div class="filesize">{{this.filesize}}</div>
+            </div>
         </a>
     </div>
 </template>
@@ -75,34 +98,46 @@ export default {
 .file{
     display: block;
     position: relative;
-    width: 100px;
-    height: 110px;
+    width: 260px;
+    height: 80px;
     border-radius: 10px;
     border: 2px solid rgb(110, 123, 141, .6);
     background-color: rgb(255, 255, 255, .8);
 
-    text-align: center;
 }
 .file-logo{
     position: absolute;
     top: 10px;
-    left: 0;
-    right: 0;
-    margin: auto;
+    left: 15px;
 
     color: rgb(240, 193, 74);
-    font-size: 60px;
+    font-size: 56px;
+    text-align: center;
 }
-.filename{
-    width: 90px;
+.fileinfo{
+    width: 150px;
+    height: 45px;
     position: absolute;
-    bottom: 8px;
-    left: 0;
-    right: 0;
-    margin: auto;
+    top: 20px;
+    left: 90px;
+    text-align: center;
     
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.filename{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.filesize{
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    font-size: 12px;
+    text-align: center;
 }
 </style>

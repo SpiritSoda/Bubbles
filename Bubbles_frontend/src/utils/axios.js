@@ -20,16 +20,25 @@ function upload_with_progress(url, data, config, on_progress){
         baseURL,
         timeout,
         onUploadProgress: progressEvent => {
-            if (progressEvent.lengthComputable) {
-                on_progress && on_progress(progressEvent);
-            }
+            on_progress(progressEvent)
           }
     }).post(url, data, config)
+}
+function download_with_progress(url, config, on_progress){
+    config.responseType = 'blob'
+    return axios.create({
+        baseURL,
+        timeout,
+        onDownloadProgress: function (progressEvent){
+            on_progress(progressEvent)
+        }
+    }).get(url, config)
 }
 const $axios = {
     post,
     get,
-    upload_with_progress
+    upload_with_progress,
+    download_with_progress
 }
 
 export default $axios;

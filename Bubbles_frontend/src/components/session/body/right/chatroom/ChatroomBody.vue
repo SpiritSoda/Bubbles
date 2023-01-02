@@ -107,6 +107,10 @@ export default {
                 this.msg = 'Message too long ...'
             else if (this.error_code == 3004)
                 this.msg = 'File too large (>' + this.$store.state.global.max_file_size / (1024 * 1024) + "MB) ..."
+            else if (this.error_code == 3005)
+                this.msg = 'Error occurs while uploading ...'
+            else if (this.error_code == 3006)
+                this.msg = 'Error occurs while downloading ...'
             return this.msg
         },
         has_error() {

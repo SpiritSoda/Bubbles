@@ -11,6 +11,7 @@ import com.bubbles.bubbles_backend.service.MessageService;
 import com.bubbles.bubbles_backend.service.UserService;
 import com.bubbles.bubbles_backend.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.ResourceUtils;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,8 +77,8 @@ public class ChatController {
         messageDTO.setTimestamp(TimeUtils.timestamp());
         messageDTO.setSenderId(user.getUserId());
         messageDTO.setChatroomId(chatroom);
-        // $Date$.$File Name$
-        messageDTO.setContent(format + "." + file.getOriginalFilename());
+        // $Date$.$FileSize$.$FileName$
+        messageDTO.setContent(format + "." + file.getSize() + "." + file.getOriginalFilename());
 
         // store file
         String realPath = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath();
@@ -86,11 +88,13 @@ public class ChatController {
         if (!f.exists()) {
             f.mkdirs();
         }
-        file.transferTo(new File(f, file.getOriginalFilename()));
+        String filename = file.getOriginalFilename() + "." + messageDTO.getTimestamp();
+        file.transferTo(new File(f, filename));
 
         Message message = messageService.saveMessage(messageDTO);
         simpMessagingTemplate.convertAndSend("/chat/chatroom/" + messageDTO.getChatroomId(), STOMPMessage.buildMessage(STOMPMessageType.BROADCAST_MESSAGE, message));
 
+//        log.info("finish upload " + message.getMessageId());
         return Result.buildSuccessResult("Success to upload file");
     }
     @GetMapping("/api/chat/downloadFile")
@@ -101,10 +105,13 @@ public class ChatController {
         String content = message.getContent();
         int split = content.indexOf('.');
         String folder = content.substring(0, split);
-        String filename = content.substring(split + 1);
+        String size_filename = content.substring(split + 1);
+        split = size_filename.indexOf('.');
+        String filename = size_filename.substring(split + 1);
+        String local_filename = filename + "." + message.getTimestamp();
 
         String realPath = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath();
-        String path = realPath + "static/" + folder + "/" + filename;
+        String path = realPath + "static/" + folder + "/" + local_filename;
         File file = new File(path);
         if (!file.exists()) {
             response.setContentType("text/html;charset=utf-8");
@@ -114,19 +121,18 @@ public class ChatController {
 //        log.info(path);
 
         InputStream in = new FileInputStream(path);
-        int read;
 
-        byte[] b = new byte[4096];
-        response.setContentType("application/force-download");
-        response.addHeader("Content-Disposition","attachment;filename=" + filename);
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "utf-8"));
+//        log.info("attachment;filename=" + URLEncoder.encode(filename, "utf-8"));
         response.addHeader("Content-Length", "" + file.length());
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
-        while ((read = in.read(b)) > 0) {
-            outputStream.write(b);
-        }
+        IOUtils.copy(in, outputStream);
         outputStream.close();
         in.close();
+//        log.info("finish download " + id);
 //        return response;
     }
     @PostMapping("/api/chat/get")

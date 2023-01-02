@@ -6,13 +6,16 @@ import settings from './modules/settings'
 import error from './modules/error'
 import tx from './modules/tx'
 import global from './modules/global'
+import file from './modules/file'
 import $axios from '../utils/axios'
 import $socket from '../utils/socket'
 import $bus from '../utils/eventbus'
 
 export default new createStore({
-  state: {
-
+  state: () => {
+    return {
+      upload_id: -1
+    }
   },
   getters: {
 
@@ -189,8 +192,29 @@ export default new createStore({
     },
     // upload file
     upload_file(context, payload) {
+      let id = this.state.upload_id
+      this.state.upload_id -= 1
+      let task = {
+        filename: payload.info.filename,
+        type: 'upload',
+        filesize: payload.info.filesize,
+        id: id,
+      }
+      this.commit("file/append_task", task)
+      // console.log("uploading ...", this.state.file.tasks)
+
       let token = this.state.localuser.token
-      $axios.post(
+      let on_progress = (e) => {
+        let progress = e.loaded / e.total
+        this.commit("file/update_progress", {
+          id,
+          progress
+        })
+        if(e.loaded >= e.total)
+            this.commit("file/finish_task", {id})
+      }
+      let on_error = payload.on_error ? payload.on_error : (e) => {}
+      $axios.upload_with_progress(
         '/api/chat/uploadFile',
         payload.data,
         {
@@ -198,7 +222,8 @@ export default new createStore({
             'token': token,
             'Content-Type': 'multipart/form-data'
           }
-        })
+        },
+        on_progress)
         .then(
           (response) => {
             console.log(response)
@@ -206,14 +231,33 @@ export default new createStore({
         )
         .catch(
           (e) => {
-            console.log(e)
+            on_error(e)
           }
         )
     },
     // download file
     download_file(context, payload) {
+      let task = {
+        filename: payload.info.filename,
+        type: 'download',
+        filesize: payload.info.filesize,
+        id: payload.id,
+      }
+      this.commit("file/append_task", task)
+      // console.log("downloading ...", this.state.file.tasks)
+      
       let token = this.state.localuser.token
-      $axios.get(
+      let on_progress = (e) => {
+        let progress = e.loaded / e.total
+        this.commit("file/update_progress", {
+          id: payload.id,
+          progress
+        })
+        if(e.loaded >= e.total)
+            this.commit("file/finish_task", {id: payload.id})
+      }
+      let on_error = payload.on_error ? payload.on_error : (e) => {}
+      $axios.download_with_progress(
         '/api/chat/downloadFile',
         {
           params: {
@@ -222,24 +266,24 @@ export default new createStore({
           headers: {
             'token': token
           },
-          responseType: 'blob'
-        })
-        .then(
+        },
+        on_progress
+        ).then(
           (response) => {
             const blob = new Blob([response.data]);
-            // const filename = response.headers["content-disposition"].split(";")[1].split("filename=")[1]
-            console.log(response.headers)
+            const filename = decodeURIComponent(response.headers["content-disposition"].split(";")[1].split("filename=")[1])
+            // console.log(filename)
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement('a');
             a.href = url;
-            a.download = payload.filename;
+            a.download = payload.info.filename;
             a.click();
             window.URL.revokeObjectURL(url);
           }
         )
         .catch(
           (e) => {
-            console.log(e)
+            on_error(e)
           }
         )
     },
@@ -287,6 +331,7 @@ export default new createStore({
     settings,
     error,
     tx,
-    global
+    global,
+    file
   },
 })

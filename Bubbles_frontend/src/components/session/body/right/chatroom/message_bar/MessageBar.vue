@@ -3,13 +3,15 @@ import { Picker, EmojiIndex } from "emoji-mart-vue-fast/src";
 import data from "emoji-mart-vue-fast/data/all.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
 import CheckBox from '../../../../../utils/CheckBox.vue'
+import FileTransfer from "./toolbar/FileTransfer.vue";
 
 export default {
     inject: ['background_color', 'settings', 'shadow_color'],
     components: {
-        Picker,
-        CheckBox
-    },
+    Picker,
+    CheckBox,
+    FileTransfer
+},
     data() {
         return {
             emoji_index: new EmojiIndex(data),
@@ -42,7 +44,7 @@ export default {
             if(!file)
                 return
             const size = file.size
-            console.log(file.size, this.$store.state.global.max_file_size)
+            // console.log(file, this.$store.state.global.max_file_size)
             if(size > this.$store.state.global.max_file_size){
                 this.$store.commit("error/set_error_code", 3004)
                 document.getElementById("file-select").value = ""
@@ -53,6 +55,10 @@ export default {
             formData.append("chatroom", this.$store.state.chatroom.selected_room);
             this.$store.dispatch("upload_file", 
                 {
+                    info: {
+                        filename: file.name,
+                        filesize: file.size
+                    },
                     data: formData
                 }
             )
@@ -97,6 +103,9 @@ export default {
                 </a>
             </li>
             <li class="history">
+                <div class="file-transfer-wrapper">
+                    <FileTransfer></FileTransfer>
+                </div>
                 <a href="javascript:;">
                     <i class="fas fa-history"></i>
                 </a>
@@ -358,5 +367,23 @@ export default {
     margin: auto;
     border-radius: 50%;
     opacity: 0;
+}
+.history:hover .file-transfer-wrapper {
+    height: 230px;
+    top: -230px;
+}
+
+.file-transfer-wrapper {
+    width: 300px;
+    height: 0px;
+    background-color: transparent;
+
+    position: absolute;
+    left: -150px;
+    right: 0;
+    top: 0;
+    overflow: hidden;
+
+    transition: all .3s;
 }
 </style>
