@@ -111,6 +111,8 @@ export default {
                 this.msg = 'Error occurs while uploading ...'
             else if (this.error_code == 3006)
                 this.msg = 'Error occurs while downloading ...'
+            else if (this.error_code == 3007)
+                this.msg = 'Image too large (>' + this.$store.state.global.max_image_size / (1024 * 1024) + "MB) ..."
             return this.msg
         },
         has_error() {

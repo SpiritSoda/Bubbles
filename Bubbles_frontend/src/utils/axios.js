@@ -35,6 +35,7 @@ function download_with_progress(url, config, on_progress){
     }).get(url, config)
 }
 const $axios = {
+    baseURL,
     post,
     get,
     upload_with_progress,

@@ -1,3 +1,4 @@
+import $bus from '../../utils/eventbus'
 export default {
     namespaced: true,
     state: () => {
@@ -18,6 +19,7 @@ export default {
                 progress: 0
             }
             state.tasks[task_info.id] = task
+            $bus.emit('file_task_create', {})
             // console.log("after append" + task_info.id, state.tasks)
         },
         finish_task(state, payload) {

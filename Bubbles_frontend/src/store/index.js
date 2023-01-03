@@ -322,6 +322,29 @@ export default new createStore({
             on_error()
           }
         )
+    },
+    ban_user(context, payload){
+      let on_error = payload.on_error ? payload.on_error : () => { }
+      let on_success = payload.on_success ? payload.on_success : (cnt) => { }
+      $axios.post('/api/chatroom/ban',
+      {
+        userId: payload.userId,
+        chatroomId: payload.chatroomId
+      },
+      {
+        headers: {
+          token: this.state.localuser.token
+        }
+      }).then(
+        (response) => {
+          on_success(response)
+        }
+      ).catch(
+        (e) => {
+          console.log(e)
+          on_error()
+        }
+      )
     }
   },
   modules: {

@@ -16,7 +16,9 @@ export default {
         return {
             emoji_index: new EmojiIndex(data),
             emojis_output: "",
-            content: ''
+            content: '',
+            has_new_task: false,
+            has_new_task_timer: 0
         };
     },
     methods: {
@@ -53,6 +55,32 @@ export default {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("chatroom", this.$store.state.chatroom.selected_room);
+            formData.append("type", 1)
+            this.$store.dispatch("upload_file", 
+                {
+                    info: {
+                        filename: file.name,
+                        filesize: file.size
+                    },
+                    data: formData
+                }
+            )
+        },
+        upload_image(event) {
+            const file = event.target.files[0]
+            if(!file)
+                return
+            const size = file.size
+            // console.log(file, this.$store.state.global.max_file_size)
+            if(size > this.$store.state.global.max_image_size){
+                this.$store.commit("error/set_error_code", 3007)
+                document.getElementById("image-select").value = ""
+                return
+            }
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("chatroom", this.$store.state.chatroom.selected_room);
+            formData.append("type", 2)
             this.$store.dispatch("upload_file", 
                 {
                     info: {
@@ -71,6 +99,15 @@ export default {
                 'height': '245px'
             }
         },
+    },
+    mounted(){
+        this.$bus.on('file_task_create', () => {
+            this.has_new_task = true;
+            if(this.has_new_task_timer){
+                clearTimeout(this.has_new_task_timer)
+            }
+            this.has_new_task_timer = setTimeout(() => {this.has_new_task = false}, 1000)
+        })
     }
 }
 </script>
@@ -93,12 +130,13 @@ export default {
             </li>
             <li class="image">
                 <a href="javascript:;">
+                    <input id="image-select" class="file-input" type="file" @change="upload_image" title="Send Image" accept=".png,.jpg">
                     <i class="fas fa-image"></i>
                 </a>
             </li>
             <li class="file">
                 <a href="javascript:;">
-                    <input id="file-select" type="file" @change="upload_file" title="Send File">
+                    <input id="file-select" class="file-input" type="file" @change="upload_file" title="Send File">
                     <i class="fas fa-folder-open"></i>
                 </a>
             </li>
@@ -106,8 +144,8 @@ export default {
                 <div class="file-transfer-wrapper">
                     <FileTransfer></FileTransfer>
                 </div>
-                <a href="javascript:;">
-                    <i class="fas fa-history"></i>
+                <a href="javascript:;" :class="{has_new_task: has_new_task}">
+                    <i class="fas" :class="has_new_task ? 'fa-exclamation': 'fa-history'"></i>
                 </a>
             </li>
             <li class="setting">
@@ -245,10 +283,16 @@ export default {
     margin: auto;
     border-radius: 50%;
 }
-
+.toolbar a i{
+    transition: all .2s;
+}
 .toolbar a:hover {
     color: rgb(124, 179, 255);
     box-shadow: 0 0 7px rgb(124, 179, 255);
+}
+.has_new_task{
+    color: green;
+    box-shadow: 0 0 7px green;
 }
 
 .emoji:hover .emoji-selector-wrapper {
@@ -354,7 +398,7 @@ export default {
     right: 5px;
     margin: auto;
 }
-#file-select{
+.file-input{
     width: 30px;
     height: 30px;
     line-height: 30px;

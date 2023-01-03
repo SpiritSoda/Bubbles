@@ -3,20 +3,19 @@ package com.bubbles.bubbles_backend.controller;
 import com.bubbles.bubbles_backend.component.ChatroomManager;
 import com.bubbles.bubbles_backend.config.JwtConfig;
 import com.bubbles.bubbles_backend.dto.ChatroomDTO;
-import com.bubbles.bubbles_backend.dto.InviteDTO;
+import com.bubbles.bubbles_backend.dto.UserChatroomDTO;
 import com.bubbles.bubbles_backend.dto.PassportDTO;
 import com.bubbles.bubbles_backend.entity.Chatroom;
 import com.bubbles.bubbles_backend.entity.User;
 import com.bubbles.bubbles_backend.exception.*;
+import com.bubbles.bubbles_backend.service.BanRecordService;
 import com.bubbles.bubbles_backend.service.ChatroomService;
 import com.bubbles.bubbles_backend.service.PassportService;
 import com.bubbles.bubbles_backend.service.UserService;
-import com.bubbles.bubbles_backend.utils.ChatroomPassportUtils;
-import com.bubbles.bubbles_backend.utils.InviteTokenUtils;
-import com.bubbles.bubbles_backend.utils.PassportType;
-import com.bubbles.bubbles_backend.utils.Result;
+import com.bubbles.bubbles_backend.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,19 +29,23 @@ import java.util.List;
 @RestController
 @Slf4j
 public class ChatroomController {
+    private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatroomService chatroomService;
     private final UserService userService;
     private final PassportService passportService;
     private final ChatroomManager chatroomManager;
     private final JwtConfig jwtConfig;
+    private final BanRecordService banRecordService;
 
     @Autowired
-    public ChatroomController(ChatroomService chatroomService, UserService userService, PassportService passportService, ChatroomManager chatroomManager, JwtConfig jwtConfig) {
+    public ChatroomController(SimpMessagingTemplate simpMessagingTemplate, ChatroomService chatroomService, UserService userService, PassportService passportService, ChatroomManager chatroomManager, JwtConfig jwtConfig, BanRecordService banRecordService) {
+        this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatroomService = chatroomService;
         this.userService = userService;
         this.passportService = passportService;
         this.chatroomManager = chatroomManager;
         this.jwtConfig = jwtConfig;
+        this.banRecordService = banRecordService;
     }
 
     @PostMapping("/api/chatroom/verifyPassport")
@@ -100,16 +103,24 @@ public class ChatroomController {
             throw new PassportNotValidException(token);
         token = request.getHeader("token");
         User user = userService.findByToken(token);
+        if(banRecordService.existsByUserAndChatroom(user.getUserId(), id))
+            throw new UserBannedException(user.getUserId(), id);
         chatroomService.joinChatroom(user, id);
         return Result.buildSuccessResult("Success to join chatroom");
     }
     @PostMapping("/api/chatroom/invite")
-    public Result inviteToChatroom(@RequestBody @Valid InviteDTO inviteDTO, HttpServletRequest request) throws Exception {
+    public Result inviteToChatroom(@RequestBody @Valid UserChatroomDTO userChatroomDTO, HttpServletRequest request) throws Exception {
         String token = request.getHeader("token");
         User user = userService.findByToken(token);
-        if(!chatroomService.inChatroom(user, inviteDTO.getChatroomId()))
-            throw new UserNotInChatroomException(user.getUserId(), inviteDTO.getChatroomId());
-        chatroomService.joinChatroom(inviteDTO.getUserId(), inviteDTO.getChatroomId());
+        if(!chatroomService.inChatroom(user, userChatroomDTO.getChatroomId()))
+            throw new UserNotInChatroomException(user.getUserId(), userChatroomDTO.getChatroomId());
+        boolean adminInvite = chatroomService.isAdmin(user, userChatroomDTO.getChatroomId());
+        boolean gotBanned = banRecordService.existsByUserAndChatroom(userChatroomDTO.getUserId(), userChatroomDTO.getChatroomId());
+        if(!adminInvite && gotBanned)
+            throw new UserBannedException(userChatroomDTO.getUserId(), userChatroomDTO.getChatroomId());
+        if(adminInvite && gotBanned)
+            banRecordService.clearRecord(userChatroomDTO.getUserId(), userChatroomDTO.getChatroomId());
+        chatroomService.joinChatroom(userChatroomDTO.getUserId(), userChatroomDTO.getChatroomId());
         return Result.buildSuccessResult("Success to join chatroom");
     }
     @PostMapping("/api/chatroom/leave")
@@ -130,5 +141,19 @@ public class ChatroomController {
         HashMap<String, Object> data = new HashMap<>();
         data.put("onlines", onlines);
         return Result.buildSuccessResult("Success to get online user", data);
+    }
+    @PostMapping("/api/chatroom/ban")
+    public Result banUser(@RequestBody @Valid UserChatroomDTO userChatroomDTO, HttpServletRequest request) throws Exception{
+        String token = request.getHeader("token");
+        User user = userService.findByToken(token);
+        if(!chatroomService.inChatroom(user, userChatroomDTO.getChatroomId()))
+            throw new UserNotInChatroomException(user.getUserId(), userChatroomDTO.getChatroomId());
+        if(!chatroomService.isAdmin(user, userChatroomDTO.getChatroomId()))
+            return Result.buildFailResult("You are not chatroom\'s admin");
+        if(chatroomService.isAdmin(userChatroomDTO.getUserId(), userChatroomDTO.getChatroomId()))
+            return Result.buildFailResult("You can\'t ban yourself");
+        banRecordService.banUserFromChatroom(userChatroomDTO.getUserId(), userChatroomDTO.getChatroomId());
+        simpMessagingTemplate.convertAndSendToUser(String.valueOf(userChatroomDTO.getUserId()), "/receive", STOMPMessage.buildMessage(STOMPMessageType.BANNED_MESSAGE, 0));
+        return Result.buildSuccessResult("Success to ban user");
     }
 }

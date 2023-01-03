@@ -20,6 +20,10 @@ export default {
         title: {
             type: String,
             default: null
+        },
+        color: {
+            type: String,
+            default: '#7e8c8d'
         }
     },
     computed: {
@@ -33,7 +37,8 @@ export default {
                 'transition': 'all .2s',
                 'font-size': 0.36 * this.r + 'px',
                 'background-color': this.state ? 'rgb(228, 45, 45)' : 'white',
-                'color': this.state ? 'white' : '#7e8c8d'
+                'color': this.state ? 'white' : this.color,
+                'box-shadow': '0 0 ' + this.r_shadow + 'px rgba(0, 0, 0, .3)'
             }
         },
         icon(){
@@ -73,7 +78,6 @@ export default {
 <style scoped>
 .btn a{
     display: block;
-    box-shadow: 0 0 4px rgba(0, 0, 0, .3);
     background-color: #fff;
 }
 .btn a:hover {

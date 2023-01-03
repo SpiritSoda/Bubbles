@@ -10,6 +10,7 @@ import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
 import InviteToken from './components/session/body/popup/InviteToken.vue';
 import InviteFriend from './components/session/body/popup/InviteFriend.vue';
 import MultiLogin from './components/session/body/popup/MultiLogin.vue';
+import Kicked from './components/session/body/popup/Kicked.vue';
 
 export default {
   components: {
@@ -22,7 +23,8 @@ export default {
     CreateChatroom,
     InviteToken,
     InviteFriend,
-    MultiLogin
+    MultiLogin,
+    Kicked
 },
   data() {
     return {
@@ -99,6 +101,7 @@ export default {
       <InviteToken v-else-if="this.popup == 3"></InviteToken>
       <InviteFriend v-else-if="this.popup == 4"></InviteFriend>
       <MultiLogin v-else-if="this.popup == 5"></MultiLogin>
+      <Kicked v-else-if="this.popup == 6"></Kicked>
     </Popup>
   </div>
 </template>

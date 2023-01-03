@@ -5,4 +5,5 @@ public class STOMPMessageType {
     public static int CHAT_MESSAGE = 1;
     public static int BROADCAST_MESSAGE = 2;
     public static int RE_LOGIN_MESSAGE = 3;
+    public static int BANNED_MESSAGE = 4;
 }

@@ -1,5 +1,6 @@
 package com.bubbles.bubbles_backend.controller;
 
+import com.bubbles.bubbles_backend.component.FileManager;
 import com.bubbles.bubbles_backend.config.FileConfig;
 import com.bubbles.bubbles_backend.dto.MessageDTO;
 import com.bubbles.bubbles_backend.dto.MessageQueryDTO;
@@ -37,13 +38,15 @@ public class ChatController {
     private final UserService userService;
     private final ChatroomService chatroomService;
     private final FileConfig fileConfig;
+    private final FileManager fileManager;
     @Autowired
-    ChatController(SimpMessagingTemplate simpMessagingTemplate, MessageService messageService, UserService userService, ChatroomService chatroomService, FileConfig fileConfig){
+    ChatController(SimpMessagingTemplate simpMessagingTemplate, MessageService messageService, UserService userService, ChatroomService chatroomService, FileConfig fileConfig, FileManager fileManager){
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.messageService = messageService;
         this.userService = userService;
         this.chatroomService = chatroomService;
         this.fileConfig = fileConfig;
+        this.fileManager = fileManager;
     }
     @PostMapping("/api/chat/send")
     public Result sendMessage(@RequestBody @Valid MessageDTO messageDTO, HttpServletRequest request) throws Exception{
@@ -61,7 +64,9 @@ public class ChatController {
         return Result.buildSuccessResult("Success to send message");
     }
     @PostMapping("/api/chat/uploadFile")
-    public Result uploadFile(@RequestParam("file")MultipartFile file, @RequestParam("chatroom")Integer chatroom, HttpServletRequest request) throws Exception {
+    public Result uploadFile(@RequestParam("file")MultipartFile file, @RequestParam("chatroom")Integer chatroom, @RequestParam("type")Integer type, HttpServletRequest request) throws Exception {
+        if(!MessageType.isValid(type))
+            return Result.buildFailResult("Invalid file type");
         String token = request.getHeader("token");
         User user = userService.findByToken(token);
         if(!chatroomService.inChatroom(user, chatroom)){
@@ -73,7 +78,7 @@ public class ChatController {
         String format = simpleDateFormat.format(new Date());
         // construct message
         MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setType(MessageType.FILE);
+        messageDTO.setType(type);
         messageDTO.setTimestamp(TimeUtils.timestamp());
         messageDTO.setSenderId(user.getUserId());
         messageDTO.setChatroomId(chatroom);
@@ -81,15 +86,10 @@ public class ChatController {
         messageDTO.setContent(format + "." + file.getSize() + "." + file.getOriginalFilename());
 
         // store file
-        String realPath = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath();
-        //文件夹路径,这里以时间作为目录
-        String path = realPath + "static/" + format;
-        File f = new File(path);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-        String filename = file.getOriginalFilename() + "." + messageDTO.getTimestamp();
-        file.transferTo(new File(f, filename));
+        if(type == MessageType.FILE)
+            fileManager.storeFile(format, file, messageDTO.getTimestamp());
+        else if(type == MessageType.IMAGE)
+            fileManager.storeImage(file, messageDTO.getTimestamp());
 
         Message message = messageService.saveMessage(messageDTO);
         simpMessagingTemplate.convertAndSend("/chat/chatroom/" + messageDTO.getChatroomId(), STOMPMessage.buildMessage(STOMPMessageType.BROADCAST_MESSAGE, message));
@@ -102,16 +102,9 @@ public class ChatController {
     public void downloadFile(@RequestParam("message") Integer id, HttpServletRequest request, HttpServletResponse response) throws Exception {
 //        log.info(String.valueOf(id));
         Message message = messageService.findById(id);
-        String content = message.getContent();
-        int split = content.indexOf('.');
-        String folder = content.substring(0, split);
-        String size_filename = content.substring(split + 1);
-        split = size_filename.indexOf('.');
-        String filename = size_filename.substring(split + 1);
-        String local_filename = filename + "." + message.getTimestamp();
-
-        String realPath = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath();
-        String path = realPath + "static/" + folder + "/" + local_filename;
+        String filename = Message.getFileName(message);
+        String path = Message.getFilePath(message);
+//        log.info(filename + " " + path);
         File file = new File(path);
         if (!file.exists()) {
             response.setContentType("text/html;charset=utf-8");

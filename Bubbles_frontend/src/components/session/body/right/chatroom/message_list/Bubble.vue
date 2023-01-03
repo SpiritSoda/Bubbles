@@ -52,6 +52,18 @@ export default {
         },
         is_local(){
             return this.message.senderId == this.$store.state.localuser.local_id
+        },
+        image_url(){
+            if(this.type != 2)
+                return ""
+            const content = this.message.content
+            let dot = content.indexOf('.')
+            const size_filename = content.substr(dot + 1)
+            dot = size_filename.indexOf('.')
+            const filename = encodeURIComponent(size_filename.substr(dot + 1) + "." + this.message.timestamp) 
+            const url = this.$axios.baseURL + "/images/" + filename
+            console.log(url)
+            return url
         }
     }
 }
@@ -70,6 +82,9 @@ export default {
                 <div class="filesize">{{this.filesize}}</div>
             </div>
         </a>
+        <div class="image" v-else-if="this.type == 2">
+            <img :src="image_url" alt="">
+        </div>
     </div>
 </template>
 
@@ -139,5 +154,14 @@ export default {
     margin: auto;
     font-size: 12px;
     text-align: center;
+}
+.image{
+    position: relative;
+    width: 180px;
+    height: 140px;
+}
+.image img{
+    width: 100%;
+    height: 100%;
 }
 </style>

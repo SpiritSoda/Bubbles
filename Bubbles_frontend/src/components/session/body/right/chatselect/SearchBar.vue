@@ -82,7 +82,7 @@ export default {
             else if (this.error_code == 7002)
                 this.msg = 'This chatroom is full already ...'
             else if (this.error_code == 7003)
-                this.msg = 'You just got banned by chatroom\'s admin ...'
+                this.msg = 'You are banned by this chatroom\'s admin ...'
             else if (this.error_code == 7004)
                 this.msg = 'Invite token can not be empty ...'
             else if (this.error_code == 7005)

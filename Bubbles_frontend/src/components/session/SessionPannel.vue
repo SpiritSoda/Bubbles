@@ -20,6 +20,10 @@ export default {
                 this.$bus.emit('popup', 5)
                 this.$bus.emit("switch_state", 0)
             }
+            else if(message.type == 4){
+                this.$store.commit("chatroom/reset_chatroom")
+                this.$bus.emit('popup', 6)
+            }
         }
     },
     mounted() {
