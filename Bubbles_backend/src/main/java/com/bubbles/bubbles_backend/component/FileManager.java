@@ -21,7 +21,7 @@ public class FileManager {
         if (!f.exists()) {
             f.mkdirs();
         }
-        String filename = file.getOriginalFilename() + "." + timestamp;
+        String filename = timestamp + "." + file.getOriginalFilename();
         file.transferTo(new File(f, filename));
     }
     public void storeImage(MultipartFile file, long timestamp) throws Exception{
@@ -32,7 +32,7 @@ public class FileManager {
         if (!f.exists()) {
             f.mkdirs();
         }
-        String filename = file.getOriginalFilename() + "." + timestamp;
+        String filename = timestamp + "." + file.getOriginalFilename();
         file.transferTo(new File(f, filename));
     }
 

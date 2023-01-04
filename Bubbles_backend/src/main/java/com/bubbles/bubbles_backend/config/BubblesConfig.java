@@ -9,4 +9,6 @@ import org.springframework.context.annotation.Configuration;
 public class BubblesConfig {
     @Value("${bubbles.chatroom.inviteTokenExceedTime}")
     private long inviteTokenExceedTime;
+    @Value("${bubbles.chatroom.maxTextMessageLength}")
+    private int maxTextMessageLength;
 }

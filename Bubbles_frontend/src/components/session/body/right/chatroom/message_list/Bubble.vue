@@ -60,9 +60,8 @@ export default {
             let dot = content.indexOf('.')
             const size_filename = content.substr(dot + 1)
             dot = size_filename.indexOf('.')
-            const filename = encodeURIComponent(size_filename.substr(dot + 1) + "." + this.message.timestamp) 
+            const filename = encodeURIComponent(this.message.timestamp + "." + size_filename.substr(dot + 1)) 
             const url = this.$axios.baseURL + "/images/" + filename
-            console.log(url)
             return url
         }
     }

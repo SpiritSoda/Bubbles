@@ -55,7 +55,7 @@ public class Message {
         String size_filename = content.substring(split + 1);
         split = size_filename.indexOf('.');
         String filename = size_filename.substring(split + 1);
-        String local_filename = filename + "." + message.getTimestamp();
+        String local_filename = message.getTimestamp() + "." + filename;
 
         String realPath = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath();
         if(message.type == MessageType.FILE)

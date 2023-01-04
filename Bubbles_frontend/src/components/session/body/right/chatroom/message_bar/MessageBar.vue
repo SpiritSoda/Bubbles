@@ -29,8 +29,15 @@ export default {
                 this.$store.commit('error/set_error_code', 3003)
                 return
             }
-            this.$store.dispatch('send_message', this.content)
-            this.content = ''
+            this.$store.dispatch('send_message', {
+                content: this.content,
+                on_error: () => {
+                    this.$store.commit('error/set_error_code', 3001)
+                },
+                on_success: () => {
+                    this.content = ''
+                }
+            })
         },
         append_emoji(e) {
             this.content += e.native

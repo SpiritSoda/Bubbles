@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const baseURL = 'https://b2884t1064.oicp.vip'
+// const baseURL = 'http://127.0.0.1:8081'
 const timeout = 100000
 
 function post(url, data, config){

@@ -155,19 +155,17 @@ export default new createStore({
     },
 
     // send message to chatroom
-    send_message(context, content) {
+    send_message(context, payload) {
       if (this.state.chatroom.selected_room == 0)
         return;
       let token = this.state.localuser.token
       let msg = {
         type: 0,
-        content: content,
+        content: payload.content,
         chatroomId: this.state.chatroom.selected_room
       }
-      let on_error = (msg) => {
-        msg['state'] = 1
-        this.commit('save_message', msg)
-      }
+      let on_error = payload.on_error ? payload.on_error : () => {}
+      let on_success = payload.on_success ? payload.on_success : () => {}
       $axios.post(
         '/api/chat/send',
         msg,
@@ -179,14 +177,17 @@ export default new createStore({
         .then(
           (response) => {
             let code = response.data.code;
-            if (code != 0) {
-              on_error(msg)
+            // console.log(response.data)
+            if (code != 0){
+              on_error()
             }
+            else
+              on_success()
           }
         )
         .catch(
           (e) => {
-            on_error(msg)
+            on_error()
           }
         )
     },

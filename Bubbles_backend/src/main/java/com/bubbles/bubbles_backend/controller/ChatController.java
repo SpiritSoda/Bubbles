@@ -1,6 +1,7 @@
 package com.bubbles.bubbles_backend.controller;
 
 import com.bubbles.bubbles_backend.component.FileManager;
+import com.bubbles.bubbles_backend.config.BubblesConfig;
 import com.bubbles.bubbles_backend.config.FileConfig;
 import com.bubbles.bubbles_backend.dto.MessageDTO;
 import com.bubbles.bubbles_backend.dto.MessageQueryDTO;
@@ -15,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,14 +39,16 @@ public class ChatController {
     private final ChatroomService chatroomService;
     private final FileConfig fileConfig;
     private final FileManager fileManager;
+    private final BubblesConfig bubblesConfig;
     @Autowired
-    ChatController(SimpMessagingTemplate simpMessagingTemplate, MessageService messageService, UserService userService, ChatroomService chatroomService, FileConfig fileConfig, FileManager fileManager){
+    ChatController(SimpMessagingTemplate simpMessagingTemplate, MessageService messageService, UserService userService, ChatroomService chatroomService, FileConfig fileConfig, FileManager fileManager, BubblesConfig bubblesConfig){
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.messageService = messageService;
         this.userService = userService;
         this.chatroomService = chatroomService;
         this.fileConfig = fileConfig;
         this.fileManager = fileManager;
+        this.bubblesConfig = bubblesConfig;
     }
     @PostMapping("/api/chat/send")
     public Result sendMessage(@RequestBody @Valid MessageDTO messageDTO, HttpServletRequest request) throws Exception{
@@ -55,6 +57,8 @@ public class ChatController {
         if(!chatroomService.inChatroom(user, messageDTO.getChatroomId())){
             throw new UserNotInChatroomException(user.getUserId(), messageDTO.getChatroomId());
         }
+        if(messageDTO.getContent().length() > bubblesConfig.getMaxTextMessageLength())
+            return Result.buildFailResult("Message Length Exceed");
         messageDTO.setTimestamp(TimeUtils.timestamp());
         messageDTO.setSenderId(user.getUserId());
         messageDTO.setType(MessageType.TEXT);
