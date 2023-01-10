@@ -1,9 +1,9 @@
 <script>
-import Avatar from '../../../utils/Avatar.vue';
-import ConfirmButton from '../../../utils/ConfirmButton.vue';
-import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
-import LoadingButton from '../../../utils/LoadingButton.vue';
-import VerticalSplit from '../../../utils/VerticalSplit.vue';
+import Avatar from '../utils/Avatar.vue';
+import ConfirmButton from '../utils/ConfirmButton.vue';
+import HorizontalSplit from '../utils/HorizontalSplit.vue';
+import LoadingButton from '../utils/LoadingButton.vue';
+import VerticalSplit from '../utils/VerticalSplit.vue';
 
 export default {
     components: { HorizontalSplit, VerticalSplit, LoadingButton, Avatar, ConfirmButton },

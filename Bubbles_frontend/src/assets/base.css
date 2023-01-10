@@ -8,10 +8,9 @@ html{
   overflow: hidden;
 }
 body{
-  height: 101%;
+  height: 102%;
   width: 102%;
   position: absolute;
-  left: -1%;
   overflow: auto;
 }
 

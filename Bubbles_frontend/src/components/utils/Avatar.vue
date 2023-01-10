@@ -30,11 +30,11 @@ export default {
                 'width': (this.r - 5) + 'px', 
                 'height': (this.r - 5) + 'px', 
                 // 'background-image':'url(\'/avatars/' + this.avatar + '.webp\')',
-                'background-image':'url(\'/avatars/genshin/' + this.avatar + '.jpg\')',
+                'background-image':'url(\'avatars/genshin/' + this.avatar + '.jpg\')',
                 'background-size': (this.r - 5) + 'px',
                 'opacity': this.avatar > 0 ? 1.0 : 0.0
             }
-        }
+        },
     }
 }
 </script>

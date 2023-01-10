@@ -5,12 +5,12 @@ import { computed } from 'vue';
 import CheckBox from './components/utils/CheckBox.vue';
 import RegisterView from './components/register/RegisterView.vue';
 import Popup from './components/utils/Popup.vue';
-import EditUserInfo from './components/session/body/popup/EditUserInfo.vue';
-import CreateChatroom from './components/session/body/popup/CreateChatroom.vue';
-import InviteToken from './components/session/body/popup/InviteToken.vue';
-import InviteFriend from './components/session/body/popup/InviteFriend.vue';
-import MultiLogin from './components/session/body/popup/MultiLogin.vue';
-import Kicked from './components/session/body/popup/Kicked.vue';
+import EditUserInfo from './components/popup/EditUserInfo.vue';
+import CreateChatroom from './components/popup/CreateChatroom.vue';
+import InviteToken from './components/popup/InviteToken.vue';
+import InviteFriend from './components/popup/InviteFriend.vue';
+import MultiLogin from './components/popup/MultiLogin.vue';
+import Kicked from './components/popup/Kicked.vue';
 
 export default {
   components: {

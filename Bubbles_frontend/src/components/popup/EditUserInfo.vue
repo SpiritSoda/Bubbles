@@ -1,10 +1,10 @@
 <script>
-import Button from '../../../utils/Button.vue';
-import Avatar from '../../../utils/Avatar.vue';
-import VerticalSplit from '../../../utils/VerticalSplit.vue';
-import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
-import TextButton from '../../../utils/TextButton.vue';
-import LoadingTextButton from '../../../utils/LoadingTextButton.vue';
+import Button from '../utils/Button.vue';
+import Avatar from '../utils/Avatar.vue';
+import VerticalSplit from '../utils/VerticalSplit.vue';
+import HorizontalSplit from '../utils/HorizontalSplit.vue';
+import TextButton from '../utils/TextButton.vue';
+import LoadingTextButton from '../utils/LoadingTextButton.vue';
 export default {
     components: {
         Button,
@@ -152,7 +152,7 @@ export default {
                 <div class="avatar-list-roller">
                     <div class="avatar-icon" 
                         v-for="id in avatar_count"
-                        :style="{ 'background-image': 'url(\'/avatars/genshin/' + id + '.jpg\')' }"
+                        :style="{ 'background-image': 'url(\'avatars/genshin/' + id + '.jpg\')' }"
                         @click="set_avatar(id)">
                     </div>
                 </div>

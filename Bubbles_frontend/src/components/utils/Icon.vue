@@ -29,7 +29,7 @@ export default {
             return {
                 'width': (this.r - 5) + 'px', 
                 'height': (this.r - 5) + 'px', 
-                'background-image':'url(\'/chatroom/' + this.icon + '.jpg\')',
+                'background-image':'url(\'chatroom/' + this.icon + '.jpg\')',
                 'background-size': (this.r - 5) + 'px',
                 'opacity': this.icon > 0 ? 1.0 : 0.0
             }

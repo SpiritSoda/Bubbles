@@ -1,6 +1,6 @@
 <script>
-import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
-import VerticalSplit from '../../../utils/VerticalSplit.vue';
+import HorizontalSplit from '../utils/HorizontalSplit.vue';
+import VerticalSplit from '../utils/VerticalSplit.vue';
 
 export default {
     components: { HorizontalSplit, VerticalSplit },

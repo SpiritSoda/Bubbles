@@ -1,9 +1,9 @@
 <script>
-import HorizontalSplit from '../../../utils/HorizontalSplit.vue';
-import Icon from '../../../utils/Icon.vue';
-import LoadingTextButton from '../../../utils/LoadingTextButton.vue';
-import TextButton from '../../../utils/TextButton.vue';
-import VerticalSplit from '../../../utils/VerticalSplit.vue';
+import HorizontalSplit from '../utils/HorizontalSplit.vue';
+import Icon from '../utils/Icon.vue';
+import LoadingTextButton from '../utils/LoadingTextButton.vue';
+import TextButton from '../utils/TextButton.vue';
+import VerticalSplit from '../utils/VerticalSplit.vue';
 
 export default {
     components: { HorizontalSplit, VerticalSplit, TextButton, Icon, LoadingTextButton },
@@ -241,7 +241,7 @@ export default {
             <div class="icon-list" :class="{ 'show-list': show_list }">
                 <div class="icon-list-roller" id="icon-list-roller">
                     <div class="icon-item" v-for="id in icon_count"
-                        :style="{ 'background-image': 'url(\'/chatroom/' + id + '.jpg\')' }" @click="set_icon(id)">
+                        :style="{ 'background-image': 'url(\'chatroom/' + id + '.jpg\')' }" @click="set_icon(id)">
                     </div>
                 </div>
             </div>

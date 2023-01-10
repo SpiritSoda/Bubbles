@@ -13,7 +13,7 @@ export default {
     computed:{
         chatroom_background(){
             return {
-                'background-image': 'url(\'/chatroom/' + this.chatroom.icon + '.jpg\')',
+                'background-image': 'url(\'chatroom/' + this.chatroom.icon + '.jpg\')',
                 'background-size': 'cover'
             }
         },
